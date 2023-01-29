@@ -6,38 +6,38 @@ namespace CatalogAPI.Services;
 
 public class BrandService: IBrandService
 {
-    private Context db;
+    private readonly Context _db;
     public BrandService(Context context)
     {
-        db = context;
+        _db = context;
     }
 
     public async Task<List<Brand>> Get()
     {
-        return await db.Brands.ToListAsync();
+        return await _db.Brands.ToListAsync();
     }
 
-    public async Task<Brand> Get(int id)
+    public async Task<Brand> GetById(int id)
     {
-        return await db.Brands.SingleOrDefaultAsync(x => x.Id == id);
+        return await _db.Brands.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Brand> Get(string name)
+    public async Task<Brand> GetByName(string name)
     {
-        return await db.Brands.SingleOrDefaultAsync(x => x.Name == name);
+        return await _db.Brands.SingleOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task<Brand> Create(Brand brand)
     {
-        await db.Brands.AddAsync(brand);
-        await db.SaveChangesAsync();
+        await _db.Brands.AddAsync(brand);
+        await _db.SaveChangesAsync();
         return brand;
     }
 
     public async Task<Brand> Update(Brand brand)
     {
-        db.Brands.Update(brand);
-        await db.SaveChangesAsync();
+        _db.Brands.Update(brand);
+        await _db.SaveChangesAsync();
         return brand;
     }
 }

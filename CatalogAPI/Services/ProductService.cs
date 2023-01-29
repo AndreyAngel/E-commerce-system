@@ -6,58 +6,58 @@ namespace CatalogAPI.Services;
 
 public class ProductService: IProductService
 {
-    private Context db;
+    private readonly Context _db;
     public ProductService(Context context)
     {
-        db = context;
+        _db = context;
     }
 
     public async Task<List<Product>> Get()
     {
-        return await db.Products.ToListAsync();
+        return await _db.Products.ToListAsync();
     }
 
     public async Task<Product> GetById(int id)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == id);
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Product> GetByName(string name)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Name == name);
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task<List<Product>> GetByBrandId(int brandId)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Id == brandId).ToListAsync();
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Id == brandId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByBrandName(string brandName)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Name == brandName).ToListAsync();
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Name == brandName).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryId(int categoryId)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Id == categoryId).ToListAsync();
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Id == categoryId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryName(string categoryName)
     {
-        return await db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Name == categoryName).ToListAsync();
+        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Name == categoryName).ToListAsync();
     }
 
     public async Task<Product> Create(Product product)
     {
-        await db.Products.AddAsync(product);
-        await db.SaveChangesAsync();
+        await _db.Products.AddAsync(product);
+        await _db.SaveChangesAsync();
         return product;
     }
 
     public async Task<Product> Update(Product product)
     {
-        db.Products.Update(product);
-        await db.SaveChangesAsync();
+        _db.Products.Update(product);
+        await _db.SaveChangesAsync();
         return product;
     }
 }

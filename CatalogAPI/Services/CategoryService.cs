@@ -6,38 +6,38 @@ namespace CatalogAPI.Services;
 
 public class CategoryService: ICategoryService
 {
-    private Context db;
+    private readonly Context _db;
     public CategoryService(Context context)
     {
-        db = context;
+        _db = context;
     }
 
     public async Task<List<Category>> Get()
     {
-        return await db.Categories.ToListAsync();
+        return await _db.Categories.ToListAsync();
     }
 
-    public async Task<Category> Get(int id)
+    public async Task<Category> GetById(int id)
     {
-        return await db.Categories.SingleOrDefaultAsync(x => x.Id == id);
+        return await _db.Categories.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Category> Get(string name)
+    public async Task<Category> GetByName(string name)
     {
-        return await db.Categories.SingleOrDefaultAsync(x => x.Name == name);
+        return await _db.Categories.SingleOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task<Category> Create(Category category)
     {
-        await db.Categories.AddAsync(category);
-        await db.SaveChangesAsync();
+        await _db.Categories.AddAsync(category);
+        await _db.SaveChangesAsync();
         return category;
     }
 
     public async Task<Category> Update(Category category)
     {
-        db.Categories.Update(category);
-        await db.SaveChangesAsync();
+        _db.Categories.Update(category);
+        await _db.SaveChangesAsync();
         return category;
     }
 }

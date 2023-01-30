@@ -1,6 +1,7 @@
 ﻿using OrderAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models;
+using MassTransit;
 
 namespace OrderAPI.Controllers
 {

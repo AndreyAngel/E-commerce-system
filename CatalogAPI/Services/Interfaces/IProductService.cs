@@ -1,4 +1,5 @@
 ﻿using CatalogAPI.Models;
+using Infrastructure.DTO;
 
 namespace CatalogAPI.Services.Interfaces;
 
@@ -13,4 +14,5 @@ public interface IProductService
     public Task<List<Product>> GetByCategoryName(string categoryName);
     public Task<Product> Create(Product product);
     public Task<Product> Update(Product product);
+    public Task<ProductList> CheckProducts(ProductList products);
 }

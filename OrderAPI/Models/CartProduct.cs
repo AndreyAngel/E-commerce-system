@@ -1,4 +1,4 @@
-﻿using OrderAPI.Models.DTO;
+﻿using Infrastructure.Models;
 
 namespace OrderAPI.Models;
 

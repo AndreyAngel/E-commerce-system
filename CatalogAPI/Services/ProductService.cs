@@ -1,6 +1,7 @@
 ﻿using CatalogAPI.Models;
 using CatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.DTO;
 
 namespace CatalogAPI.Services;
 
@@ -59,5 +60,11 @@ public class ProductService: IProductService
         _db.Products.Update(product);
         await _db.SaveChangesAsync();
         return product;
+    }
+
+    public async Task<ProductList> CheckProducts(ProductList productList)
+    {
+        return new ProductList();
+        //TODO
     }
 }

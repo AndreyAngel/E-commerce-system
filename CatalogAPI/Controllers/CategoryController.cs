@@ -1,5 +1,5 @@
 ﻿using CatalogAPI.Models;
-using CatalogAPI.Services;
+using CatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers;
@@ -9,8 +9,8 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
-    private readonly CategoryService _service;
-    public CategoryController(CategoryService service)
+    private readonly ICategoryService _service;
+    public CategoryController(ICategoryService service)
     {
         _service = service;
     }
@@ -30,6 +30,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{id:int}")]
     public async Task<ActionResult<Category>> GetById(int id)
     {
         try
@@ -44,6 +45,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{name}")]
     public async Task<ActionResult<Category>> GetByName(string name)
     {
         try

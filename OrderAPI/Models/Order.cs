@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
-
-namespace OrderAPI.Models;
+﻿namespace OrderAPI.Models;
 
 public class Order
 {
@@ -9,7 +6,7 @@ public class Order
 
     public int UserId { get; set; }
 
-    public List<CartProduct> cartProducts { get; set; } = new List<CartProduct>();
+    public List<CartProduct> CartProducts { get; set; } = new List<CartProduct>();
 
     public bool IsReady { get; set; } = false;
 

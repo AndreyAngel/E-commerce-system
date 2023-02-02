@@ -30,22 +30,22 @@ public class ProductService: IProductService
 
     public async Task<List<Product>> GetByBrandId(int brandId)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Id == brandId).ToListAsync();
+        return await _db.Products.Where(x => x.Brand.Id == brandId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByBrandName(string brandName)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Brand.Name == brandName).ToListAsync();
+        return await _db.Products.Where(x => x.Brand.Name == brandName).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryId(int categoryId)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Id == categoryId).ToListAsync();
+        return await _db.Products.Where(x => x.Category.Id == categoryId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryName(string categoryName)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => x.Category.Name == categoryName).ToListAsync();
+        return await _db.Products.Where(x => x.Category.Name == categoryName).ToListAsync();
     }
 
     public async Task<Product> Create(Product product)

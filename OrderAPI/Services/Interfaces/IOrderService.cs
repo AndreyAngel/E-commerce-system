@@ -2,7 +2,7 @@
 
 namespace OrderAPI.Services.Interfaces;
 
-interface IOrderService
+public interface IOrderService
 {
     Task<List<Order>> GetAll();
     Task<Order> GetById(int id);

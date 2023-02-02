@@ -1,9 +1,19 @@
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderAPI.Models;
+using OrderAPI.Services;
+using OrderAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddControllers().AddNewtonsoftJson(x =>
+            x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Order.db"));
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartProductService, CartProductService>();
 builder.Services.AddMassTransit(x =>
 {
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
@@ -15,11 +25,6 @@ builder.Services.AddMassTransit(x =>
         });
     }));
 });
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

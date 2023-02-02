@@ -1,14 +1,14 @@
 ﻿using MassTransit;
 using Infrastructure.DTO;
-using CatalogAPI.Services;
+using CatalogAPI.Services.Interfaces;
 
 namespace CatalogAPI.Consumers;
 
 public class ProductsConsumer : IConsumer<ProductList>
 {
-    private readonly ProductService _service;
+    private readonly IProductService _service;
 
-    public ProductsConsumer(ProductService service)
+    public ProductsConsumer(IProductService service)
     {
         _service = service;
     }

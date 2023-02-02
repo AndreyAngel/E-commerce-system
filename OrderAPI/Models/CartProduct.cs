@@ -14,7 +14,7 @@ public class CartProduct
     public double TotalValue { get; set; }
 
     public int CartId { get; set; }
-    public Cart Cart { get; set; }
+    public Cart? Cart { get; set; }
 
     public void ComputeTotalValue()
     {

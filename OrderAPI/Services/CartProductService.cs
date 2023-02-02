@@ -21,7 +21,7 @@ public class CartProductService: ICartProductService
             product.Quantity += cartProduct.Quantity;
             product.ComputeTotalValue();
 
-            return await Update(cartProduct);
+            return await Update(product);
         }
 
         cartProduct.ComputeTotalValue();
@@ -33,6 +33,7 @@ public class CartProductService: ICartProductService
 
     public async Task<CartProduct> Update(CartProduct cartProduct)
     {
+        cartProduct.ComputeTotalValue();
         _db.CartProducts.Update(cartProduct);
         await _db.SaveChangesAsync();
 

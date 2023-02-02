@@ -1,7 +1,6 @@
-﻿using OrderAPI.Services;
+﻿using OrderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models;
-using MassTransit;
 
 namespace OrderAPI.Controllers
 {
@@ -9,16 +8,17 @@ namespace OrderAPI.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
-        private readonly CartService _cartService;
-        private readonly CartProductService _productService;
+        private readonly ICartService _cartService;
+        private readonly ICartProductService _productService;
 
-        public CartController(CartService cartService, CartProductService productService)
+        public CartController(ICartService cartService, ICartProductService productService)
         {
             _cartService = cartService;
             _productService = productService;
         }
 
         [HttpGet]
+        [Route("{id:int}")]
         public async Task<ActionResult<Cart>> GetById(int id)
         {
             try
@@ -63,6 +63,7 @@ namespace OrderAPI.Controllers
         }
 
         [HttpDelete]
+        [Route("{IdCart:int},{IdProduct:int}")]
         public async Task<ActionResult<Cart>> DeleteProduct(int IdCart, int IdProduct)
         {
             try

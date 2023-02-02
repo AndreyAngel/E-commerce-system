@@ -2,6 +2,7 @@
 using OrderAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
+using Infrastructure;
 using Infrastructure.DTO;
 
 namespace OrderAPI.Services;
@@ -9,8 +10,8 @@ namespace OrderAPI.Services;
 public class CartService: ICartService
 {
     private readonly Context _db;
-    private readonly IBus _bus;
-    public CartService(Context context, IBus bus)
+    private readonly IBusControl _bus;
+    public CartService(Context context, IBusControl bus)
     {
         _db = context;
         _bus = bus;
@@ -18,13 +19,13 @@ public class CartService: ICartService
 
     public async Task<Cart> GetById(int id)
     {
-        Cart? cart = await _db.Carts.Include(x => x.cartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new Exception("Cart not found!");
 
         Cart result = await Check(cart);
-        return result;
+        return cart;
     }
 
     public async Task<Cart> Create(Cart cart)
@@ -37,7 +38,7 @@ public class CartService: ICartService
 
     public async Task<Cart> ComputeTotalValue(int id)
     {
-        Cart? cart = await _db.Carts.Include(x => x.cartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new Exception("Cart not found!");
@@ -51,7 +52,7 @@ public class CartService: ICartService
 
     public async Task<Cart> Clear(int id)
     {
-        Cart? cart = await _db.Carts.Include(x => x.cartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new Exception("Cart not found!");
@@ -66,19 +67,39 @@ public class CartService: ICartService
 
     public async Task<Cart> Check(Cart cart)
     {
+        // Checks the relevance of products and returns a new cart
+
         ProductList products = new ProductList();
 
-        foreach(CartProduct cartProduct in cart.cartProducts)
+        foreach (CartProduct cartProduct in cart.CartProducts)
         {
             products.Products.Add(cartProduct.Product);
         }
 
-        Uri uri = new Uri("rebbitmq/localhost/checkProductsQueue");
-        var EndPoint = await _bus.GetSendEndpoint(uri);
-        await EndPoint.Send(products);
+        Uri uri = new Uri("rabbitmq/localhost/checkProductsQueue");
+        ProductList response = await RabbitMQClient.Request<ProductList, ProductList>(_bus, products, uri);
 
-        return new Cart();
+        // The order of the objects in the response matches the order in the request
+        // Replacing old objects with current ones
+        List<int> indexes = new();
+        for (int i = 0; i < response.Products.Count; i++)
+        {
+            if (response.Products[i].Id == cart.CartProducts[i].Product.Id)
+            {
+                cart.CartProducts[i].Product = response.Products[i];
+                cart.CartProducts[i].ComputeTotalValue();
+            }
+            else
+                indexes.Add(i);
+        }
+        // Delete the rest
+        foreach (int index in indexes)
+        {
+            cart.CartProducts.RemoveAt(index);
+        }
 
-        // TODO
+        cart.ComputeTotalValue();
+
+        return cart;
     }
 }

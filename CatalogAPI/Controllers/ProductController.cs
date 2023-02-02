@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CatalogAPI.Models;
-using CatalogAPI.Services;
+using CatalogAPI.Services.Interfaces;
 
 namespace CatalogAPI.Controllers;
 
@@ -9,8 +9,8 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
-    private readonly ProductService _service;
-    public ProductController(ProductService service)
+    private readonly IProductService _service;
+    public ProductController(IProductService service)
     {
         _service = service;
     }
@@ -30,6 +30,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{id:int}")]
     public async Task<ActionResult<Product>> GetById(int id)
     {
         try
@@ -44,6 +45,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{name}")]
     public async Task<ActionResult<Product>> GetByName(string name)
     {
         try
@@ -58,6 +60,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{brandId:int}")]
     public async Task<ActionResult<Product>> GetByBrandId(int brandId)
     {
         try
@@ -72,6 +75,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{brandName}")]
     public async Task<ActionResult<Product>> GetByBrandName(string brandName)
     {
         try
@@ -86,6 +90,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{categoryId:int}")]
     public async Task<ActionResult<Product>> GetByCategoryId(int categoryId)
     {
         try
@@ -100,6 +105,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{categoryName}")]
     public async Task<ActionResult<Product>> GetByCategoryName(string categoryName)
     {
         try

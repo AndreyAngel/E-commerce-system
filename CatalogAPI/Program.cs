@@ -1,19 +1,31 @@
 using MassTransit;
 using CatalogAPI.Consumers;
+using Microsoft.EntityFrameworkCore;
+using CatalogAPI.Models;
+using CatalogAPI.Services.Interfaces;
+using CatalogAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddControllers().AddNewtonsoftJson(x =>
+            x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Catalog.db"));
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<ProductsConsumer>();
+
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
-        cfg.Host(new Uri("rabbitmq://localhost"), h =>
+        cfg.Host("rabbitmq://localhost", settings =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            settings.Username("guest");
+            settings.Password("guest");
         });
         cfg.ReceiveEndpoint("checkProductsQueue", ep =>
         {
@@ -23,11 +35,6 @@ builder.Services.AddMassTransit(x =>
         });
     }));
 });
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

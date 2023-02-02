@@ -2,7 +2,7 @@
 
 namespace OrderAPI.Services.Interfaces;
 
-interface ICartService
+public interface ICartService
 {
     Task<Cart> GetById(int id);
     Task<Cart> Create(Cart cart);

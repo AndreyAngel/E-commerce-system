@@ -1,7 +1,7 @@
 ﻿using CatalogAPI.Models;
 
 namespace CatalogAPI.Services.Interfaces;
-interface IBrandService
+public interface IBrandService
 {
     public Task<List<Brand>> Get();
     public Task<Brand> GetById(int id);

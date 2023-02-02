@@ -1,5 +1,5 @@
 ﻿using CatalogAPI.Models;
-using CatalogAPI.Services;
+using CatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogAPI.Controllers;
@@ -9,8 +9,8 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class BrandController : ControllerBase
 {
-    private readonly BrandService _service;
-    public BrandController(BrandService service)
+    private readonly IBrandService _service;
+    public BrandController(IBrandService service)
     {
         _service = service;
     }
@@ -30,6 +30,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{id:int}")]
     public async Task<ActionResult<Brand>> GetById(int id)
     {
         try
@@ -44,6 +45,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{name}")]
     public async Task<ActionResult<Brand>> GetByName(string name)
     {
         try

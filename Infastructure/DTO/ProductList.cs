@@ -2,7 +2,7 @@
 
 namespace Infrastructure.DTO;
 
-public class ProductList
+public class ProductList<Type>
 {
-    public List<Product> Products { get; set; } = new List<Product>();
+    public List<Type> Products { get; set; } = new List<Type>();
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Infrastructure;
 using Infrastructure.DTO;
+using Infrastructure.Models;
 
 namespace OrderAPI.Services;
 
@@ -69,15 +70,15 @@ public class CartService: ICartService
     {
         // Checks the relevance of products and returns a new cart
 
-        ProductList products = new ProductList();
+        ProductList<int> products = new ProductList<int>();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
         {
-            products.Products.Add(cartProduct.Product);
+            products.Products.Add(cartProduct.ProductId);
         }
 
-        Uri uri = new Uri("rabbitmq/localhost/checkProductsQueue");
-        ProductList response = await RabbitMQClient.Request<ProductList, ProductList>(_bus, products, uri);
+        Uri uri = new Uri("rabbitmq://localhost/checkProductsQueue");
+        ProductList<Product> response = await RabbitMQClient.Request<ProductList<int>, ProductList<Product>>(_bus, products, uri);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones

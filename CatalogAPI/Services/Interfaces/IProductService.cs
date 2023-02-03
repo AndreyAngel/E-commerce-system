@@ -14,5 +14,5 @@ public interface IProductService
     public Task<List<Product>> GetByCategoryName(string categoryName);
     public Task<Product> Create(Product product);
     public Task<Product> Update(Product product);
-    public Task<ProductList> CheckProducts(ProductList products);
+    public Task<ProductList<Product>> CheckProducts(ProductList<int> products);
 }

@@ -108,7 +108,7 @@ namespace OrderAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OrderAPI.Models.Order", null)
+                    b.HasOne("OrderAPI.Models.Order", "Order")
                         .WithMany("CartProducts")
                         .HasForeignKey("OrderId");
 
@@ -119,6 +119,8 @@ namespace OrderAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

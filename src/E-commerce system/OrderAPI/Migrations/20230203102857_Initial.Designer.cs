@@ -11,7 +11,7 @@ using OrderAPI.Models;
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230201115804_Initial")]
+    [Migration("20230203102857_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -111,7 +111,7 @@ namespace OrderAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OrderAPI.Models.Order", null)
+                    b.HasOne("OrderAPI.Models.Order", "Order")
                         .WithMany("CartProducts")
                         .HasForeignKey("OrderId");
 
@@ -122,6 +122,8 @@ namespace OrderAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

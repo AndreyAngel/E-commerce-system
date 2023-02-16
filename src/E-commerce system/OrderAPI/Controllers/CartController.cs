@@ -94,5 +94,19 @@ namespace OrderAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        [Route("{IdCart:int}")]
+        public async Task<ActionResult<Cart>> Clear(int IdCart)
+        {
+            try
+            {
+                return await _cartService.Clear(IdCart);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

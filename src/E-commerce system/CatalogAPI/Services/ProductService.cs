@@ -107,9 +107,26 @@ public class ProductService: IProductService
         return product;
     }
 
+    // Returns actuality products by ID
     public async Task<ProductList<Infrastructure.Models.Product>> CheckProducts(ProductList<int> productList)
     {
-        return new ProductList<Infrastructure.Models.Product>();
-        //TODO
+        ProductList<Infrastructure.Models.Product> products = new();
+        foreach (var productId in productList.Products)
+        {
+            var product = await _db.Products.SingleOrDefaultAsync(x => x.Id == productId);
+
+            if (product != null && product.IsSale)
+                // todo: to use AutoMapper
+                products.Products.Add(new Infrastructure.Models.Product()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price
+                });
+            else
+                products.Products.Add(null);
+        }
+
+        return products;
     }
 }

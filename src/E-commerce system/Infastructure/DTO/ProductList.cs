@@ -1,6 +1,4 @@
-﻿using Infrastructure.Models;
-
-namespace Infrastructure.DTO;
+﻿namespace Infrastructure.DTO;
 
 public class ProductList<Type>
 {

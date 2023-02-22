@@ -26,7 +26,11 @@ public class CartService: ICartService
             throw new Exception("Cart not found!");
 
         Cart result = await Check(cart);
-        return cart;
+
+        _db.Carts.Update(result);
+        await _db.SaveChangesAsync();
+
+        return result;
     }
 
     public async Task<Cart> Create(Cart cart)
@@ -66,10 +70,9 @@ public class CartService: ICartService
         return cart;
     }
 
+    // Checks the relevance of products and returns a new cart
     public async Task<Cart> Check(Cart cart)
     {
-        // Checks the relevance of products and returns a new cart
-
         ProductList<int> products = new ProductList<int>();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
@@ -85,6 +88,12 @@ public class CartService: ICartService
         List<int> indexes = new();
         for (int i = 0; i < response.Products.Count; i++)
         {
+            if (response.Products[i] == null)
+            {
+                indexes.Add(i);
+                continue;
+            }
+
             if (response.Products[i].Id == cart.CartProducts[i].Product.Id)
             {
                 cart.CartProducts[i].Product = response.Products[i];
@@ -94,9 +103,9 @@ public class CartService: ICartService
                 indexes.Add(i);
         }
         // Delete the rest
-        foreach (int index in indexes)
+        for(int i = 0; i < indexes.Count; i++)
         {
-            cart.CartProducts.RemoveAt(index);
+            cart.CartProducts.RemoveAt(indexes[i] - i);
         }
 
         cart.ComputeTotalValue();

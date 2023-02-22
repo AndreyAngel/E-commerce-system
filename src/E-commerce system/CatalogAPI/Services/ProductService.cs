@@ -62,9 +62,9 @@ public class ProductService: IProductService
         return product;
     }
 
-    public async Task<ProductList<Product>> CheckProducts(ProductList<int> productList)
+    public async Task<ProductList<Infrastructure.Models.Product>> CheckProducts(ProductList<int> productList)
     {
-        return new ProductList<Product>();
+        return new ProductList<Infrastructure.Models.Product>();
         //TODO
     }
 }

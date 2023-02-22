@@ -77,7 +77,7 @@ public class CartService: ICartService
             products.Products.Add(cartProduct.ProductId);
         }
 
-        Uri uri = new Uri("rabbitmq://localhost/checkProductsQueue");
+        Uri uri = new("rabbitmq://localhost/checkProductsQueue");
         ProductList<Product> response = await RabbitMQClient.Request<ProductList<int>, ProductList<Product>>(_bus, products, uri);
 
         // The order of the objects in the response matches the order in the request

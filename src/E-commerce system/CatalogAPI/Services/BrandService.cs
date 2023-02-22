@@ -43,10 +43,10 @@ public class BrandService: IBrandService
     public async Task<Brand> Create(Brand brand)
     {
         if (brand.Id != 0)
-            throw new Exception("Нельзя передавать id"); //todo: new exception
+            throw new Exception("Нельзя передавать id!"); //todo: new exception
 
         if (GetByName(brand.Name) != null)
-            throw new Exception("Brand with this name alredy exist");
+            throw new Exception("Brand with this name alredy exists!");//todo: new exception
 
         await _db.Brands.AddAsync(brand);
         await _db.SaveChangesAsync();
@@ -59,7 +59,7 @@ public class BrandService: IBrandService
             throw new Exception("id <= 0"); //todo: new exception
 
         if (GetById(brand.Id) == null)
-            throw new Exception("Brand bot found");
+            throw new Exception("Brand bot found!");//todo: new exception
 
         _db.Brands.Update(brand);
         await _db.SaveChangesAsync();

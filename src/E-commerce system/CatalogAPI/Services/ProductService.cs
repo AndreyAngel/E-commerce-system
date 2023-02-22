@@ -20,36 +20,75 @@ public class ProductService: IProductService
 
     public async Task<Product> GetById(int id)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == id);
+        if (id <= 0)
+            throw new Exception("id <= 0"); // todo: new exception
+
+        var res = await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == id);
+
+        if (res == null)
+            throw new Exception("Product not found!"); // todo: new exception
+
+        return res;
     }
 
     public async Task<Product> GetByName(string name)
     {
-        return await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Name == name);
+        var res = await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Name == name);
+
+        if (res == null)
+            throw new Exception("Product not found!"); // todo: new exception
+
+        return res;
     }
 
     public async Task<List<Product>> GetByBrandId(int brandId)
     {
+        var res = _db.Brands.SingleOrDefaultAsync(x => x.Id == brandId);
+
+        if (res == null)
+            throw new Exception("Brand not found!"); // todo: new exception
+
         return await _db.Products.Where(x => x.Brand.Id == brandId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByBrandName(string brandName)
     {
+        var res = _db.Brands.SingleOrDefaultAsync(x => x.Name == brandName);
+
+        if (res == null)
+            throw new Exception("Brand not found!"); // todo: new exception
+
         return await _db.Products.Where(x => x.Brand.Name == brandName).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryId(int categoryId)
     {
+        var res = _db.Categories.SingleOrDefaultAsync(x => x.Id == categoryId);
+
+        if (res == null)
+            throw new Exception("Category not found!"); // todo: new exception
+
         return await _db.Products.Where(x => x.Category.Id == categoryId).ToListAsync();
     }
 
     public async Task<List<Product>> GetByCategoryName(string categoryName)
     {
+        var res = _db.Categories.SingleOrDefaultAsync(x => x.Name == categoryName);
+
+        if (res == null)
+            throw new Exception("Category not found!"); // todo: new exception
+
         return await _db.Products.Where(x => x.Category.Name == categoryName).ToListAsync();
     }
 
     public async Task<Product> Create(Product product)
     {
+        if (product.Id != 0)
+            throw new Exception("Нельзя передавать id!"); //todo: new exception
+
+        if (GetByName(product.Name) != null)
+            throw new Exception("Product with this name already exists!"); //todo: new exception
+
         await _db.Products.AddAsync(product);
         await _db.SaveChangesAsync();
         return product;
@@ -57,6 +96,12 @@ public class ProductService: IProductService
 
     public async Task<Product> Update(Product product)
     {
+        if (product.Id <= 0)
+            throw new Exception("id <= 0"); //todo: new exception
+
+        if (GetById(product.Id) == null)
+            throw new Exception("Product bot found!");//todo: new exception
+
         _db.Products.Update(product);
         await _db.SaveChangesAsync();
         return product;

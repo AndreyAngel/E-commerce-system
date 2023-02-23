@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Infrastructure;
 using Infrastructure.DTO;
-using Infrastructure.Models;
 using Infrastructure.Exceptions;
 
 namespace OrderAPI.Services;
@@ -93,15 +92,16 @@ public class CartService: ICartService
     // Checks the relevance of products and returns a new cart
     public async Task<Cart> Check(Cart cart)
     {
-        ProductList<int> products = new ProductList<int>();
+        ProductListDTO<int> products = new ProductListDTO<int>();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
         {
-            products.Products.Add(cartProduct.ProductId);
+            products.Products.Add(cartProduct.ProductDTOId);
         }
 
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
-        ProductList<Product> response = await RabbitMQClient.Request<ProductList<int>, ProductList<Product>>(_bus, products, uri);
+        ProductListDTO<ProductDTO> response =
+            await RabbitMQClient.Request<ProductListDTO<int>, ProductListDTO<ProductDTO>>(_bus, products, uri);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones
@@ -114,7 +114,7 @@ public class CartService: ICartService
                 continue;
             }
 
-            if (response.Products[i].Id == cart.CartProducts[i].Product.Id)
+            if (response.Products[i].Id == cart.CartProducts[i].ProductDTOId)
             {
                 cart.CartProducts[i].Product = response.Products[i];
                 cart.CartProducts[i].ComputeTotalValue();

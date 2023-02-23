@@ -112,15 +112,15 @@ public class ProductService: IProductService
     }
 
     // Returns actuality products by ID
-    public async Task<ProductList<Infrastructure.Models.Product>> CheckProducts(ProductList<int> productList)
+    public async Task<ProductListDTO<ProductDTO>> CheckProducts(ProductListDTO<int> productList)
     {
-        ProductList<Infrastructure.Models.Product> products = new();
+        ProductListDTO<ProductDTO> products = new();
         foreach (var productId in productList.Products)
         {
             var product = await _db.Products.SingleOrDefaultAsync(x => x.Id == productId);
 
             if (product != null && product.IsSale)
-                products.Products.Add(_mapper.Map<Infrastructure.Models.Product>(product));
+                products.Products.Add(_mapper.Map<ProductDTO>(product));
             else
                 products.Products.Add(null);
         }

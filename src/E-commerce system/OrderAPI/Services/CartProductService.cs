@@ -2,15 +2,20 @@
 using OrderAPI.Models;
 using OrderAPI.Services.Interfaces;
 using Infrastructure.Exceptions;
+using Infrastructure.DTO;
+using Infrastructure;
+using MassTransit;
 
 namespace OrderAPI.Services;
 
 public class CartProductService: ICartProductService
 {
     private readonly Context _db;
-    public CartProductService(Context context)
+    private readonly IBusControl _bus;
+    public CartProductService(Context context, IBusControl bus)
     {
         _db = context;
+        _bus = bus;
     }
 
     public async Task<CartProduct> Create(CartProduct cartProduct)
@@ -18,12 +23,18 @@ public class CartProductService: ICartProductService
         if (cartProduct.Id != 0)
             cartProduct.Id = 0;
 
+        // Getting of product by ID from Catalog service
+        ProductDTO productDTO = new() { Id = cartProduct.ProductDTOId };
+        Uri uri = new("rabbitmq://localhost/getProductQueue");
+        ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
+
         //todo: new Exception - передача идентификатора не своей корзины
 
-        if (_db.CartProducts.Any(x => x.ProductId == cartProduct.ProductId && x.CartId == cartProduct.CartId))
+        if (_db.CartProducts.Any(x => x.ProductDTOId == cartProduct.ProductDTOId && x.CartId == cartProduct.CartId))
         {
-            CartProduct product = await _db.CartProducts.Include(x => x.Product).SingleAsync(x => x.ProductId == cartProduct.ProductId
-                                                                                                && x.CartId == cartProduct.CartId);
+            CartProduct product = await _db.CartProducts.Include(x => x.Product)
+                .SingleAsync(x => x.ProductDTOId == cartProduct.ProductDTOId && x.CartId == cartProduct.CartId);
+
             product.Quantity += cartProduct.Quantity;
             product.ComputeTotalValue();
 

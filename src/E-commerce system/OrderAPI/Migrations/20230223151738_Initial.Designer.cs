@@ -11,7 +11,7 @@ using OrderAPI.Models;
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230203102857_Initial")]
+    [Migration("20230223151738_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,22 +20,24 @@ namespace OrderAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("Infrastructure.Models.Product", b =>
+            modelBuilder.Entity("Infrastructure.DTO.ProductDTO", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("ErrorMessage")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Price")
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("Price")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("ProductDTO");
                 });
 
             modelBuilder.Entity("OrderAPI.Models.Cart", b =>
@@ -63,7 +65,7 @@ namespace OrderAPI.Migrations
                     b.Property<int?>("OrderId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductDTOId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -78,7 +80,7 @@ namespace OrderAPI.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductDTOId");
 
                     b.ToTable("CartProducts");
                 });
@@ -115,9 +117,9 @@ namespace OrderAPI.Migrations
                         .WithMany("CartProducts")
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("Infrastructure.Models.Product", "Product")
+                    b.HasOne("Infrastructure.DTO.ProductDTO", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductDTOId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,4 +1,4 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.DTO;
 using System.ComponentModel.DataAnnotations;
 
 namespace OrderAPI.Models;
@@ -9,8 +9,8 @@ public class CartProduct
 
 
     [Range(1, 9999999999999999999, ErrorMessage = "Invalid ProductId")]
-    public int ProductId { get; set; }
-    public Product Product { get; set; }
+    public int ProductDTOId { get; set; }
+    public ProductDTO? Product { get; set; }
 
 
     [Range(1, 999999, ErrorMessage = "Invalid quantity")]
@@ -32,6 +32,6 @@ public class CartProduct
 
     public void ComputeTotalValue()
     {
-        TotalValue = Quantity * Product.Price;
+        TotalValue = Quantity * Product.Price.Value;
     }
 }

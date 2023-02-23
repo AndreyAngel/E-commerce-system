@@ -26,7 +26,8 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<ProductsConsumer>();
+    x.AddConsumer<CheckProductsConsumer>();
+    x.AddConsumer<GetProductConsumer>();
 
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
@@ -38,8 +39,14 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("checkProductsQueue", ep =>
         {
             ep.PrefetchCount = 16;
-            ep.UseMessageRetry(r => r.Interval(2, 100));
-            ep.ConfigureConsumer<ProductsConsumer>(provider);
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<CheckProductsConsumer>(provider);
+        });
+        cfg.ReceiveEndpoint("getProductQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<GetProductConsumer>(provider);
         });
     }));
 });

@@ -1,6 +1,7 @@
 ﻿using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using CatalogAPI.Exceptions;
 
 namespace CatalogAPI.Services;
 
@@ -20,12 +21,12 @@ public class BrandService: IBrandService
     public async Task<Brand> GetById(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid BrandId");
 
         var res = await _db.Brands.SingleOrDefaultAsync(x => x.Id == id);
 
         if (res == null)
-            throw new Exception("Brand not found!"); //todo: new exception
+            throw new NotFoundException(nameof(id), "Brand with this Id was not founded!");
 
         return res;
     }
@@ -35,7 +36,7 @@ public class BrandService: IBrandService
         var res = await _db.Brands.SingleOrDefaultAsync(x => x.Name == name);
 
         if (res == null)
-            throw new Exception("Brand not found!"); //todo: new exception
+            throw new NotFoundException(nameof(name), "Brand with this name was not founded!");
 
         return res;
     }
@@ -46,7 +47,7 @@ public class BrandService: IBrandService
             brand.Id = 0;
 
         if (await GetByName(brand.Name) != null)
-            throw new Exception("Brand with this name alredy exists!");//todo: new exception
+            throw new ObjectNotUniqueException(nameof(brand.Name), "Brand with this name alredy exists!");
 
         await _db.Brands.AddAsync(brand);
         await _db.SaveChangesAsync();
@@ -56,10 +57,10 @@ public class BrandService: IBrandService
     public async Task<Brand> Update(Brand brand)
     {
         if (brand.Id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(brand.Id));
+            throw new ArgumentOutOfRangeException(nameof(brand.Id), "Invalid brandId");
 
         if (await GetById(brand.Id) == null)
-            throw new Exception("Brand bot found!");//todo: new exception
+            throw new NotFoundException(nameof(brand.Id), "Brand with this Id was not founded!");
 
         _db.Brands.Update(brand);
         await _db.SaveChangesAsync();

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using CatalogAPI.Models;
 using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Services;
+using CatalogAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source =
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddMassTransit(x =>
 {

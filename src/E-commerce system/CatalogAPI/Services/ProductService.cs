@@ -2,15 +2,18 @@
 using CatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DTO;
+using AutoMapper;
 
 namespace CatalogAPI.Services;
 
 public class ProductService: IProductService
 {
     private readonly Context _db;
-    public ProductService(Context context)
+    private readonly IMapper _mapper;
+    public ProductService(Context context, IMapper mapper)
     {
         _db = context;
+        _mapper = mapper;
     }
 
     public async Task<List<Product>> Get()
@@ -116,13 +119,7 @@ public class ProductService: IProductService
             var product = await _db.Products.SingleOrDefaultAsync(x => x.Id == productId);
 
             if (product != null && product.IsSale)
-                // todo: to use AutoMapper
-                products.Products.Add(new Infrastructure.Models.Product()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Price = product.Price
-                });
+                products.Products.Add(_mapper.Map<Infrastructure.Models.Product>(product));
             else
                 products.Products.Add(null);
         }

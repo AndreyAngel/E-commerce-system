@@ -20,7 +20,7 @@ public class BrandService: IBrandService
     public async Task<Brand> GetById(int id)
     {
         if (id <= 0)
-            throw new Exception("id <= 0"); //todo: new exception
+            throw new ArgumentOutOfRangeException(nameof(id));
 
         var res = await _db.Brands.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -43,9 +43,9 @@ public class BrandService: IBrandService
     public async Task<Brand> Create(Brand brand)
     {
         if (brand.Id != 0)
-            throw new Exception("Нельзя передавать id!"); //todo: new exception
+            brand.Id = 0;
 
-        if (GetByName(brand.Name) != null)
+        if (await GetByName(brand.Name) != null)
             throw new Exception("Brand with this name alredy exists!");//todo: new exception
 
         await _db.Brands.AddAsync(brand);
@@ -56,9 +56,9 @@ public class BrandService: IBrandService
     public async Task<Brand> Update(Brand brand)
     {
         if (brand.Id <= 0)
-            throw new Exception("id <= 0"); //todo: new exception
+            throw new ArgumentOutOfRangeException(nameof(brand.Id));
 
-        if (GetById(brand.Id) == null)
+        if (await GetById(brand.Id) == null)
             throw new Exception("Brand bot found!");//todo: new exception
 
         _db.Brands.Update(brand);

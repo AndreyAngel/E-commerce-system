@@ -24,7 +24,7 @@ public class ProductService: IProductService
     public async Task<Product> GetById(int id)
     {
         if (id <= 0)
-            throw new Exception("id <= 0"); // todo: new exception
+            throw new ArgumentOutOfRangeException(nameof(id));
 
         var res = await _db.Products.Include(x => x.Category).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -87,9 +87,9 @@ public class ProductService: IProductService
     public async Task<Product> Create(Product product)
     {
         if (product.Id != 0)
-            throw new Exception("Нельзя передавать id!"); //todo: new exception
+            product.Id = 0;
 
-        if (GetByName(product.Name) != null)
+        if (await GetByName(product.Name) != null)
             throw new Exception("Product with this name already exists!"); //todo: new exception
 
         await _db.Products.AddAsync(product);
@@ -100,9 +100,9 @@ public class ProductService: IProductService
     public async Task<Product> Update(Product product)
     {
         if (product.Id <= 0)
-            throw new Exception("id <= 0"); //todo: new exception
+            throw new ArgumentOutOfRangeException(nameof(product.Id));
 
-        if (GetById(product.Id) == null)
+        if (await GetById(product.Id) == null)
             throw new Exception("Product bot found!");//todo: new exception
 
         _db.Products.Update(product);

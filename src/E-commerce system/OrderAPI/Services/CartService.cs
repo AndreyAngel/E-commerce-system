@@ -20,6 +20,9 @@ public class CartService: ICartService
 
     public async Task<Cart> GetById(int id)
     {
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id));
+
         Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -33,8 +36,16 @@ public class CartService: ICartService
         return result;
     }
 
-    public async Task<Cart> Create(Cart cart)
+    // The cart is created automatically after user registration 
+    public async Task<Cart> Create(int id)
     {
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id));
+
+        //todo: передача идентификатора не равного UserId
+
+        Cart cart = new() { Id = id };
+
         await _db.Carts.AddAsync(cart);
         await _db.SaveChangesAsync();
 
@@ -43,7 +54,10 @@ public class CartService: ICartService
 
     public async Task<Cart> ComputeTotalValue(int id)
     {
-        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id));
+
+        var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new Exception("Cart not found!");
@@ -57,7 +71,12 @@ public class CartService: ICartService
 
     public async Task<Cart> Clear(int id)
     {
-        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        if (id <= 0)
+            throw new ArgumentOutOfRangeException(nameof(id));
+
+        //todo: передача идентификатора не равного UserId
+
+        var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new Exception("Cart not found!");

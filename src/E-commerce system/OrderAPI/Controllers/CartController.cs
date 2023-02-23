@@ -33,20 +33,6 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Cart>> Create(Cart cart)
-        {
-            try
-            {
-                Cart res = await _cartService.Create(cart);
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost]
         public async Task<ActionResult<Cart>> AddProduct(CartProduct cartProduct)
         {
             try

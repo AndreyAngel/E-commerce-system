@@ -3,7 +3,7 @@ using CatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DTO;
 using AutoMapper;
-using CatalogAPI.Exceptions;
+using Infrastructure.Exceptions;
 
 namespace CatalogAPI.Services;
 

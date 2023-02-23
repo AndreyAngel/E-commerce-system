@@ -5,6 +5,7 @@ using MassTransit;
 using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Models;
+using Infrastructure.Exceptions;
 
 namespace OrderAPI.Services;
 
@@ -21,12 +22,12 @@ public class CartService: ICartService
     public async Task<Cart> GetById(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
 
         Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
-            throw new Exception("Cart not found!");
+            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
 
         Cart result = await Check(cart);
 
@@ -40,7 +41,7 @@ public class CartService: ICartService
     public async Task<Cart> Create(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
 
         //todo: передача идентификатора не равного UserId
 
@@ -55,12 +56,12 @@ public class CartService: ICartService
     public async Task<Cart> ComputeTotalValue(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
 
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
-            throw new Exception("Cart not found!");
+            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
 
         cart.ComputeTotalValue();
         _db.Carts.Update(cart);
@@ -72,14 +73,14 @@ public class CartService: ICartService
     public async Task<Cart> Clear(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
 
         //todo: передача идентификатора не равного UserId
 
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
-            throw new Exception("Cart not found!");
+            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
 
         cart.Clear();
 

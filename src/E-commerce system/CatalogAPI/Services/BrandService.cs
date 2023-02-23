@@ -1,7 +1,7 @@
 ﻿using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using CatalogAPI.Exceptions;
+using Infrastructure.Exceptions;
 
 namespace CatalogAPI.Services;
 

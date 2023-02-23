@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderAPI.Models;
 using OrderAPI.Services.Interfaces;
+using Infrastructure.Exceptions;
 
 namespace OrderAPI.Services;
 
@@ -39,12 +40,12 @@ public class CartProductService: ICartProductService
     public async Task<CartProduct> Update(CartProduct cartProduct)
     {
         if (cartProduct.Id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cartProduct.Id));
+            throw new ArgumentOutOfRangeException(nameof(cartProduct.Id), "Invalid cart product Id");
 
         //todo: new Exception - передача идентификатора не своей корзины
 
         if (await _db.CartProducts.SingleOrDefaultAsync(x => x.Id == cartProduct.Id) == null)
-            throw new Exception("Cart product not found!"); //todo: new exception
+            throw new NotFoundException(nameof(cartProduct.Id), "Cart product with this Id not founded!");
 
         cartProduct.ComputeTotalValue();
         _db.CartProducts.Update(cartProduct);
@@ -56,12 +57,12 @@ public class CartProductService: ICartProductService
     public async Task Delete(int id)
     {
         if (id <= 0)
-            throw new ArgumentOutOfRangeException(nameof(id));
+            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart product Id");
 
         var res = await _db.CartProducts.SingleOrDefaultAsync(x => x.Id == id);
 
         if (res == null)
-            throw new Exception("Cart product not found!"); //todo: new exception
+            throw new NotFoundException(nameof(res.Id), "Cart product with this Id not founded!");
 
         _db.CartProducts.Remove(res);
         await _db.SaveChangesAsync();

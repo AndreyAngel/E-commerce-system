@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Exceptions;
+﻿namespace Infrastructure.Exceptions;
 
 public class NotFoundException: ArgumentException
 {

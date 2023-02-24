@@ -132,7 +132,8 @@ public class CartService: ICartService
 
             if (response.Products[i].Id == model.CartProducts[i].ProductId)
             {
-                model.CartProducts[i].Product = response.Products[i];
+                var product = _mapper.Map<ProductViewModel>(response.Products[i]);
+                model.CartProducts[i].Product = product;
                 model.CartProducts[i].ComputeTotalValue();
             }
             else

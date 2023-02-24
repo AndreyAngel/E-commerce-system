@@ -5,7 +5,7 @@ namespace OrderAPI.Services.Interfaces;
 
 public interface ICartProductService
 {
-    Task<CartProductViewModel> Create(CartProduct cartProduct);
-    Task<CartProductViewModel> Update(CartProductViewModel cartProduct);
+    Task<CartProductViewModelResponse> Create(CartProduct cartProduct);
+    Task<CartProduct> Update(CartProduct cartProduct);
     Task Delete(int id);
 }

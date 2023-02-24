@@ -1,6 +1,4 @@
-﻿using OrderAPI.Models.ViewModels;
-
-namespace OrderAPI.Models.DataBase;
+﻿namespace OrderAPI.Models.DataBase;
 
 public class CartProduct
 {
@@ -17,4 +15,9 @@ public class CartProduct
 
     public int? OrderId { get; set; }
     public Order? Order { get; set; }
+
+    public void ComputeTotalValue(double price)
+    {
+        TotalValue = Quantity * price;
+    }
 }

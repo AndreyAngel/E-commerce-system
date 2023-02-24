@@ -22,50 +22,51 @@ public class CartProductService: ICartProductService
         _mapper = mapper;
     }
 
-    public async Task<CartProductViewModel> Create(CartProduct cartProduct)
+    public async Task<CartProductViewModelResponse> Create(CartProduct cartProduct)
     {
         if (cartProduct.Id != 0)
             cartProduct.Id = 0;
 
-        CartProductViewModel model = _mapper.Map<CartProductViewModel>(cartProduct);
-
         // Getting of product by ID from Catalog service
-        ProductDTO productDTO = new() { Id = model.ProductId };
+        ProductDTO productDTO = new() { Id = cartProduct.ProductId };
         Uri uri = new("rabbitmq://localhost/getProductQueue");
         ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
 
         if (response.ErrorMessage != null)
             throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
 
-        model.Product = response;
-
         //todo: new Exception - передача идентификатора не своей корзины
 
 
         // проверка на наличие уже такого товара в карзине
-        if (_db.CartProducts.Any(x => x.ProductId == model.ProductId && x.CartId == model.CartId))
+        if (_db.CartProducts.Any(x => x.ProductId == cartProduct.ProductId && x.CartId == cartProduct.CartId))
         {
             CartProduct product = await _db.CartProducts
-                .SingleAsync(x => x.ProductId == model.ProductId && x.CartId == model.CartId);
+                .SingleAsync(x => x.ProductId == cartProduct.ProductId && x.CartId == cartProduct.CartId);
 
-            model.Quantity += product.Quantity;
-            model.Id = product.Id;
-            model.ComputeTotalValue();
+            product.Quantity += cartProduct.Quantity;
+            product.ComputeTotalValue(response.Price.Value);
 
-            return await Update(model);
+            await Update(product);
+
+            var res = _mapper.Map<CartProductViewModelResponse>(product);
+            res.Product = _mapper.Map<ProductViewModel>(response);
+
+            return res;
         }
 
-        model.ComputeTotalValue();
+        cartProduct.ComputeTotalValue(response.Price.Value);
 
-        var result = _mapper.Map<CartProduct>(model);
-
-        await _db.CartProducts.AddAsync(result);
+        await _db.CartProducts.AddAsync(cartProduct);
         await _db.SaveChangesAsync();
+
+        var model = _mapper.Map<CartProductViewModelResponse>(cartProduct);
+        model.Product = _mapper.Map<ProductViewModel>(response);
 
         return model;
     }
 
-    public async Task<CartProductViewModel> Update(CartProductViewModel cartProduct)
+    public async Task<CartProduct> Update(CartProduct cartProduct)
     {
         if (cartProduct.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(cartProduct.Id), "Invalid cart product Id");
@@ -83,12 +84,9 @@ public class CartProductService: ICartProductService
         if (response.ErrorMessage != null)
             throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
 
-        cartProduct.Product = response;
-        cartProduct.ComputeTotalValue();
+        cartProduct.ComputeTotalValue(response.Price.Value);
 
-        var res = _mapper.Map<CartProduct>(cartProduct);
-
-        _db.CartProducts.Update(res);
+        _db.CartProducts.Update(cartProduct);
         await _db.SaveChangesAsync();
 
         return cartProduct;

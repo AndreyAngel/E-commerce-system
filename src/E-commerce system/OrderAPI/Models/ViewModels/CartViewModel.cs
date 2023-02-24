@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using OrderAPI.Models.DataBase;
 
 namespace OrderAPI.Models.ViewModels;
 
@@ -10,7 +9,7 @@ public class CartViewModel
     [Required(ErrorMessage = "Invalid CartId")]
     public int Id { get; set; } // Generated during user registration (UserId == CartId)
 
-    public List<CartProductViewModel> CartProducts { get; set; } = new List<CartProductViewModel>();
+    public List<CartProductViewModelResponse> CartProducts { get; set; } = new List<CartProductViewModelResponse>();
 
 
     [Range(0, 9999999999999999999, ErrorMessage = "Invalid total value")]

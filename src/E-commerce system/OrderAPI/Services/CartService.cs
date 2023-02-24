@@ -1,10 +1,12 @@
 ﻿using OrderAPI.Services.Interfaces;
-using OrderAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
+using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels;
+using AutoMapper;
 
 namespace OrderAPI.Services;
 
@@ -12,32 +14,36 @@ public class CartService: ICartService
 {
     private readonly Context _db;
     private readonly IBusControl _bus;
-    public CartService(Context context, IBusControl bus)
+    private readonly IMapper _mapper;
+    public CartService(Context context, IBusControl bus, IMapper mapper)
     {
         _db = context;
         _bus = bus;
+        _mapper = mapper;
     }
 
-    public async Task<Cart> GetById(int id)
+    public async Task<CartViewModel> GetById(int id)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
 
-        Cart? cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
+        var cart = await _db.Carts.Include(x => x.CartProducts).AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
 
-        Cart result = await Check(cart);
+        CartViewModel result = await Check(cart);
 
-        _db.Carts.Update(result);
+        cart = _mapper.Map<Cart>(result);
+
+        _db.Carts.Update(cart);
         await _db.SaveChangesAsync();
 
         return result;
     }
 
     // The cart is created automatically after user registration 
-    public async Task<Cart> Create(int id)
+    public async Task<CartViewModel> Create(int id)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
@@ -49,10 +55,12 @@ public class CartService: ICartService
         await _db.Carts.AddAsync(cart);
         await _db.SaveChangesAsync();
 
-        return cart;
+        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+
+        return model;
     }
 
-    public async Task<Cart> ComputeTotalValue(int id)
+    public async Task<CartViewModel> ComputeTotalValue(int id)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
@@ -62,14 +70,18 @@ public class CartService: ICartService
         if (cart == null)
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
 
-        cart.ComputeTotalValue();
+        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+
+        model.ComputeTotalValue();
+        cart.TotalValue = model.TotalValue;
+
         _db.Carts.Update(cart);
         await _db.SaveChangesAsync();
 
-        return cart;
+        return model;
     }
 
-    public async Task<Cart> Clear(int id)
+    public async Task<CartViewModel> Clear(int id)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
@@ -86,22 +98,26 @@ public class CartService: ICartService
         _db.Carts.Update(cart);
         await _db.SaveChangesAsync();
 
-        return cart;
+        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+
+        return model;
     }
 
     // Checks the relevance of products and returns a new cart
-    public async Task<Cart> Check(Cart cart)
+    public async Task<CartViewModel> Check(Cart cart)
     {
-        ProductListDTO<int> products = new ProductListDTO<int>();
+        ProductListDTO<int> productsId = new ProductListDTO<int>();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
         {
-            products.Products.Add(cartProduct.ProductDTOId);
+            productsId.Products.Add(cartProduct.ProductId);
         }
 
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
         ProductListDTO<ProductDTO> response =
-            await RabbitMQClient.Request<ProductListDTO<int>, ProductListDTO<ProductDTO>>(_bus, products, uri);
+            await RabbitMQClient.Request<ProductListDTO<int>, ProductListDTO<ProductDTO>>(_bus, productsId, uri);
+
+        CartViewModel model = _mapper.Map<CartViewModel>(cart);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones
@@ -114,10 +130,10 @@ public class CartService: ICartService
                 continue;
             }
 
-            if (response.Products[i].Id == cart.CartProducts[i].ProductDTOId)
+            if (response.Products[i].Id == model.CartProducts[i].ProductId)
             {
-                cart.CartProducts[i].Product = response.Products[i];
-                cart.CartProducts[i].ComputeTotalValue();
+                model.CartProducts[i].Product = response.Products[i];
+                model.CartProducts[i].ComputeTotalValue();
             }
             else
                 indexes.Add(i);
@@ -125,11 +141,11 @@ public class CartService: ICartService
         // Delete the rest
         for(int i = 0; i < indexes.Count; i++)
         {
-            cart.CartProducts.RemoveAt(indexes[i] - i);
+            model.CartProducts.RemoveAt(indexes[i] - i);
         }
 
-        cart.ComputeTotalValue();
-
-        return cart;
+        model.ComputeTotalValue();
+        
+        return model;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using OrderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.Models;
+using OrderAPI.Models.ViewModels;
+using OrderAPI.Models.DataBase;
 
 namespace OrderAPI.Controllers
 {
@@ -19,11 +20,11 @@ namespace OrderAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Cart>> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                Cart cart = await _cartService.GetById(id);
+                CartViewModel cart = await _cartService.GetById(id);
                 return Ok(cart);
             }
             catch (Exception ex)
@@ -33,14 +34,16 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Cart>> AddProduct(CartProduct cartProduct)
+        public async Task<IActionResult> AddProduct(CartProduct cartProduct)
         {
             try
             {
-                CartProduct product = await _productService.Create(cartProduct);
-                Cart cart = await _cartService.ComputeTotalValue(product.CartId);
+                CartProductViewModel product = await _productService.Create(cartProduct);
+                await _cartService.ComputeTotalValue(product.CartId);
+                
+                // todo: изменить статус код ответа
 
-                return Ok(cart);
+                return Ok(product);
             }
             catch (Exception ex) 
             {
@@ -50,12 +53,12 @@ namespace OrderAPI.Controllers
 
         [HttpDelete]
         [Route("{IdCart:int},{IdProduct:int}")]
-        public async Task<ActionResult<Cart>> DeleteProduct(int IdCart, int IdProduct)
+        public async Task<IActionResult> DeleteProduct(int IdCart, int IdProduct)
         {
             try
             {
                 await _productService.Delete(IdProduct);
-                Cart cart = await _cartService.ComputeTotalValue(IdCart);
+                CartViewModel cart = await _cartService.ComputeTotalValue(IdCart);
                 
                 return Ok(cart);
             }
@@ -66,12 +69,12 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Cart>> QuantityChange(CartProduct cartProduct)
+        public async Task<IActionResult> QuantityChange(CartProductViewModel cartProduct)
         {
             try
             {
                 await _productService.Update(cartProduct);
-                Cart cart = await _cartService.ComputeTotalValue(cartProduct.CartId);
+                CartViewModel cart = await _cartService.ComputeTotalValue(cartProduct.CartId);
 
                 return Ok(cart);
             }
@@ -83,11 +86,12 @@ namespace OrderAPI.Controllers
 
         [HttpDelete]
         [Route("{IdCart:int}")]
-        public async Task<ActionResult<Cart>> Clear(int IdCart)
+        public async Task<IActionResult> Clear(int IdCart)
         {
             try
             {
-                return await _cartService.Clear(IdCart);
+                var res = await _cartService.Clear(IdCart);
+                return Ok(res);
             }
             catch (Exception ex)
             {

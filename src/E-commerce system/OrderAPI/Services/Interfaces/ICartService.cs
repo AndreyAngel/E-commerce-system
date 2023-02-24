@@ -1,12 +1,13 @@
-﻿using OrderAPI.Models;
+﻿using OrderAPI.Models.ViewModels;
+using OrderAPI.Models.DataBase;
 
 namespace OrderAPI.Services.Interfaces;
 
 public interface ICartService
 {
-    Task<Cart> GetById(int id);
-    Task<Cart> Create(int id);
-    Task<Cart> ComputeTotalValue(int id);
-    Task<Cart> Clear(int id);
-    Task<Cart> Check(Cart cart);
+    Task<CartViewModel> GetById(int id);
+    Task<CartViewModel> Create(int id);
+    Task<CartViewModel> ComputeTotalValue(int id);
+    Task<CartViewModel> Clear(int id);
+    Task<CartViewModel> Check(Cart cart);
 }

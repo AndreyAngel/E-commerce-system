@@ -28,15 +28,15 @@ public class GetProductConsumer: IConsumer<ProductDTO>
         }
         catch(NotFoundException ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { ErrorMessage = ex.Message});
+            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message});
         }
         catch (ArgumentOutOfRangeException ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { ErrorMessage = ex.Message });
+            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
         }
         catch(Exception ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { ErrorMessage = ex.Message });
+            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
         }
     }
 }

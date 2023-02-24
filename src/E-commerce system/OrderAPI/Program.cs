@@ -1,6 +1,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using OrderAPI.Models;
+using OrderAPI;
+using OrderAPI.Models.DataBase;
 using OrderAPI.Services;
 using OrderAPI.Services.Interfaces;
 
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source =
 
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartProductService, CartProductService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddMassTransit(x =>
 {

@@ -14,7 +14,8 @@ namespace OrderAPI.Migrations
                 name: "Carts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     TotalValue = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
@@ -38,27 +39,12 @@ namespace OrderAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductDTO",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<double>(type: "REAL", nullable: true),
-                    ErrorMessage = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductDTO", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CartProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProductDTOId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     TotalValue = table.Column<double>(type: "REAL", nullable: false),
                     CartId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -78,12 +64,6 @@ namespace OrderAPI.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CartProducts_ProductDTO_ProductDTOId",
-                        column: x => x.ProductDTOId,
-                        principalTable: "ProductDTO",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -95,11 +75,6 @@ namespace OrderAPI.Migrations
                 name: "IX_CartProducts_OrderId",
                 table: "CartProducts",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartProducts_ProductDTOId",
-                table: "CartProducts",
-                column: "ProductDTOId");
         }
 
         /// <inheritdoc />
@@ -113,9 +88,6 @@ namespace OrderAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "ProductDTO");
         }
     }
 }

@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OrderAPI.Models;
+using OrderAPI.Models.DataBase;
 
 #nullable disable
 
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230223151738_Initial")]
+    [Migration("20230224042504_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,29 +20,10 @@ namespace OrderAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("Infrastructure.DTO.ProductDTO", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("Price")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductDTO");
-                });
-
-            modelBuilder.Entity("OrderAPI.Models.Cart", b =>
-                {
-                    b.Property<int>("Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalValue")
@@ -53,7 +34,7 @@ namespace OrderAPI.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.CartProduct", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.CartProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +46,7 @@ namespace OrderAPI.Migrations
                     b.Property<int?>("OrderId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductDTOId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -80,12 +61,10 @@ namespace OrderAPI.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductDTOId");
-
                     b.ToTable("CartProducts");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.Order", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,37 +84,29 @@ namespace OrderAPI.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.CartProduct", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.CartProduct", b =>
                 {
-                    b.HasOne("OrderAPI.Models.Cart", "Cart")
+                    b.HasOne("OrderAPI.Models.DataBase.Cart", "Cart")
                         .WithMany("CartProducts")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OrderAPI.Models.Order", "Order")
+                    b.HasOne("OrderAPI.Models.DataBase.Order", "Order")
                         .WithMany("CartProducts")
                         .HasForeignKey("OrderId");
-
-                    b.HasOne("Infrastructure.DTO.ProductDTO", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductDTOId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Cart");
 
                     b.Navigation("Order");
-
-                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.Cart", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.Cart", b =>
                 {
                     b.Navigation("CartProducts");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.Order", b =>
+            modelBuilder.Entity("OrderAPI.Models.DataBase.Order", b =>
                 {
                     b.Navigation("CartProducts");
                 });

@@ -1,15 +1,16 @@
 ﻿using Infrastructure.DTO;
+using OrderAPI.Models.DataBase;
 using System.ComponentModel.DataAnnotations;
 
-namespace OrderAPI.Models;
+namespace OrderAPI.Models.ViewModels;
 
-public class CartProduct
+public class CartProductViewModel
 {
     public int Id { get; set; }
 
 
     [Range(1, 9999999999999999999, ErrorMessage = "Invalid ProductId")]
-    public int ProductDTOId { get; set; }
+    public int ProductId { get; set; }
     public ProductDTO? Product { get; set; }
 
 
@@ -18,12 +19,12 @@ public class CartProduct
 
 
     [Range(0, 9999999999999999999, ErrorMessage = "Invalid total value")]
-    public double TotalValue { get; set; }
+    public double TotalValue { get; set; } = 0;
 
 
     [Range(1, 9999999999999999999, ErrorMessage = "Invalid CartId")]
     public int CartId { get; set; }
-    public Cart? Cart { get; set; }
+    public CartViewModel? Cart { get; set; }
 
 
     [Range(1, 9999999999999999999, ErrorMessage = "Invalid OrderId")]

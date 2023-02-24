@@ -1,4 +1,4 @@
-﻿using OrderAPI.Models;
+﻿using OrderAPI.Models.DataBase;
 
 namespace OrderAPI.Services.Interfaces;
 

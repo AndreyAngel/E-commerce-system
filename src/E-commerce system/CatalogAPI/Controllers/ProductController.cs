@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CatalogAPI.Models;
 using CatalogAPI.Services.Interfaces;
+using Infrastructure.Exceptions;
 
 namespace CatalogAPI.Controllers;
 
@@ -38,6 +39,14 @@ public class ProductController : ControllerBase
             var result = await _service.GetById(id);
             return Ok(result);
         }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -52,6 +61,10 @@ public class ProductController : ControllerBase
         {
             var result = await _service.GetByName(name);
             return Ok(result);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -68,6 +81,14 @@ public class ProductController : ControllerBase
             var result = await _service.GetByBrandId(brandId);
             return Ok(result);
         }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -82,6 +103,10 @@ public class ProductController : ControllerBase
         {
             var result = await _service.GetByBrandName(brandName);
             return Ok(result);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -98,6 +123,14 @@ public class ProductController : ControllerBase
             var result = await _service.GetByCategoryId(categoryId);
             return Ok(result);
         }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -113,6 +146,10 @@ public class ProductController : ControllerBase
             var result = await _service.GetByCategoryName(categoryName);
             return Ok(result);
         }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -125,7 +162,11 @@ public class ProductController : ControllerBase
         try
         {
             var result = await _service.Create(product);
-            return Ok(result);
+            return Created(new Uri($"http://localhost:5192/api/v1/cat/product/GetById/{result.Id}"), result);
+        }
+        catch (ObjectNotUniqueException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (Exception ex)
         {
@@ -140,6 +181,14 @@ public class ProductController : ControllerBase
         {
             var result = await _service.Update(product);
             return Ok(result);
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {

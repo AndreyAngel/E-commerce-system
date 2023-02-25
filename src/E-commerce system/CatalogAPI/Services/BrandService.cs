@@ -46,7 +46,7 @@ public class BrandService: IBrandService
         if (brand.Id != 0)
             brand.Id = 0;
 
-        if (await GetByName(brand.Name) != null)
+        if (await _db.Brands.SingleOrDefaultAsync(x => x.Name == brand.Name) != null)
             throw new ObjectNotUniqueException(nameof(brand.Name), "Brand with this name alredy exists!");
 
         await _db.Brands.AddAsync(brand);
@@ -59,7 +59,7 @@ public class BrandService: IBrandService
         if (brand.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(brand.Id), "Invalid brandId");
 
-        if (await GetById(brand.Id) == null)
+        if (await _db.Brands.SingleOrDefaultAsync(x => x.Id == brand.Id) == null)
             throw new NotFoundException(nameof(brand.Id), "Brand with this Id was not founded!");
 
         _db.Brands.Update(brand);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models.ViewModels;
 using OrderAPI.Models.DataBase;
 using AutoMapper;
+using Infrastructure.Exceptions;
 
 namespace OrderAPI.Controllers
 {
@@ -30,7 +31,19 @@ namespace OrderAPI.Controllers
                 CartViewModel cart = await _cartService.GetById(id);
                 return Ok(cart);
             }
-            catch (Exception ex)
+            catch(ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch(CatalogApiException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -50,6 +63,18 @@ namespace OrderAPI.Controllers
 
                 return Ok(product);
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (CatalogApiException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
@@ -66,6 +91,14 @@ namespace OrderAPI.Controllers
                 CartViewModel cart = await _cartService.ComputeTotalValue(cartId);
                 
                 return Ok(cart);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -84,6 +117,18 @@ namespace OrderAPI.Controllers
 
                 return Ok(cart);
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (CatalogApiException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -98,6 +143,14 @@ namespace OrderAPI.Controllers
             {
                 var res = await _cartService.Clear(cartId);
                 return Ok(res);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

@@ -47,6 +47,9 @@ public class ProductService: IProductService
 
     public async Task<List<Product>> GetByBrandId(int brandId)
     {
+        if (brandId <= 0)
+            throw new ArgumentOutOfRangeException(nameof(brandId), "Invalid productId");
+
         var res = _db.Brands.SingleOrDefaultAsync(x => x.Id == brandId);
 
         if (res == null)
@@ -67,6 +70,9 @@ public class ProductService: IProductService
 
     public async Task<List<Product>> GetByCategoryId(int categoryId)
     {
+        if (categoryId <= 0)
+            throw new ArgumentOutOfRangeException(nameof(categoryId), "Invalid productId");
+
         var res = _db.Categories.SingleOrDefaultAsync(x => x.Id == categoryId);
 
         if (res == null)

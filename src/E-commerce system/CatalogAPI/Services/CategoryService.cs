@@ -2,6 +2,7 @@
 using CatalogAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Exceptions;
+using System.Xml.Linq;
 
 namespace CatalogAPI.Services;
 
@@ -47,7 +48,7 @@ public class CategoryService: ICategoryService
         if (category.Id != 0)
             category.Id = 0;
 
-        if (await GetByName(category.Name) != null)
+        if (await _db.Categories.SingleOrDefaultAsync(x => x.Name == category.Name) != null)
             throw new ObjectNotUniqueException(nameof(category.Name), "Category with this name alredy exists!");
 
         await _db.Categories.AddAsync(category);

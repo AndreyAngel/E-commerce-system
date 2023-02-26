@@ -1,16 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MassTransit.NewIdFormatters;
+using System.ComponentModel.DataAnnotations;
 
 namespace CatalogAPI.Models
 {
-    public class Brand
+    public class Brand: BaseEntity
     {
-        public int Id { get; set; }
-
-        [Required(ErrorMessage = "Name not provided")]
-        public string? Name { get; set; }
-
-        public string? Description { get; set; }
-
-        public List<Product> Products { get; set; } = new List<Product>();
+        public virtual List<Product> Products { get; set; } = new List<Product>();
     }
 }

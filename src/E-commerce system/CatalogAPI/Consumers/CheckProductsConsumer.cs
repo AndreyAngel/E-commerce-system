@@ -15,7 +15,7 @@ public class CheckProductsConsumer : IConsumer<ProductListDTO<int>>
     public async Task Consume(ConsumeContext<ProductListDTO<int>> context)
     {
         var content = context.Message;
-        var res = await _service.CheckProducts(content);
+        var res = _service.CheckProducts(content);
         await context.RespondAsync<ProductListDTO<ProductDTO>>(res);
     }
 }

@@ -17,11 +17,11 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> Get()
+    public ActionResult<List<Product>> Get()
     {
         try
         {
-            var result = await _service.Get();
+            var result = _service.Get();
             return Ok(result);
         }
         catch (Exception ex)
@@ -32,11 +32,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<Product>> GetById(int id)
+    public ActionResult<Product> GetById(int id)
     {
         try
         {
-            var result = await _service.GetById(id);
+            var result = _service.GetById(id);
             return Ok(result);
         }
         catch (ArgumentOutOfRangeException ex)
@@ -55,11 +55,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{name}")]
-    public async Task<ActionResult<Product>> GetByName(string name)
+    public ActionResult<Product> GetByName(string name)
     {
         try
         {
-            var result = await _service.GetByName(name);
+            var result = _service.GetByName(name);
             return Ok(result);
         }
         catch (NotFoundException ex)
@@ -74,11 +74,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{brandId:int}")]
-    public async Task<ActionResult<Product>> GetByBrandId(int brandId)
+    public ActionResult<Product> GetByBrandId(int brandId)
     {
         try
         {
-            var result = await _service.GetByBrandId(brandId);
+            var result = _service.GetByBrandId(brandId);
             return Ok(result);
         }
         catch (ArgumentOutOfRangeException ex)
@@ -97,11 +97,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{brandName}")]
-    public async Task<ActionResult<Product>> GetByBrandName(string brandName)
+    public ActionResult<Product> GetByBrandName(string brandName)
     {
         try
         {
-            var result = await _service.GetByBrandName(brandName);
+            var result = _service.GetByBrandName(brandName);
             return Ok(result);
         }
         catch (NotFoundException ex)
@@ -116,11 +116,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{categoryId:int}")]
-    public async Task<ActionResult<Product>> GetByCategoryId(int categoryId)
+    public ActionResult<Product> GetByCategoryId(int categoryId)
     {
         try
         {
-            var result = await _service.GetByCategoryId(categoryId);
+            var result = _service.GetByCategoryId(categoryId);
             return Ok(result);
         }
         catch (ArgumentOutOfRangeException ex)
@@ -139,11 +139,11 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("{categoryName}")]
-    public async Task<ActionResult<Product>> GetByCategoryName(string categoryName)
+    public ActionResult<Product> GetByCategoryName(string categoryName)
     {
         try
         {
-            var result = await _service.GetByCategoryName(categoryName);
+            var result = _service.GetByCategoryName(categoryName);
             return Ok(result);
         }
         catch (NotFoundException ex)

@@ -22,7 +22,7 @@ public class GetProductConsumer: IConsumer<ProductDTO>
 
         try
         {
-            var product = await _service.GetById(content.Id);
+            var product = _service.GetById(content.Id);
             var result = _mapper.Map<ProductDTO>(product);
             await context.RespondAsync<ProductDTO>(result);
         }

@@ -21,6 +21,7 @@ builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source =
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

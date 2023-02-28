@@ -1,6 +1,5 @@
 ﻿using CatalogAPI.Models;
 using CatalogAPI.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.DTO;
 using AutoMapper;
 using Infrastructure.Exceptions;

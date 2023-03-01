@@ -1,31 +1,29 @@
 ﻿using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.Exceptions;
-using System.Xml.Linq;
 
 namespace CatalogAPI.Services;
 
 public class CategoryService: ICategoryService
 {
-    private readonly Context _db;
-    public CategoryService(Context context)
+    private readonly IRepositoryService<Category> _repositoryService;
+    public CategoryService(IRepositoryService<Category> repositoryService)
     {
-        _db = context;
+        _repositoryService = repositoryService;
     }
 
-    public async Task<List<Category>> Get()
+    public List<Category> Get()
     {
-        return await _db.Categories.ToListAsync();
+        return _repositoryService.GetAll().ToList();
     }
 
-    public async Task<Category> GetById(int id)
+    public Category GetById(int id)
     {
 
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid categoryId");
 
-        var res = await _db.Categories.SingleOrDefaultAsync(x => x.Id == id);
+        var res = _repositoryService.GetById(id);
 
         if (res == null)
             throw new NotFoundException(nameof(id), "Category with this Id was not founded!");
@@ -33,9 +31,9 @@ public class CategoryService: ICategoryService
         return res;
     }
 
-    public async Task<Category> GetByName(string name)
+    public Category GetByName(string name)
     {
-        var res = await _db.Categories.SingleOrDefaultAsync(x => x.Name == name);
+        var res = _repositoryService.GetByName(name);
 
         if (res == null)
             throw new NotFoundException(nameof(name), "Category with this name was not founded!");
@@ -48,11 +46,11 @@ public class CategoryService: ICategoryService
         if (category.Id != 0)
             category.Id = 0;
 
-        if (await _db.Categories.SingleOrDefaultAsync(x => x.Name == category.Name) != null)
+        if (_repositoryService.GetByName(category.Name) != null)
             throw new ObjectNotUniqueException(nameof(category.Name), "Category with this name alredy exists!");
 
-        await _db.Categories.AddAsync(category);
-        await _db.SaveChangesAsync();
+        await _repositoryService.AddAsync(category);
+
         return category;
     }
 
@@ -61,11 +59,11 @@ public class CategoryService: ICategoryService
         if (category.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(category.Id), "Invalid categoryId");
 
-        if (await GetById(category.Id) == null)
+        if (_repositoryService.GetById(category.Id) == null)
             throw new NotFoundException(nameof(category.Id), "Category with this Id was not founded!");
 
-        _db.Categories.Update(category);
-        await _db.SaveChangesAsync();
+        await _repositoryService.UpdateAsync(category);
+
         return category;
     }
 }

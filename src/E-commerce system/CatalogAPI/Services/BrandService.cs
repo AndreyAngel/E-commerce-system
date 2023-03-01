@@ -1,29 +1,28 @@
 ﻿using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.Exceptions;
 
 namespace CatalogAPI.Services;
 
 public class BrandService: IBrandService
 {
-    private readonly Context _db;
-    public BrandService(Context context)
+    private readonly IRepositoryService<Brand> _repositoryService;
+    public BrandService(IRepositoryService<Brand> repositoryService)
     {
-        _db = context;
+        _repositoryService = repositoryService;
     }
 
-    public async Task<List<Brand>> Get()
+    public List<Brand> Get()
     {
-        return await _db.Brands.ToListAsync();
+        return _repositoryService.GetAll().ToList();
     }
 
-    public async Task<Brand> GetById(int id)
+    public Brand GetById(int id)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid BrandId");
 
-        var res = await _db.Brands.SingleOrDefaultAsync(x => x.Id == id);
+        var res = _repositoryService.GetById(id);
 
         if (res == null)
             throw new NotFoundException(nameof(id), "Brand with this Id was not founded!");
@@ -31,9 +30,9 @@ public class BrandService: IBrandService
         return res;
     }
 
-    public async Task<Brand> GetByName(string name)
+    public Brand GetByName(string name)
     {
-        var res = await _db.Brands.SingleOrDefaultAsync(x => x.Name == name);
+        var res = _repositoryService.GetByName(name);
 
         if (res == null)
             throw new NotFoundException(nameof(name), "Brand with this name was not founded!");
@@ -46,11 +45,11 @@ public class BrandService: IBrandService
         if (brand.Id != 0)
             brand.Id = 0;
 
-        if (await _db.Brands.SingleOrDefaultAsync(x => x.Name == brand.Name) != null)
+        if (_repositoryService.GetByName(brand.Name) != null)
             throw new ObjectNotUniqueException(nameof(brand.Name), "Brand with this name alredy exists!");
 
-        await _db.Brands.AddAsync(brand);
-        await _db.SaveChangesAsync();
+        await _repositoryService.AddAsync(brand);
+
         return brand;
     }
 
@@ -59,11 +58,11 @@ public class BrandService: IBrandService
         if (brand.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(brand.Id), "Invalid brandId");
 
-        if (await _db.Brands.SingleOrDefaultAsync(x => x.Id == brand.Id) == null)
+        if (_repositoryService.GetById(brand.Id) == null)
             throw new NotFoundException(nameof(brand.Id), "Brand with this Id was not founded!");
 
-        _db.Brands.Update(brand);
-        await _db.SaveChangesAsync();
+        await _repositoryService.UpdateAsync(brand);
+
         return brand;
     }
 }

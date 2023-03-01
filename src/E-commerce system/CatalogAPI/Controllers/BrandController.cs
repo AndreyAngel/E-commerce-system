@@ -1,7 +1,9 @@
-﻿using CatalogAPI.Models;
-using CatalogAPI.Services.Interfaces;
+﻿using CatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Exceptions;
+using CatalogAPI.Models.ViewModels;
+using CatalogAPI.Models.DataBase;
+using AutoMapper;
 
 namespace CatalogAPI.Controllers;
 
@@ -11,18 +13,22 @@ namespace CatalogAPI.Controllers;
 public class BrandController : ControllerBase
 {
     private readonly IBrandService _service;
-    public BrandController(IBrandService service)
+    private readonly IMapper _mapper;
+    public BrandController(IBrandService service, IMapper mapper)
     {
         _service = service;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public ActionResult<List<Brand>> Get()
+    public ActionResult<List<BrandViewModelResponce>> Get()
     {
         try
         {
             var result = _service.Get();
-            return Ok(result);
+            var res = _mapper.Map<List<BrandViewModelResponce>>(result);
+
+            return Ok(res);
         }
         catch (Exception ex)
         {
@@ -32,12 +38,14 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public ActionResult<Brand> GetById(int id)
+    public ActionResult<BrandViewModelResponce> GetById(int id)
     {
         try
         {
             var result = _service.GetById(id);
-            return Ok(result);
+            var res = _mapper.Map<BrandViewModelResponce>(result);
+
+            return Ok(res);
         }
         catch(ArgumentOutOfRangeException ex)
         {
@@ -55,12 +63,14 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Route("{name}")]
-    public ActionResult<Brand> GetByName(string name)
+    public ActionResult<BrandViewModelResponce> GetByName(string name)
     {
         try
         {
             var result = _service.GetByName(name);
-            return Ok(result);
+            var res = _mapper.Map<BrandViewModelResponce>(result);
+
+            return Ok(res);
         }
         catch (NotFoundException ex)
         {
@@ -73,12 +83,15 @@ public class BrandController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Brand>> Create(Brand brand)
+    public async Task<ActionResult<BrandViewModelResponce>> Create(BrandViewModelRequest model)
     {
         try
         {
+            Brand brand = _mapper.Map<Brand>(model);
             var result = await _service.Create(brand);
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/brand/GetById/{result.Id}"), result);
+            var res = _mapper.Map<BrandViewModelResponce>(result);
+
+            return Created(new Uri($"http://localhost:5192/api/v1/cat/brand/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -91,12 +104,18 @@ public class BrandController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<Brand>> Update(Brand brand)
+    [Route("{id:int}")]
+    public async Task<ActionResult<BrandViewModelResponce>> Update(int id, BrandViewModelRequest model)
     {
         try
         {
+            Brand brand = _mapper.Map<Brand>(model);
+            brand.Id = id;
+
             var result = await _service.Update(brand);
-            return Ok(result);
+            var res = _mapper.Map<BrandViewModelResponce>(result);
+
+            return Ok(res);
         }
         catch (Exception ex)
         {

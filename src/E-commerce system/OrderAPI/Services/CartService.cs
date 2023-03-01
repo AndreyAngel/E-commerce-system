@@ -15,11 +15,13 @@ public class CartService: ICartService
     private readonly Context _db;
     private readonly IBusControl _bus;
     private readonly IMapper _mapper;
-    public CartService(Context context, IBusControl bus, IMapper mapper)
+    private readonly ICartProductService _cartProductService;
+    public CartService(Context context, IBusControl bus, IMapper mapper, ICartProductService cartProductService)
     {
         _db = context;
         _bus = bus;
         _mapper = mapper;
+        _cartProductService = cartProductService;
     }
 
     public async Task<CartViewModel> GetById(int id)
@@ -127,10 +129,8 @@ public class CartService: ICartService
             if (response.Products[i] == null)
             {
                 indexes.Add(i);
-                continue;
             }
-
-            if (response.Products[i].Id == model.CartProducts[i].ProductId)
+            else if (response.Products[i].Id == model.CartProducts[i].ProductId)
             {
                 var product = _mapper.Map<ProductViewModel>(response.Products[i]);
                 model.CartProducts[i].Product = product;
@@ -143,6 +143,7 @@ public class CartService: ICartService
         for(int i = 0; i < indexes.Count; i++)
         {
             model.CartProducts.RemoveAt(indexes[i] - i);
+            await _cartProductService.Delete(cart.CartProducts[indexes[i] - i].Id);
         }
 
         model.ComputeTotalValue();

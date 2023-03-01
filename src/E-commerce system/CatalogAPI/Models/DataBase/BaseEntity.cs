@@ -1,6 +1,6 @@
-﻿namespace CatalogAPI.Models;
+﻿namespace CatalogAPI.Models.DataBase;
 
-public class BaseEntity: IEntity
+public class BaseEntity : IEntity
 {
     public int Id { get; set; }
     public string Name { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Infrastructure.DTO;
-using OrderAPI.Models.DataBase;
 using System.ComponentModel.DataAnnotations;
 
 namespace OrderAPI.Models.ViewModels;

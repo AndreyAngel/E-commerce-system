@@ -1,10 +1,10 @@
 using MassTransit;
 using CatalogAPI.Consumers;
 using Microsoft.EntityFrameworkCore;
-using CatalogAPI.Models;
 using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Services;
 using CatalogAPI;
+using CatalogAPI.Models.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 

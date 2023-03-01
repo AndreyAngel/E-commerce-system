@@ -1,8 +1,8 @@
-﻿using CatalogAPI.Models;
-using CatalogAPI.Services.Interfaces;
+﻿using CatalogAPI.Services.Interfaces;
 using Infrastructure.DTO;
 using AutoMapper;
 using Infrastructure.Exceptions;
+using CatalogAPI.Models.DataBase;
 
 namespace CatalogAPI.Services;
 
@@ -102,10 +102,20 @@ public class ProductService: IProductService
         if (product.Id != 0)
             product.Id = 0;
 
-        if (_repositoryProduct.GetById(product.Id) != null)
+        var res = _repositoryProduct.GetById(product.Id);
+        if (res != null && res.IsSale)
             throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
 
+        else if (res != null && !res.IsSale)
+        {
+            product.IsSale = true;
+            await Update(product);
+        }
+
         await _repositoryProduct.AddAsync(product);
+
+        product.Category = new Category { Id = product.CategoryId };
+        product.Brand = new Brand { Id = product.BrandId };
 
         return product;
     }
@@ -119,6 +129,9 @@ public class ProductService: IProductService
             throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
 
         await _repositoryProduct.UpdateAsync(product);
+
+        product.Category = new Category { Id = product.CategoryId };
+        product.Brand = new Brand { Id = product.BrandId };
 
         return product;
     }

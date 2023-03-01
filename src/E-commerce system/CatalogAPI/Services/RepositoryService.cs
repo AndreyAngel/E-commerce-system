@@ -1,7 +1,7 @@
 ﻿using CatalogAPI.Services.Interfaces;
-using CatalogAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using CatalogAPI.Models.DataBase;
 
 namespace CatalogAPI.Services;
 

@@ -107,13 +107,16 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<CartViewModel>> QuantityChange(CartProductViewModelRequest cartProduct)
+        [Route("{id:int}")]
+        public async Task<ActionResult<CartViewModel>> QuantityChange(int id, CartProductViewModelRequest model)
         {
             try
             {
-                CartProduct product = _mapper.Map<CartProduct>(cartProduct);
+                CartProduct product = _mapper.Map<CartProduct>(model);
+                product.Id = id;
+
                 await _productService.Update(product);
-                CartViewModel cart = await _cartService.ComputeTotalValue(cartProduct.CartId);
+                CartViewModel cart = await _cartService.ComputeTotalValue(model.CartId);
 
                 return Ok(cart);
             }

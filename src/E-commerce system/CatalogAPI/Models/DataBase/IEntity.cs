@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Models;
+﻿namespace CatalogAPI.Models.DataBase;
 
 public interface IEntity
 {

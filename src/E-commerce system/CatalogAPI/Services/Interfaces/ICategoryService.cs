@@ -1,4 +1,4 @@
-﻿using CatalogAPI.Models;
+﻿using CatalogAPI.Models.DataBase;
 
 namespace CatalogAPI.Services.Interfaces;
 

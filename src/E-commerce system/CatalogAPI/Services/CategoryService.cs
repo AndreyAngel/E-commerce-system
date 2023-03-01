@@ -1,6 +1,6 @@
 ﻿using CatalogAPI.Services.Interfaces;
-using CatalogAPI.Models;
 using Infrastructure.Exceptions;
+using CatalogAPI.Models.DataBase;
 
 namespace CatalogAPI.Services;
 

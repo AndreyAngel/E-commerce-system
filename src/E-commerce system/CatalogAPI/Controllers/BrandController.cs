@@ -17,11 +17,11 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Brand>>> Get()
+    public ActionResult<List<Brand>> Get()
     {
         try
         {
-            var result = await _service.Get();
+            var result = _service.Get();
             return Ok(result);
         }
         catch (Exception ex)
@@ -32,11 +32,11 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<Brand>> GetById(int id)
+    public ActionResult<Brand> GetById(int id)
     {
         try
         {
-            var result = await _service.GetById(id);
+            var result = _service.GetById(id);
             return Ok(result);
         }
         catch(ArgumentOutOfRangeException ex)
@@ -55,11 +55,11 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Route("{name}")]
-    public async Task<ActionResult<Brand>> GetByName(string name)
+    public ActionResult<Brand> GetByName(string name)
     {
         try
         {
-            var result = await _service.GetByName(name);
+            var result = _service.GetByName(name);
             return Ok(result);
         }
         catch (NotFoundException ex)

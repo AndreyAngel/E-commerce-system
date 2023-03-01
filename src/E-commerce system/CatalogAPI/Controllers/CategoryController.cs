@@ -17,11 +17,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Category>>> Get()
+    public ActionResult<List<Category>> Get()
     {
         try
         {
-            var result = await _service.Get();
+            var result = _service.Get();
             return Ok(result);
         }
         catch(Exception ex) 
@@ -32,11 +32,11 @@ public class CategoryController : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<Category>> GetById(int id)
+    public ActionResult<Category> GetById(int id)
     {
         try
         {
-            var result = await _service.GetById(id);
+            var result = _service.GetById(id);
             return Ok(result);
         }
         catch (ArgumentOutOfRangeException ex)
@@ -55,11 +55,11 @@ public class CategoryController : ControllerBase
 
     [HttpGet]
     [Route("{name}")]
-    public async Task<ActionResult<Category>> GetByName(string name)
+    public ActionResult<Category> GetByName(string name)
     {
         try
         {
-            var result = await _service.GetByName(name);
+            var result = _service.GetByName(name);
             return Ok(result);
         }
         catch (NotFoundException ex)

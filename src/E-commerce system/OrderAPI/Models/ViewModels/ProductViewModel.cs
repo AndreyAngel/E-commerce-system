@@ -1,9 +1,11 @@
-﻿namespace OrderAPI.Models.ViewModels
-{
-    public class ProductViewModel
-    {
-        public string Name { get; set; }
+﻿using System.ComponentModel.DataAnnotations;
 
-        public double Price { get; set; }
-    }
+namespace OrderAPI.Models.ViewModels;
+
+public class ProductViewModel
+{
+    [Required]
+    public string? Name { get; set; }
+
+    public double Price { get; set; }
 }

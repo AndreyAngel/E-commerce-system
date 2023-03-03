@@ -189,6 +189,10 @@ public class ProductController : ControllerBase
         {
             return Conflict(ex.Message);
         }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);

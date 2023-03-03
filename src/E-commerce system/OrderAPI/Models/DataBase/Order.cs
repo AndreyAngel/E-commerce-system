@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace OrderAPI.Models.DataBase;
 
-namespace OrderAPI.Models.DataBase;
-
-public class Order
+public class Order : BaseEntity
 {
-    public int Id { get; set; }
-
     public int UserId { get; set; }
 
     public List<CartProduct> CartProducts { get; set; } = new List<CartProduct>();

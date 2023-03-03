@@ -1,9 +1,7 @@
 ﻿namespace OrderAPI.Models.DataBase;
 
-public class Cart
+public class Cart : BaseEntity
 {
-    public int Id { get; set; }
-
     public List<CartProduct> CartProducts { get; set; } = new List<CartProduct>();
 
     public double TotalValue { get; set; }

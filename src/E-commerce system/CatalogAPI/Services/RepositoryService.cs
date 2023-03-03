@@ -17,7 +17,7 @@ public class RepositoryService<TEntity>: IRepositoryService<TEntity> where TEnti
 
     public IEnumerable<TEntity> GetAll()
     {
-        return _db.ToList();
+        return _db.AsNoTracking().ToList();
     }
 
     public TEntity GetById(int id)
@@ -27,12 +27,36 @@ public class RepositoryService<TEntity>: IRepositoryService<TEntity> where TEnti
 
     public TEntity GetByName(string name)
     {
-        return _db.SingleOrDefault(x => x.Name == name);
+        return _db.AsNoTracking().SingleOrDefault(x => x.Name == name);
     }
 
-    public IEnumerable<TEntity> GetByFilter(Func<TEntity, bool> predicate)
+    public TEntity GetByFilter(Func<TEntity, bool> predicate)
     {
-        return _db.Where(predicate);
+        return _db.AsNoTracking().SingleOrDefault(predicate);
+    }
+
+    public IEnumerable<TEntity> GetListByFilter(Func<TEntity, bool> predicate)
+    {
+        return _db.AsNoTracking().Where(predicate);
+    }
+
+    public TEntity GetWithInclude(Func<TEntity, bool> predicate,
+        params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        var query = Include(includeProperties);
+        return query.SingleOrDefault(predicate);
+    }
+
+    public IEnumerable<TEntity> GetAllWithInclude(params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        return Include(includeProperties);
+    }
+
+    public IEnumerable<TEntity> GetListWithInclude(Func<TEntity, bool> predicate,
+        params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        var query = Include(includeProperties);
+        return query.Where(predicate);
     }
 
     public async Task AddAsync(TEntity entity)
@@ -47,22 +71,11 @@ public class RepositoryService<TEntity>: IRepositoryService<TEntity> where TEnti
         await _context.SaveChangesAsync();
     }
 
-    public async Task RemoveAsync(TEntity entity)
+    public async Task RemoveAsync(int id)
     {
+        TEntity entity = _db.Single(x => x.Id == id);
         await Task.Run( () => _db.Remove(entity));
         await _context.SaveChangesAsync();
-    }
-
-    public IEnumerable<TEntity> GetWithInclude(params Expression<Func<TEntity, object>>[] includeProperties)
-    {
-        return Include(includeProperties);
-    }
-
-    public IEnumerable<TEntity> GetWithInclude(Func<TEntity, bool> predicate,
-        params Expression<Func<TEntity, object>>[] includeProperties)
-    {
-        var query = Include(includeProperties);
-        return query.Where(predicate);
     }
 
     private IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)

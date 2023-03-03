@@ -25,7 +25,7 @@ public class ProductService: IProductService
 
     public List<Product> Get()
     {
-        return _repositoryProduct.GetAll().ToList();
+        return _repositoryProduct.GetAll().Where(x => x.IsSale).ToList();
     }
 
     public Product GetById(int id)
@@ -33,7 +33,7 @@ public class ProductService: IProductService
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid productId");
 
-        var res = _repositoryProduct.GetWithInclude(x => x.Brand, y => y.Category).FirstOrDefault(x => x.Id == id);
+        var res = _repositoryProduct.GetWithInclude(x => x.Id == id, x => x.Brand, y => y.Category);
 
         if (res == null)
             throw new NotFoundException(nameof(id), "Product with this Id was not founded!");
@@ -43,7 +43,7 @@ public class ProductService: IProductService
 
     public Product GetByName(string name)
     {
-        var res = _repositoryProduct.GetWithInclude(x => x.Brand, y => y.Category).FirstOrDefault(x => x.Name == name);
+        var res = _repositoryProduct.GetWithInclude(x => x.Name == name, x => x.Brand, y => y.Category);
 
         if (res == null)
             throw new NotFoundException(nameof(name), "Product with this name was not founded!");
@@ -61,7 +61,8 @@ public class ProductService: IProductService
         if (brand == null)
             throw new NotFoundException(nameof(brandId), "Brand with this Id was not founded!");
 
-        return _repositoryProduct.GetWithInclude(x => x.BrandId == brandId, x => x.Brand, x => x.Category).ToList();
+        return _repositoryProduct.GetListWithInclude(x => x.BrandId == brandId, x => x.Brand, x => x.Category)
+                                        .Where(x => x.IsSale).ToList();
     }
 
     public List<Product> GetByBrandName(string brandName)
@@ -71,7 +72,8 @@ public class ProductService: IProductService
         if (brand == null)
             throw new NotFoundException(nameof(brandName), "Brand with this name was not founded!");
 
-        return _repositoryProduct.GetWithInclude(x => x.BrandId == brand.Id, x => x.Brand, x => x.Category).ToList();
+        return _repositoryProduct.GetListWithInclude(x => x.BrandId == brand.Id, x => x.Brand, x => x.Category)
+                                        .Where(x => x.IsSale).ToList();
     }
 
     public List<Product> GetByCategoryId(int categoryId)
@@ -84,7 +86,8 @@ public class ProductService: IProductService
         if (category == null)
             throw new NotFoundException(nameof(categoryId), "Category with this Id was not founded!");
 
-        return _repositoryProduct.GetWithInclude(x => x.CategoryId == categoryId, x => x.Brand, x => x.Category).ToList();
+        return _repositoryProduct.GetListWithInclude(x => x.CategoryId == categoryId, x => x.Brand, x => x.Category)
+                                        .Where(x => x.IsSale).ToList();
     }
 
     public List<Product> GetByCategoryName(string categoryName)
@@ -94,7 +97,8 @@ public class ProductService: IProductService
         if (category == null)
             throw new NotFoundException(nameof(categoryName), "Category with this name was not founded!");
 
-        return _repositoryProduct.GetWithInclude(x => x.CategoryId == category.Id, x => x.Brand, x => x.Category).ToList();
+        return _repositoryProduct.GetListWithInclude(x => x.CategoryId == category.Id, x => x.Brand, x => x.Category)
+                                        .Where(x => x.IsSale).ToList();
     }
 
     public async Task<Product> Create(Product product)
@@ -102,22 +106,31 @@ public class ProductService: IProductService
         if (product.Id != 0)
             product.Id = 0;
 
-        var res = _repositoryProduct.GetById(product.Id);
+        var res = _repositoryProduct.GetByName(product.Name);
         if (res != null && res.IsSale)
             throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
 
-        else if (res != null && !res.IsSale)
+        else if (_repositoryBrand.GetById(product.BrandId) == null)
         {
-            product.IsSale = true;
-            await Update(product);
+            throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
         }
 
+        else if (_repositoryCategory.GetById(product.CategoryId) == null)
+        {
+            throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
+        }
+
+        else if (res != null && !res.IsSale)
+        {
+            res.IsSale = true;
+            await _repositoryProduct.UpdateAsync(res);
+            return _repositoryProduct.GetWithInclude(x => x.Id == res.Id, x => x.Brand, y => y.Category);
+        }
+
+        product.IsSale = true;
         await _repositoryProduct.AddAsync(product);
 
-        product.Category = new Category { Id = product.CategoryId };
-        product.Brand = new Brand { Id = product.BrandId };
-
-        return product;
+        return _repositoryProduct.GetWithInclude(x => x.Id == product.Id, x => x.Brand, y => y.Category);
     }
 
     public async Task<Product> Update(Product product)
@@ -125,15 +138,24 @@ public class ProductService: IProductService
         if (product.Id <= 0)
             throw new ArgumentOutOfRangeException(nameof(product.Id), "Invalid productId");
 
-        if (_repositoryProduct.GetById == null)
+        var res = _repositoryProduct.GetById(product.Id);
+
+        if (res == null || !res.IsSale)
             throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
+
+        else if (_repositoryBrand.GetById(product.BrandId) == null)
+        {
+            throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
+        }
+
+        else if (_repositoryCategory.GetById(product.CategoryId) == null)
+        {
+            throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
+        }
 
         await _repositoryProduct.UpdateAsync(product);
 
-        product.Category = new Category { Id = product.CategoryId };
-        product.Brand = new Brand { Id = product.BrandId };
-
-        return product;
+        return _repositoryProduct.GetWithInclude(x => x.Id == product.Id, x => x.Brand, y => y.Category);
     }
 
     // Returns actuality products by ID

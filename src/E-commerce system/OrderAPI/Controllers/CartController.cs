@@ -23,12 +23,12 @@ namespace OrderAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<CartViewModel>> GetById(int id)
+        [Route("{cartId:int}")]
+        public async Task<ActionResult<CartViewModel>> GetById(int cartId)
         {
             try
             {
-                CartViewModel cart = await _cartService.GetById(id);
+                CartViewModel cart = await _cartService.GetById(cartId);
                 return Ok(cart);
             }
             catch(ArgumentOutOfRangeException ex)
@@ -59,9 +59,7 @@ namespace OrderAPI.Controllers
                 CartProductViewModelResponse product = await _productService.Create(cartProduct);
                 await _cartService.ComputeTotalValue(cartProduct.CartId);
 
-                // todo: изменить статус код ответа
-
-                return Ok(product);
+                return Created(new Uri($"https://localhost:7045/api/v1/ord/cart/GetById/{model.CartId}"), product);
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -107,13 +105,13 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{id:int}")]
-        public async Task<ActionResult<CartViewModel>> QuantityChange(int id, CartProductViewModelRequest model)
+        [Route("{cartProductId:int}")]
+        public async Task<ActionResult<CartViewModel>> QuantityChange(int cartProductId, CartProductViewModelRequest model)
         {
             try
             {
                 CartProduct product = _mapper.Map<CartProduct>(model);
-                product.Id = id;
+                product.Id = cartProductId;
 
                 await _productService.Update(product);
                 CartViewModel cart = await _cartService.ComputeTotalValue(model.CartId);

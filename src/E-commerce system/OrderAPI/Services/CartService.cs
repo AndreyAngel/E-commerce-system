@@ -27,12 +27,16 @@ public class CartService: ICartService
     public async Task<CartViewModel> GetById(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
+        }
 
         var cart = await _db.Carts.Include(x => x.CartProducts).AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
+        {
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+        }
 
         CartViewModel result = await Check(cart);
 
@@ -48,7 +52,9 @@ public class CartService: ICartService
     public async Task<CartViewModel> Create(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
+        }
 
         //todo: передача идентификатора не равного UserId
 
@@ -65,12 +71,16 @@ public class CartService: ICartService
     public async Task<CartViewModel> ComputeTotalValue(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
-
+        }
+            
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
+        {
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+        }
 
         CartViewModel model = _mapper.Map<CartViewModel>(cart);
 
@@ -86,14 +96,18 @@ public class CartService: ICartService
     public async Task<CartViewModel> Clear(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
+        } 
 
         //todo: передача идентификатора не равного UserId
 
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
+        {
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+        }
 
         cart.Clear();
 

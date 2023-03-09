@@ -33,7 +33,9 @@ public class CartProductService: ICartProductService
         ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
 
         if (response.ErrorMessage != null)
+        {
             throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
+        }
 
         //todo: new Exception - передача идентификатора не своей корзины
 
@@ -69,12 +71,16 @@ public class CartProductService: ICartProductService
     public async Task<CartProduct> Update(CartProduct cartProduct)
     {
         if (cartProduct.Id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(cartProduct.Id), "Invalid cart product Id");
+        }
 
         //todo: new Exception - передача идентификатора не своей корзины
 
         if (await _db.CartProducts.AsNoTracking().SingleOrDefaultAsync(x => x.Id == cartProduct.Id) == null)
+        {
             throw new NotFoundException(nameof(cartProduct.Id), "Cart product with this Id not founded!");
+        }
 
         // Getting of product by ID from Catalog service
         ProductDTO productDTO = new() { Id = cartProduct.ProductId };
@@ -82,7 +88,9 @@ public class CartProductService: ICartProductService
         ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
 
         if (response.ErrorMessage != null)
+        {
             throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
+        } 
 
         cartProduct.ComputeTotalValue(response.Price.Value);
 
@@ -95,12 +103,16 @@ public class CartProductService: ICartProductService
     public async Task Delete(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart product Id");
+        }
 
         var res = await _db.CartProducts.SingleOrDefaultAsync(x => x.Id == id);
 
         if (res == null)
+        {
             throw new NotFoundException(nameof(res.Id), "Cart product with this Id not founded!");
+        } 
 
         _db.CartProducts.Remove(res);
         await _db.SaveChangesAsync();

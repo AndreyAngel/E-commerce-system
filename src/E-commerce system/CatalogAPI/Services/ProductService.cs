@@ -3,6 +3,7 @@ using Infrastructure.DTO;
 using AutoMapper;
 using Infrastructure.Exceptions;
 using CatalogAPI.Models.DataBase;
+using CatalogAPI.Models.ViewModels;
 
 namespace CatalogAPI.Services;
 
@@ -31,12 +32,16 @@ public class ProductService: IProductService
     public Product GetById(int id)
     {
         if (id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid productId");
+        }
 
         var res = _repositoryProduct.GetWithInclude(x => x.Id == id, x => x.Brand, y => y.Category);
 
         if (res == null)
+        {
             throw new NotFoundException(nameof(id), "Product with this Id was not founded!");
+        }
 
         return res;
     }
@@ -46,59 +51,28 @@ public class ProductService: IProductService
         var res = _repositoryProduct.GetWithInclude(x => x.Name == name, x => x.Brand, y => y.Category);
 
         if (res == null)
+        {
             throw new NotFoundException(nameof(name), "Product with this name was not founded!");
+        }
 
         return res;
     }
 
-    public List<Product> GetByBrandId(int brandId)
+    public List<Product> GetByFilter(ProductFilterViewModel model)
     {
-        if (brandId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(brandId), "Invalid productId");
+        var products = _repositoryProduct.GetAll();
 
-        var brand = _repositoryBrand.GetById(brandId);
+        if (model.BrandId != null)
+        {
+            products = products.Where(x => x.BrandId == model.BrandId);
+        }
 
-        if (brand == null)
-            throw new NotFoundException(nameof(brandId), "Brand with this Id was not founded!");
+        if (model.CategoryId != null)
+        {
+            products = products.Where(x => x.CategoryId == model.CategoryId);
+        }
 
-        return _repositoryProduct.GetListWithInclude(x => x.BrandId == brandId, x => x.Brand, x => x.Category)
-                                        .Where(x => x.IsSale).ToList();
-    }
-
-    public List<Product> GetByBrandName(string brandName)
-    {
-        var brand = _repositoryBrand.GetByName(brandName);
-
-        if (brand == null)
-            throw new NotFoundException(nameof(brandName), "Brand with this name was not founded!");
-
-        return _repositoryProduct.GetListWithInclude(x => x.BrandId == brand.Id, x => x.Brand, x => x.Category)
-                                        .Where(x => x.IsSale).ToList();
-    }
-
-    public List<Product> GetByCategoryId(int categoryId)
-    {
-        if (categoryId <= 0)
-            throw new ArgumentOutOfRangeException(nameof(categoryId), "Invalid productId");
-
-        var category = _repositoryCategory.GetById(categoryId);
-
-        if (category == null)
-            throw new NotFoundException(nameof(categoryId), "Category with this Id was not founded!");
-
-        return _repositoryProduct.GetListWithInclude(x => x.CategoryId == categoryId, x => x.Brand, x => x.Category)
-                                        .Where(x => x.IsSale).ToList();
-    }
-
-    public List<Product> GetByCategoryName(string categoryName)
-    {
-        var category = _repositoryCategory.GetByName(categoryName);
-
-        if (category == null)
-            throw new NotFoundException(nameof(categoryName), "Category with this name was not founded!");
-
-        return _repositoryProduct.GetListWithInclude(x => x.CategoryId == category.Id, x => x.Brand, x => x.Category)
-                                        .Where(x => x.IsSale).ToList();
+        return products.ToList();
     }
 
     public async Task<Product> Create(Product product)
@@ -107,8 +81,11 @@ public class ProductService: IProductService
             product.Id = 0;
 
         var res = _repositoryProduct.GetByName(product.Name);
+
         if (res != null && res.IsSale)
+        {
             throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
+        }
 
         else if (_repositoryBrand.GetById(product.BrandId) == null)
         {
@@ -136,13 +113,22 @@ public class ProductService: IProductService
     public async Task<Product> Update(Product product)
     {
         if (product.Id <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(product.Id), "Invalid productId");
+        }
 
         var res = _repositoryProduct.GetById(product.Id);
 
-        if (res == null || !res.IsSale)
-            throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
+        if ((res.Name != product.Name) && _repositoryProduct.GetByName(product.Name) != null)
+        {
+            throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
+        }
 
+        else if (res == null || !res.IsSale)
+        {
+            throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
+        }
+            
         else if (_repositoryBrand.GetById(product.BrandId) == null)
         {
             throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");

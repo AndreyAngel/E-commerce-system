@@ -12,7 +12,7 @@ public class CartViewModel
     public List<CartProductViewModelResponse> CartProducts { get; set; } = new List<CartProductViewModelResponse>();
 
 
-    [Range(0, 9999999999999999999, ErrorMessage = "Invalid total value")]
+    [Range(0, int.MaxValue, ErrorMessage = "Invalid total value")]
     public double TotalValue { get; set; } = 0;
 
     public void ComputeTotalValue()

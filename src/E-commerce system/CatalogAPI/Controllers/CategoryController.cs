@@ -23,21 +23,13 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public ActionResult<List<CategoryViewModelResponce>> Get()
     {
-        try
-        {
-            var result = _service.Get();
-            var res = _mapper.Map<List<CategoryViewModelResponce>>(result);
+        var result = _service.Get();
+        var res = _mapper.Map<List<CategoryViewModelResponce>>(result);
 
-            return Ok(res);
-        }
-        catch(Exception ex) 
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(res);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}")]
     public ActionResult<CategoryViewModelResponce> GetById(int id)
     {
         try
@@ -55,14 +47,9 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
-    [HttpGet]
-    [Route("{name}")]
+    [HttpGet("{name}")]
     public ActionResult<CategoryViewModelResponce> GetByName(string name)
     {
         try
@@ -76,10 +63,6 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
     [HttpPost]
@@ -91,20 +74,15 @@ public class CategoryController : ControllerBase
             var result = await _service.Create(category);
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/category/GetById/{result.Id}"), res);
+            return Created(new Uri($"https://localhost:5192/api/v1/cat/category/GetById/{result.Id}"), res);
         }
         catch(ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
-    [HttpPut]
-    [Route("{id:int}")]
+    [HttpPut("{id:int}")]
     public async Task<ActionResult<CategoryViewModelResponce>> Update(int id, CategoryViewModelRequest model)
     {
         try
@@ -125,9 +103,9 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        catch (Exception ex)
+        catch (ObjectNotUniqueException ex)
         {
-            return BadRequest(ex.Message);
+            return Conflict(ex.Message);
         }
     }
 }

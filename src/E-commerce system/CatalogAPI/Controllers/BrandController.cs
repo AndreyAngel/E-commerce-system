@@ -23,21 +23,13 @@ public class BrandController : ControllerBase
     [HttpGet]
     public ActionResult<List<BrandViewModelResponce>> Get()
     {
-        try
-        {
-            var result = _service.Get();
-            var res = _mapper.Map<List<BrandViewModelResponce>>(result);
+        var result = _service.Get();
+        var res = _mapper.Map<List<BrandViewModelResponce>>(result);
 
-            return Ok(res);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(res);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}")]
     public ActionResult<BrandViewModelResponce> GetById(int id)
     {
         try
@@ -55,14 +47,9 @@ public class BrandController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
-    [HttpGet]
-    [Route("{name}")]
+    [HttpGet("{name}")]
     public ActionResult<BrandViewModelResponce> GetByName(string name)
     {
         try
@@ -75,10 +62,6 @@ public class BrandController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
         }
     }
 
@@ -97,14 +80,9 @@ public class BrandController : ControllerBase
         {
             return Conflict(ex.Message);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
 
-    [HttpPut]
-    [Route("{id:int}")]
+    [HttpPut("{id:int}")]
     public async Task<ActionResult<BrandViewModelResponce>> Update(int id, BrandViewModelRequest model)
     {
         try
@@ -117,9 +95,9 @@ public class BrandController : ControllerBase
 
             return Ok(res);
         }
-        catch (Exception ex)
+        catch (ObjectNotUniqueException ex)
         {
-            return BadRequest(ex.Message);
+            return Conflict(ex.Message);
         }
     }
 }

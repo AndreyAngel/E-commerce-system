@@ -22,8 +22,7 @@ namespace OrderAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("{cartId:int}")]
+        [HttpGet("{cartId:int}")]
         public async Task<ActionResult<CartViewModel>> GetById(int cartId)
         {
             try
@@ -40,10 +39,6 @@ namespace OrderAPI.Controllers
                 return NotFound(ex.Message);
             }
             catch(CatalogApiException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -73,14 +68,9 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex) 
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
-        [HttpDelete]
-        [Route("{cartId:int},{cartProductId:int}")]
+        [HttpDelete("{cartId:int},{cartProductId:int}")]
         public async Task<ActionResult<CartViewModel>> DeleteProduct(int cartId, int cartProductId)
         {
             try
@@ -98,14 +88,9 @@ namespace OrderAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
-        [HttpPut]
-        [Route("{cartProductId:int}")]
+        [HttpPut("{cartProductId:int}")]
         public async Task<ActionResult<CartViewModel>> QuantityChange(int cartProductId, CartProductViewModelRequest model)
         {
             try
@@ -130,14 +115,9 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
-        [HttpDelete]
-        [Route("{cartId:int}")]
+        [HttpDelete("{cartId:int}")]
         public async Task<ActionResult<CartViewModel>> Clear(int cartId)
         {
             try
@@ -152,10 +132,6 @@ namespace OrderAPI.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
             }
         }
     }

@@ -4,6 +4,7 @@ using CatalogAPI.Models.DataBase;
 using CatalogAPI.Services.Interfaces;
 using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using CatalogAPI.UnitOfWork.Interfaces;
 
 namespace CatalogAPI.Controllers;
 
@@ -12,10 +13,12 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ICategoryService _service;
     private readonly IMapper _mapper;
-    public CategoryController(ICategoryService service, IMapper mapper)
+    public CategoryController(IUnitOfWork unitOfWork, ICategoryService service, IMapper mapper)
     {
+        _unitOfWork = unitOfWork;
         _service = service;
         _mapper = mapper;
     }
@@ -23,10 +26,17 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public ActionResult<List<CategoryViewModelResponce>> Get()
     {
-        var result = _service.Get();
-        var res = _mapper.Map<List<CategoryViewModelResponce>>(result);
+        try
+        {
+            var result = _service.Get();
+            var res = _mapper.Map<List<CategoryViewModelResponce>>(result);
 
-        return Ok(res);
+            return Ok(res);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpGet("{id:int}")]
@@ -47,6 +57,10 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpGet("{name}")]
@@ -63,6 +77,10 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpPost]
@@ -71,7 +89,10 @@ public class CategoryController : ControllerBase
         try
         {
             Category category = _mapper.Map<Category>(model);
+
             var result = await _service.Create(category);
+            await _unitOfWork.SaveChangesAsync();
+
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
             return Created(new Uri($"https://localhost:5192/api/v1/cat/category/GetById/{result.Id}"), res);
@@ -79,6 +100,10 @@ public class CategoryController : ControllerBase
         catch(ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
         }
     }
 
@@ -91,6 +116,8 @@ public class CategoryController : ControllerBase
             category.Id = id;
 
             var result = await _service.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
             return Ok(res);
@@ -106,6 +133,10 @@ public class CategoryController : ControllerBase
         catch (ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
         }
     }
 }

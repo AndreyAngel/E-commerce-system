@@ -5,6 +5,8 @@ using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Services;
 using CatalogAPI;
 using CatalogAPI.Models.DataBase;
+using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,7 @@ builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source =
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
-builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

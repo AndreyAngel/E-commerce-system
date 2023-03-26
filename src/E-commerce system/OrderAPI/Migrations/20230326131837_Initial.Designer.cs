@@ -11,7 +11,7 @@ using OrderAPI.Models.DataBase;
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230301134318_Initial")]
+    [Migration("20230326131837_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -70,10 +70,16 @@ namespace OrderAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPaymented")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsReady")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Payment_State")
+                    b.Property<bool>("IsReceived")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")

@@ -9,6 +9,7 @@ public class ProductViewModelRequest
 
     public string? Description { get; set; }
 
+    [Range(1, int.MaxValue, ErrorMessage = "Invalid Price")]
     public double Price { get; set; }
 
     [Range(1, int.MaxValue, ErrorMessage = "Invalid CategoryId")]

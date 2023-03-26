@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OrderAPI.Models.ViewModels;
+namespace OrderAPI.Models.ViewModels.Cart;
 
 public class CartProductViewModelRequest
 {

@@ -67,10 +67,16 @@ namespace OrderAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPaymented")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsReady")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Payment_State")
+                    b.Property<bool>("IsReceived")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")

@@ -1,9 +1,10 @@
 ﻿using OrderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.Models.ViewModels;
 using OrderAPI.Models.DataBase;
 using AutoMapper;
 using Infrastructure.Exceptions;
+using OrderAPI.UnitOfWork.Interfaces;
+using OrderAPI.Models.ViewModels.Cart;
 
 namespace OrderAPI.Controllers
 {
@@ -11,12 +12,14 @@ namespace OrderAPI.Controllers
     [ApiController]
     public class CartController : ControllerBase
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICartService _cartService;
         private readonly ICartProductService _productService;
         private readonly IMapper _mapper;
 
-        public CartController(ICartService cartService, ICartProductService productService, IMapper mapper)
+        public CartController(IUnitOfWork unitOfWork, ICartService cartService, ICartProductService productService, IMapper mapper)
         {
+            _unitOfWork = unitOfWork;
             _cartService = cartService;
             _productService = productService;
             _mapper = mapper;
@@ -42,6 +45,10 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
         }
 
         [HttpPost]
@@ -50,9 +57,11 @@ namespace OrderAPI.Controllers
             try
             {
                 CartProduct cartProduct = _mapper.Map<CartProduct>(model);
-
                 CartProductViewModelResponse product = await _productService.Create(cartProduct);
                 await _cartService.ComputeTotalValue(cartProduct.CartId);
+
+                await _unitOfWork.SaveChangesAsync();
+                product.Id = cartProduct.Id;
 
                 return Created(new Uri($"https://localhost:7045/api/v1/ord/cart/GetById/{model.CartId}"), product);
             }
@@ -68,6 +77,10 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
         }
 
         [HttpDelete("{cartId:int},{cartProductId:int}")]
@@ -77,6 +90,8 @@ namespace OrderAPI.Controllers
             {
                 await _productService.Delete(cartProductId);
                 CartViewModel cart = await _cartService.ComputeTotalValue(cartId);
+
+                await _unitOfWork.SaveChangesAsync();
                 
                 return Ok(cart);
             }
@@ -87,6 +102,10 @@ namespace OrderAPI.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
             }
         }
 
@@ -100,6 +119,8 @@ namespace OrderAPI.Controllers
 
                 await _productService.Update(product);
                 CartViewModel cart = await _cartService.ComputeTotalValue(model.CartId);
+
+                await _unitOfWork.SaveChangesAsync();
 
                 return Ok(cart);
             }
@@ -115,6 +136,10 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
         }
 
         [HttpDelete("{cartId:int}")]
@@ -123,6 +148,8 @@ namespace OrderAPI.Controllers
             try
             {
                 var res = await _cartService.Clear(cartId);
+                await _unitOfWork.SaveChangesAsync();
+
                 return Ok(res);
             }
             catch (ArgumentOutOfRangeException ex)
@@ -132,6 +159,10 @@ namespace OrderAPI.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
             }
         }
     }

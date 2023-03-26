@@ -1,5 +1,5 @@
-﻿using OrderAPI.Models.ViewModels;
-using OrderAPI.Models.DataBase;
+﻿using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels.Cart;
 
 namespace OrderAPI.Services.Interfaces;
 

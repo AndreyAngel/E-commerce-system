@@ -5,20 +5,21 @@ using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
 using AutoMapper;
+using OrderAPI.UnitOfWork.Interfaces;
+using OrderAPI.Models.ViewModels.Cart;
 
 namespace OrderAPI.Services;
 
 public class CartService: ICartService
 {
-    private readonly Context _db;
+    private readonly IUnitOfWork _db;
     private readonly IBusControl _bus;
     private readonly IMapper _mapper;
     private readonly ICartProductService _cartProductService;
-    public CartService(Context context, IBusControl bus, IMapper mapper, ICartProductService cartProductService)
+    public CartService(IUnitOfWork unitOfWork, IBusControl bus, IMapper mapper, ICartProductService cartProductService)
     {
-        _db = context;
+        _db = unitOfWork;
         _bus = bus;
         _mapper = mapper;
         _cartProductService = cartProductService;
@@ -31,7 +32,8 @@ public class CartService: ICartService
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
         }
 
-        var cart = await _db.Carts.Include(x => x.CartProducts).AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        var cart = await _db.Carts.Include(x => x.CartProducts.Where(x => x.OrderId == null))
+                                  .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
         {
@@ -42,8 +44,7 @@ public class CartService: ICartService
 
         cart = _mapper.Map<Cart>(result);
 
-        _db.Carts.Update(cart);
-        await _db.SaveChangesAsync();
+        await _db.Carts.UpdateAsync(cart);
 
         return result;
     }
@@ -61,7 +62,6 @@ public class CartService: ICartService
         Cart cart = new() { Id = id };
 
         await _db.Carts.AddAsync(cart);
-        await _db.SaveChangesAsync();
 
         CartViewModel model = _mapper.Map<CartViewModel>(cart);
 
@@ -87,8 +87,7 @@ public class CartService: ICartService
         model.ComputeTotalValue();
         cart.TotalValue = model.TotalValue;
 
-        _db.Carts.Update(cart);
-        await _db.SaveChangesAsync();
+        await _db.Carts.UpdateAsync(cart);
 
         return model;
     }
@@ -111,8 +110,7 @@ public class CartService: ICartService
 
         cart.Clear();
 
-        _db.Carts.Update(cart);
-        await _db.SaveChangesAsync();
+        await _db.Carts.UpdateAsync(cart);
 
         CartViewModel model = _mapper.Map<CartViewModel>(cart);
 

@@ -4,6 +4,8 @@ using OrderAPI;
 using OrderAPI.Models.DataBase;
 using OrderAPI.Services;
 using OrderAPI.Services.Interfaces;
+using OrderAPI.UnitOfWork;
+using OrderAPI.UnitOfWork.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,8 @@ builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source =
 
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartProductService, CartProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

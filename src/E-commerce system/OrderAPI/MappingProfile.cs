@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
 using Infrastructure.DTO;
+using OrderAPI.Models.ViewModels.Cart;
+using OrderAPI.Models.ViewModels.Order;
 
 namespace OrderAPI;
 
@@ -20,5 +21,13 @@ public class MappingProfile : Profile
         CreateMap<CartProductViewModelResponse, CartProduct>();
 
         CreateMap<ProductDTO, ProductViewModel>();
+
+        CreateMap<OrderViewModelRequest,  Order>();
+
+        CreateMap<Order, OrderViewModelResponse>();
+
+        CreateMap<Order, OrderListViewModelResponse>();
+
+        CreateMap<OrderCartProductViewModelRequest, CartProduct>();
     }
 }

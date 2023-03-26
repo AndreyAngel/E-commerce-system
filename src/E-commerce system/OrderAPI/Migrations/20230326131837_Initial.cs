@@ -31,7 +31,9 @@ namespace OrderAPI.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     IsReady = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PaymentState = table.Column<bool>(name: "Payment_State", type: "INTEGER", nullable: false)
+                    IsReceived = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsCanceled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsPaymented = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

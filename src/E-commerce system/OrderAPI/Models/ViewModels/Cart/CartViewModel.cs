@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OrderAPI.Models.ViewModels;
+namespace OrderAPI.Models.ViewModels.Cart;
 
 public class CartViewModel
 {

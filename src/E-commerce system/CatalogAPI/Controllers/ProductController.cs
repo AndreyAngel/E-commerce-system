@@ -4,6 +4,7 @@ using Infrastructure.Exceptions;
 using CatalogAPI.Models.DataBase;
 using CatalogAPI.Models.ViewModels;
 using AutoMapper;
+using CatalogAPI.UnitOfWork.Interfaces;
 
 namespace CatalogAPI.Controllers;
 
@@ -12,10 +13,12 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IProductService _service;
     private readonly IMapper _mapper;
-    public ProductController(IProductService service, IMapper mapper)
+    public ProductController(IUnitOfWork unitOfWork, IProductService service, IMapper mapper)
     {
+        _unitOfWork = unitOfWork;
         _service = service;
         _mapper = mapper;
     }
@@ -23,11 +26,17 @@ public class ProductController : ControllerBase
     [HttpGet]
     public ActionResult<List<ProductListViewModelResponce>> Get()
     {
-        var result = _service.Get();
-        var res = _mapper.Map<List<ProductListViewModelResponce>>(result);
+        try
+        {
+            var result = _service.Get();
+            var res = _mapper.Map<List<ProductListViewModelResponce>>(result);
 
-        return Ok(res);
-        
+            return Ok(res);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpGet("{id:int}")]
@@ -48,6 +57,10 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpGet("{name}")]
@@ -64,14 +77,24 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpPost]
     public ActionResult< List<ProductListViewModelResponce> > GetByFilter(ProductFilterViewModel filter)
     {
-        var result = _mapper.Map<List<ProductListViewModelResponce>>(_service.GetByFilter(filter));
-
-        return Ok(result);
+        try
+        {
+            var result = _mapper.Map<List<ProductListViewModelResponce>>(_service.GetByFilter(filter));
+            return Ok(result);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpPost]
@@ -80,7 +103,10 @@ public class ProductController : ControllerBase
         try
         {
             Product product = _mapper.Map<Product>(model);
+
             var result = await _service.Create(product);
+            await _unitOfWork.SaveChangesAsync();
+
             var res = _mapper.Map<ProductViewModelResponce>(result);
 
             return Created(new Uri($"http://localhost:5192/api/v1/cat/product/GetById/{res.Id}"), res);
@@ -93,6 +119,10 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpPut("{id:int}")]
@@ -104,6 +134,8 @@ public class ProductController : ControllerBase
             product.Id = id;
 
             var result = await _service.Update(product);
+            await _unitOfWork.SaveChangesAsync();
+
             var res = _mapper.Map<ProductViewModelResponce>(result);
 
             return Ok(res);
@@ -120,6 +152,10 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        finally
+        {
+            _unitOfWork.Dispose();
+        }
     }
 
     [HttpDelete("{id:int}")]
@@ -131,6 +167,8 @@ public class ProductController : ControllerBase
             res.IsSale = false;
             await _service.Update(res);
 
+            await _unitOfWork.SaveChangesAsync();
+
             return Ok();
         }
         catch (ArgumentOutOfRangeException ex)
@@ -140,6 +178,10 @@ public class ProductController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
         }
     }
 }

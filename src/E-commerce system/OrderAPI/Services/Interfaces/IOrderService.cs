@@ -1,12 +1,25 @@
 ﻿using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels.Order;
 
 namespace OrderAPI.Services.Interfaces;
 
 public interface IOrderService
 {
-    Task<List<Order>> GetAll();
-    Task<Order> GetById(int id);
-    Task<List<Order>> GetByUserId(int userId);
+    List<Order> GetAll();
+
+    Order GetById(int id);
+
+    List<Order> GetByFilter(OrderFilterViewModelRequest filetr);
+
     Task<Order> Create(Order order);
+
     Task<Order> Update(Order order);
+
+    Task<Order> IsReady(int id);
+
+    Task<Order> IsReceived(int id);
+
+    Task<Order> IsCanceled(int id);
+
+    Task<Order> IsPaymented(int id);
 }

@@ -4,29 +4,23 @@ using AutoMapper;
 using Infrastructure.Exceptions;
 using CatalogAPI.Models.DataBase;
 using CatalogAPI.Models.ViewModels;
+using CatalogAPI.UnitOfWork.Interfaces;
 
 namespace CatalogAPI.Services;
 
 public class ProductService: IProductService
 {
-    private readonly IRepositoryService<Product> _repositoryProduct;
-    private readonly IRepositoryService<Category> _repositoryCategory;
-    private readonly IRepositoryService<Brand> _repositoryBrand;
+    private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
-    public ProductService(IRepositoryService<Product> repositoryProduct,
-                          IRepositoryService<Category> repositoryCategory,
-                          IRepositoryService<Brand> repositoryBrand,
-                          IMapper mapper)
+    public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _repositoryProduct = repositoryProduct;
-        _repositoryCategory = repositoryCategory;
-        _repositoryBrand = repositoryBrand;
+        _db = unitOfWork;
         _mapper = mapper;
     }
 
     public List<Product> Get()
     {
-        return _repositoryProduct.GetAll().Where(x => x.IsSale).ToList();
+        return _db.Products.GetAll().Where(x => x.IsSale).ToList();
     }
 
     public Product GetById(int id)
@@ -36,7 +30,7 @@ public class ProductService: IProductService
             throw new ArgumentOutOfRangeException(nameof(id), "Invalid productId");
         }
 
-        var res = _repositoryProduct.GetWithInclude(x => x.Id == id, x => x.Brand, y => y.Category);
+        var res = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
         {
@@ -48,7 +42,8 @@ public class ProductService: IProductService
 
     public Product GetByName(string name)
     {
-        var res = _repositoryProduct.GetWithInclude(x => x.Name == name, x => x.Brand, y => y.Category);
+        var res = _db.Products.Include(x => x.Name == name, x => x.Brand, y => y.Category)
+                                      .SingleOrDefault(x => x.Name == name);
 
         if (res == null)
         {
@@ -60,7 +55,7 @@ public class ProductService: IProductService
 
     public List<Product> GetByFilter(ProductFilterViewModel model)
     {
-        var products = _repositoryProduct.GetAll();
+        var products = _db.Products.GetAll();
 
         if (model.BrandId != null)
         {
@@ -77,22 +72,19 @@ public class ProductService: IProductService
 
     public async Task<Product> Create(Product product)
     {
-        if (product.Id != 0)
-            product.Id = 0;
-
-        var res = _repositoryProduct.GetByName(product.Name);
+        var res = _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name);
 
         if (res != null && res.IsSale)
         {
             throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
         }
 
-        else if (_repositoryBrand.GetById(product.BrandId) == null)
+        else if (_db.Brands.GetById(product.BrandId) == null)
         {
             throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
         }
 
-        else if (_repositoryCategory.GetById(product.CategoryId) == null)
+        else if (_db.Categories.GetById(product.CategoryId) == null)
         {
             throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
         }
@@ -100,14 +92,15 @@ public class ProductService: IProductService
         else if (res != null && !res.IsSale)
         {
             res.IsSale = true;
-            await _repositoryProduct.UpdateAsync(res);
-            return _repositoryProduct.GetWithInclude(x => x.Id == res.Id, x => x.Brand, y => y.Category);
+            await _db.Products.UpdateAsync(res);
+
+            return _db.Products.GetById(product.Id);
         }
 
         product.IsSale = true;
-        await _repositoryProduct.AddAsync(product);
+        await _db.Products.AddAsync(product);
 
-        return _repositoryProduct.GetWithInclude(x => x.Id == product.Id, x => x.Brand, y => y.Category);
+        return _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == product.Id);
     }
 
     public async Task<Product> Update(Product product)
@@ -117,9 +110,9 @@ public class ProductService: IProductService
             throw new ArgumentOutOfRangeException(nameof(product.Id), "Invalid productId");
         }
 
-        var res = _repositoryProduct.GetById(product.Id);
+        var res = _db.Products.GetById(product.Id);
 
-        if ((res.Name != product.Name) && _repositoryProduct.GetByName(product.Name) != null)
+        if ((res.Name != product.Name) && _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name) != null)
         {
             throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
         }
@@ -129,19 +122,19 @@ public class ProductService: IProductService
             throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
         }
             
-        else if (_repositoryBrand.GetById(product.BrandId) == null)
+        else if (_db.Brands.GetById(product.BrandId) == null)
         {
             throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
         }
 
-        else if (_repositoryCategory.GetById(product.CategoryId) == null)
+        else if (_db.Categories.GetById(product.CategoryId) == null)
         {
             throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
         }
 
-        await _repositoryProduct.UpdateAsync(product);
+        await _db.Products.UpdateAsync(product);
 
-        return _repositoryProduct.GetWithInclude(x => x.Id == product.Id, x => x.Brand, y => y.Category);
+        return _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == product.Id);
     }
 
     // Returns actuality products by ID
@@ -150,7 +143,7 @@ public class ProductService: IProductService
         ProductListDTO<ProductDTO> products = new();
         foreach (var productId in productList.Products)
         {
-            var product = _repositoryProduct.GetById(productId);
+            var product = _db.Products.GetById(productId);
 
             if (product != null && product.IsSale)
                 products.Products.Add(_mapper.Map<ProductDTO>(product));

@@ -3,7 +3,6 @@ using CatalogAPI.Consumers;
 using Microsoft.EntityFrameworkCore;
 using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Services;
-using CatalogAPI;
 using CatalogAPI.Models.DataBase;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.UnitOfWork;

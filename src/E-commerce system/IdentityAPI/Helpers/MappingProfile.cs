@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.ViewModels;
+using IdentityAPI.Models.ViewModels.Requests;
+using IdentityAPI.Models.ViewModels.Responses;
 
-namespace IdentityAPI;
+namespace IdentityAPI.Helpers;
 
 public class MappingProfile : Profile
 {

@@ -1,7 +1,9 @@
 using IdentityAPI.Exceptions;
+using IdentityAPI.Helpers;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.Enums;
-using IdentityAPI.Models.ViewModels;
+using IdentityAPI.Models.ViewModels.Requests;
+using IdentityAPI.Models.ViewModels.Responses;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,6 +19,18 @@ public class UserService : IUserService
     {
         _userManager = userManager;
         _configuration = configuration;
+    }
+
+    public async Task<User> GetById(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString());
+
+        if (user == null)
+        {
+            throw new NotFoundException("User with this Id wasn't founded", nameof(id));
+        }
+
+        return user;
     }
 
     public async Task<AuthenticateViewModelResponse> Login(LoginViewModel model)
@@ -35,47 +49,55 @@ public class UserService : IUserService
         }
 
         var roles = await _userManager.GetRolesAsync(user);
-        var token = _configuration.GenerateJwtToken(user, roles[0]);
 
-        return new AuthenticateViewModelResponse(user, token, roles[0]);
+        var claims = new List<Claim>()
+        {
+            new Claim("Id", user.Id),
+            new Claim(ClaimTypes.Role, roles[0])
+        };
+
+        var refraeshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, claims);
+        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
+
+        return new AuthenticateViewModelResponse(900, accessToken, refraeshToken);
     }
 
-    public async Task<AuthenticateViewModelResponse> Register(User user, string Password, Role role)
+    public async Task<IIdentityViewModelResponse> Register(User user, string Password, Role role)
     {
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
         var result = await _userManager.CreateAsync(user, Password);
 
         if (!result.Succeeded)
         {
-            return new AuthenticateViewModelResponse(result.Errors.ToList());
+            return new IdentityErrorsViewModelResponse(result.Errors);
         }
 
-        await _userManager.AddToRoleAsync(user, userRole.Name);
-        await _userManager.AddClaimsAsync(user, new List<Claim>()
+        var claims = new List<Claim>()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim("Id", user.Id),
             new Claim(ClaimTypes.Role, userRole.Name)
-        });
+        };
 
-        var token = _configuration.GenerateJwtToken(user, userRole.Name);
+        await _userManager.AddToRoleAsync(user, userRole.Name);
+        await _userManager.AddClaimsAsync(user, claims);
 
-        return new AuthenticateViewModelResponse(user, token, userRole.Name);
+        var refreshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, claims);
+        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
+
+        return new AuthenticateViewModelResponse(900, accessToken, refreshToken);
+    }
+
+    public AccessTokenViewModelResponse GetAccessToken(string refreshToken)
+    {
+        var validatedToken = JwtTokenHelper.ValidateToken(_configuration, refreshToken);
+        var claims = new JwtSecurityToken(validatedToken).Claims.ToList();
+        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
+
+        return new AccessTokenViewModelResponse(900, accessToken);
     }
 
     public async Task Logout()
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<User> GetById(Guid id)
-    {
-        var user = await _userManager.FindByIdAsync(id.ToString());
-
-        if (user == null)
-        {
-            throw new NotFoundException("User with this Id wasn't founded", nameof(id));
-        }
-
-        return user;
     }
 }

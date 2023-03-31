@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using IdentityAPI.Models.Enums;
 
-namespace IdentityAPI.Models.ViewModels;
+namespace IdentityAPI.Models.ViewModels.Requests;
 
 public class RegisterViewModel
 {

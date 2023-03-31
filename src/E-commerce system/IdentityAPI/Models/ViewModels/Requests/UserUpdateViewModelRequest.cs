@@ -1,4 +1,4 @@
-﻿namespace IdentityAPI.Models.ViewModels;
+﻿namespace IdentityAPI.Models.ViewModels.Requests;
 
 public class UserUpdateViewModelRequest
 {

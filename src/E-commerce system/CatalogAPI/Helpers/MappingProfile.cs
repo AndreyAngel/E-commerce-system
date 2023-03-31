@@ -3,9 +3,9 @@ using CatalogAPI.Models.DataBase;
 using CatalogAPI.Models.ViewModels;
 using Infrastructure.DTO;
 
-namespace CatalogAPI;
+namespace CatalogAPI.Helpers;
 
-public class MappingProfile: Profile
+public class MappingProfile : Profile
 {
     public MappingProfile()
     {

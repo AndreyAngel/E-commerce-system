@@ -1,6 +1,4 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
-
-namespace IdentityAPI.Models.ViewModels;
+﻿namespace IdentityAPI.Models.ViewModels.Responses;
 
 public class UserViewModelResponse
 {
@@ -8,11 +6,13 @@ public class UserViewModelResponse
 
     public string Email { get; set; }
 
+    public string? PhoneNumber { get; set; }
+
     public string? Name { get; set; }
 
     public string? Surname { get; set; }
 
-    public DateOnly? BirthDate { get; set; }
+    public DateTime? BirthDate { get; set; }
 
-    public Address? Address { get; set; }
+    public AddressViewModel? Address { get; set; }
 }

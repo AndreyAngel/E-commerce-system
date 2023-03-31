@@ -1,16 +1,20 @@
 ﻿using AutoMapper;
 using IdentityAPI.Exceptions;
 using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.ViewModels;
+using IdentityAPI.Models.ViewModels.Requests;
+using IdentityAPI.Models.ViewModels.Responses;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace IdentityAPI.Controllers;
 
-[Route("api/[controller]/[action]")]
+
+[Authorize]
 [ApiController]
+[Route("api/[controller]/[action]")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -26,8 +30,68 @@ public class UserController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize]
+    [HttpGet("{userId:Guid}")]
+    public async Task<ActionResult<UserViewModelResponse>> GetById(Guid userId)
+    {
+        try
+        {
+            var user = await _userService.GetById(userId.ToString());
+            var response = _mapper.Map<UserViewModelResponse>(user);
+
+            return Ok(response);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        finally
+        {
+            _userManager.Dispose();
+        }
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<ActionResult<UserViewModelResponse>> GetYourUserData()
+    {
+        try
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split().Last();
+            var userId = new JwtSecurityToken(accessToken).Claims.First(x => x.Type == "Id");
+            var user = await _userService.GetById(userId.Value);
+            var response = _mapper.Map<UserViewModelResponse>(user);
+
+            return Ok(response);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        finally
+        {
+            _userManager.Dispose();
+        }
+    }
+
     [HttpPost]
-    public async Task<ActionResult<IdentityResult>> Register(RegisterViewModel model)
+    [AllowAnonymous]
+    public ActionResult<AccessTokenViewModelResponse> GetAccessToken(GetAccessTokenRequest model)
+    {
+        try
+        {
+            var response = _userService.GetAccessToken(model.RefreshToken);
+            return Ok(response);
+        }
+        finally
+        {
+            _userManager.Dispose();
+        }
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticateViewModelResponse>> Register(RegisterViewModel model)
     {
         try
         {
@@ -47,7 +111,8 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<IdentityResult>> Login(LoginViewModel model)
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticateViewModelResponse>> Login(LoginViewModel model)
     {
         try
         {
@@ -69,28 +134,8 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "Admin")]
     public async Task Logout()
     {
     
-    }
-
-    [Authorize]
-    [HttpGet("{userId:Guid}")]
-    public ActionResult GetById(Guid userId)
-    {
-        try
-        {
-            var user = _userService.GetById(userId);
-            return Ok(user);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        finally
-        {
-            _userManager.Dispose();
-        }
     }
 }

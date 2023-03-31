@@ -1,8 +1,9 @@
-using IdentityAPI;
+using IdentityAPI.Helpers;
 using IdentityAPI.Models.DataBase;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -45,15 +46,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     ValidateIssuerSigningKey = false,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"])),
                 });
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", builder =>
     {
-        builder.RequireClaim(ClaimTypes.Role, "admin");
+        builder.RequireClaim(ClaimTypes.Role, "Admin");
     });
 });
 
 // Add services to the container.
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

@@ -54,7 +54,7 @@ public class UserService : IUserService
         await _userManager.AddClaimsAsync(user, new List<Claim>()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim("Role", userRole.Name)
+            new Claim(ClaimTypes.Role, userRole.Name)
         });
 
         var token = _configuration.GenerateJwtToken(user, userRole.Name);

@@ -5,6 +5,8 @@ using CatalogAPI.Models.DataBase;
 using CatalogAPI.Models.ViewModels;
 using AutoMapper;
 using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CatalogAPI.Controllers;
 
@@ -98,6 +100,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult<ProductViewModelResponce>> Create(ProductViewModelRequest model)
     {
         try
@@ -126,6 +129,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult<ProductViewModelResponce>> Update(int id, ProductViewModelRequest model)
     {
         try
@@ -159,6 +163,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult> Delete(int id)
     {
         try

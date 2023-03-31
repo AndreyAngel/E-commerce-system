@@ -7,6 +7,12 @@ using CatalogAPI;
 using CatalogAPI.Models.DataBase;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.UnitOfWork;
+using CatalogAPI.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +26,24 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Catalog.db"));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = builder.Configuration["Issuer"],
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"])),
+                });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", builder =>
+    {
+        builder.RequireClaim(ClaimTypes.Role, "Admin");
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -63,6 +87,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//app.UseMiddleware<AuthorizeMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

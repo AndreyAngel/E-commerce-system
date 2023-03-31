@@ -69,7 +69,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     public async Task Logout()
     {
     

@@ -5,6 +5,8 @@ using CatalogAPI.Services.Interfaces;
 using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CatalogAPI.Controllers;
 
@@ -84,6 +86,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult<CategoryViewModelResponce>> Create(CategoryViewModelRequest model)
     {
         try
@@ -108,6 +111,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = "Admin")]
     public async Task<ActionResult<CategoryViewModelResponce>> Update(int id, CategoryViewModelRequest model)
     {
         try

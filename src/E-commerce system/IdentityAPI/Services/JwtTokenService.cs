@@ -13,7 +13,7 @@ public static class JwtTokenService
         List<Claim> claims = new()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim("Role", role)
+            new Claim(ClaimTypes.Role, role)
         };
 
         var key = Encoding.UTF8.GetBytes(configuration["Secret"]);

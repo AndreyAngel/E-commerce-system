@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
-using IdentityAPI.Exceptions;
-using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.ViewModels.Requests;
-using IdentityAPI.Models.ViewModels.Responses;
-using IdentityAPI.Services;
-using Infrastructure.Exceptions;
+using OrderAPI.Exceptions;
+using OrderAPI.Models.DataBase.Entities;
+using OrderAPI.Models.ViewModels.Requests;
+using OrderAPI.Models.ViewModels.Responses;
+using OrderAPI.Services;
+using OrderAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security;
 
-namespace IdentityAPI.Controllers;
+namespace OrderAPI.Controllers;
 
 /// <summary>
 /// Provides the APIs for handling all the user logic
@@ -46,8 +47,12 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userId"> User Id </param>
     /// <returns> The task object containing the action result of getting user information </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> User with this Id wasn't founded </response>
     [Authorize]
     [HttpGet("{userId:Guid}")]
+    [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<UserViewModelResponse>> GetById(Guid userId)
     {
         try
@@ -71,8 +76,12 @@ public class UserController : ControllerBase
     /// Get your user information by access token from headers
     /// </summary>
     /// <returns> The task object containing the action result of getting user information </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> User with this Id from the access token wasn't founded </response>
     [HttpGet]
     [Authorize]
+    [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<UserViewModelResponse>> GetYourUserData()
     {
         try
@@ -97,10 +106,14 @@ public class UserController : ControllerBase
     /// <summary>
     /// Get new access token with refresh token
     /// </summary>
-    /// <param name="model"> Request view model for get access token </param>
+    /// <param name="model"> Model of request for get access token </param>
     /// <returns> The task object containing the action result of get access token </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="403"> Insecure request </response>
     [HttpPost]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(AccessTokenViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.Forbidden)]
     public async Task<ActionResult<AccessTokenViewModelResponse>> GetAccessToken(GetAccessTokenRequest model)
     {
         try
@@ -110,7 +123,7 @@ public class UserController : ControllerBase
         }
         catch (SecurityException ex)
         {
-            return BadRequest(ex.Message);
+            return Forbid(ex.Message);
         }
         finally
         {
@@ -123,8 +136,12 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="model"> Registration view model </param>
     /// <returns> The task object containing the authorization result </returns>
+    /// <response code="201"> User registrated </response>
+    /// <response code="400"> Incorrect data was sent during registration </response>
     [HttpPost]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<ActionResult<AuthorizationViewModelResponse>> Register(RegisterViewModel model)
     {
         try
@@ -132,11 +149,12 @@ public class UserController : ControllerBase
             var user = _mapper.Map<User>(model);
             var result = await _userService.Register(user, model.Password, model.Role);
 
+            if (result.GetType() == typeof(IdentityErrorsViewModelResponse))
+            {
+                return BadRequest(result);
+            }
+
             return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
         }
         finally
         {
@@ -149,8 +167,14 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="model"> Login view model </param>
     /// <returns> The task object containing the authorization result </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> Incorrect data was sent during registration </response>
+    /// <response code="401"> Incorrect password </response>
     [HttpPost]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<ActionResult<AuthorizationViewModelResponse>> Login(LoginViewModel model)
     {
         try

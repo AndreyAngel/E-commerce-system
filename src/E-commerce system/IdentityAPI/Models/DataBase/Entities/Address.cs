@@ -1,4 +1,4 @@
-﻿namespace IdentityAPI.Models.DataBase.Entities;
+﻿namespace OrderAPI.Models.DataBase.Entities;
 
 /// <summary>
 /// Entity storing address data

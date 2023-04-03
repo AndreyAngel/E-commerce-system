@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Models.DataBase;
+﻿namespace OrderAPI.Models.DataBase;
 
 public class Brand : BaseEntity
 {

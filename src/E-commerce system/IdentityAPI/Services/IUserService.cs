@@ -1,12 +1,13 @@
-using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.ViewModels.Requests;
-using IdentityAPI.Models.ViewModels.Responses;
-using Infrastructure.Models;
-using Infrastructure.Exceptions;
-using IdentityAPI.Exceptions;
+using OrderAPI.Models.DataBase.Entities;
+using OrderAPI.Models.ViewModels.Requests;
+using OrderAPI.Models.ViewModels.Responses;
+using OrderAPI.Models;
+using OrderAPI.Exceptions;
+using OrderAPI.Exceptions;
 using System.Security;
+using OrderAPI.Models.Enums;
 
-namespace IdentityAPI.Services;
+namespace OrderAPI.Services;
 
 /// <summary>
 /// Interface for class providing the APIs for managing user in a persistence store.

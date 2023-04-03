@@ -1,10 +1,10 @@
-﻿using IdentityAPI.Models.Enums;
+﻿using OrderAPI.Models.Enums;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace IdentityAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 /// <summary>
 /// Class for working with JWT tokens

@@ -1,4 +1,4 @@
-﻿using Infrastructure.DTO;
+﻿using OrderAPI.DTO;
 using MassTransit;
 using OrderAPI.Services.Interfaces;
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Infrastructure.Exceptions;
+using OrderAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models.DataBase;

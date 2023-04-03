@@ -1,6 +1,6 @@
-﻿using CatalogAPI.Models.DataBase;
+﻿using OrderAPI.Models.DataBase;
 
-namespace CatalogAPI.Services.Interfaces;
+namespace OrderAPI.Services.Interfaces;
 
 public interface ICategoryService
 {

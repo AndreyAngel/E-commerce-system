@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Models.ViewModels;
+﻿namespace OrderAPI.Models.ViewModels;
 
 public class BrandViewModelResponce
 {

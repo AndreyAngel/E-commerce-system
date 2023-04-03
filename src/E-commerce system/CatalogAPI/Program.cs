@@ -1,17 +1,17 @@
 using MassTransit;
-using CatalogAPI.Consumers;
+using OrderAPI.Consumers;
 using Microsoft.EntityFrameworkCore;
-using CatalogAPI.Services.Interfaces;
-using CatalogAPI.Services;
-using CatalogAPI.Models.DataBase;
-using CatalogAPI.UnitOfWork.Interfaces;
-using CatalogAPI.UnitOfWork;
-using CatalogAPI.Helpers;
+using OrderAPI.Services.Interfaces;
+using OrderAPI.Services;
+using OrderAPI.Models.DataBase;
+using OrderAPI.UnitOfWork.Interfaces;
+using OrderAPI.UnitOfWork;
+using OrderAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Infrastructure.Models;
+using OrderAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

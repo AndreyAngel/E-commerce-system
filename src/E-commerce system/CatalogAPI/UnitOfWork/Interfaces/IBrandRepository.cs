@@ -1,6 +1,6 @@
-﻿using CatalogAPI.Models.DataBase;
+﻿using OrderAPI.Models.DataBase;
 
-namespace CatalogAPI.UnitOfWork.Interfaces;
+namespace OrderAPI.UnitOfWork.Interfaces;
 
 public interface IBrandRepository : IGenericRepository<Brand>
 {

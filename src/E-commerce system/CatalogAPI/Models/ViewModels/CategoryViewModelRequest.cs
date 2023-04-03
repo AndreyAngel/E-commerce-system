@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CatalogAPI.Models.ViewModels;
+namespace OrderAPI.Models.ViewModels;
 
 public class CategoryViewModelRequest
 {

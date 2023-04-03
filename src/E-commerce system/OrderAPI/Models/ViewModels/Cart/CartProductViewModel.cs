@@ -1,4 +1,4 @@
-﻿using Infrastructure.DTO;
+﻿using OrderAPI.DTO;
 using System.ComponentModel.DataAnnotations;
 
 namespace OrderAPI.Models.ViewModels.Cart;

@@ -1,21 +1,18 @@
-using IdentityAPI.Exceptions;
-using IdentityAPI.Helpers;
-using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.ViewModels.Requests;
-using IdentityAPI.Models.ViewModels.Responses;
-using Infrastructure.DTO;
-using Infrastructure;
-using Infrastructure.Exceptions;
-using Infrastructure.Models;
+using OrderAPI.Exceptions;
+using OrderAPI.Helpers;
+using OrderAPI.Models.DataBase.Entities;
+using OrderAPI.Models.ViewModels.Requests;
+using OrderAPI.Models.ViewModels.Responses;
+using OrderAPI.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security;
 using System.Security.Claims;
 using MassTransit;
-using System;
+using OrderAPI.Models.Enums;
 
-namespace IdentityAPI.Services;
+namespace OrderAPI.Services;
 
 /// <summary>
 /// Provides the APIs for managing user in a persistence store.
@@ -120,7 +117,7 @@ public class UserService : UserManager<User>, IUserService
 
         var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
 
-        return new AuthorizationViewModelResponse(900, accessToken, refraeshToken);
+        return new AuthorizationViewModelResponse(900, accessToken, refraeshToken, "Bearer");
     }
 
     /// <summary>
@@ -134,7 +131,7 @@ public class UserService : UserManager<User>, IUserService
     {
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
         var result = await CreateAsync(user, Password);
-        await CreateCart(Guid.Parse(user.Id));
+        await CreateCart(new Guid(user.Id));
 
         if (!result.Succeeded)
         {
@@ -155,7 +152,7 @@ public class UserService : UserManager<User>, IUserService
         
         var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
 
-        return new AuthorizationViewModelResponse(900, accessToken, refreshToken);
+        return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
     }
 
     /// <summary>
@@ -197,7 +194,7 @@ public class UserService : UserManager<User>, IUserService
 
         var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
 
-        return new AccessTokenViewModelResponse(900, accessToken);
+        return new AccessTokenViewModelResponse(900, accessToken, "Bearer");
     }
 
     /// <summary>

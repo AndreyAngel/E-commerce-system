@@ -1,5 +1,8 @@
-﻿namespace IdentityAPI.Models.ViewModels.Responses;
+﻿namespace OrderAPI.Models.ViewModels.Responses;
 
+/// <summary>
+/// Identity response interface
+/// </summary>
 public interface IIdentityViewModelResponse
 {
 }

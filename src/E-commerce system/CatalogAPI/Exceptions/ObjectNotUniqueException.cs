@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Exceptions;
+﻿namespace OrderAPI.Exceptions;
 
 public class ObjectNotUniqueException: ArgumentException
 {

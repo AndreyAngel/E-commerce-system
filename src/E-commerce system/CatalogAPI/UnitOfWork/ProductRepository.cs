@@ -1,7 +1,7 @@
-﻿using CatalogAPI.Models.DataBase;
-using CatalogAPI.UnitOfWork.Interfaces;
+﻿using OrderAPI.Models.DataBase;
+using OrderAPI.UnitOfWork.Interfaces;
 
-namespace CatalogAPI.UnitOfWork;
+namespace OrderAPI.UnitOfWork;
 
 public class ProductRepository : GenericRepository<Product>, IProductRepository
 {

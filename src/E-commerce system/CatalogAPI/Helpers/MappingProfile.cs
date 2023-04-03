@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using CatalogAPI.Models.DataBase;
-using CatalogAPI.Models.ViewModels;
-using Infrastructure.DTO;
+using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels;
+using OrderAPI.DTO;
 
-namespace CatalogAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 public class MappingProfile : Profile
 {

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Models;
+﻿namespace OrderAPI.Models;
 
 public class Product
 {

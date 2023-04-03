@@ -1,9 +1,9 @@
 ﻿using OrderAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
-using Infrastructure;
-using Infrastructure.DTO;
-using Infrastructure.Exceptions;
+using OrderAPI;
+using OrderAPI.DTO;
+using OrderAPI.Exceptions;
 using OrderAPI.Models.DataBase;
 using AutoMapper;
 using OrderAPI.UnitOfWork.Interfaces;
@@ -17,6 +17,7 @@ public class CartService: ICartService
     private readonly IBusControl _bus;
     private readonly IMapper _mapper;
     private readonly ICartProductService _cartProductService;
+
     public CartService(IUnitOfWork unitOfWork, IBusControl bus, IMapper mapper, ICartProductService cartProductService)
     {
         _db = unitOfWork;
@@ -47,8 +48,6 @@ public class CartService: ICartService
     // The cart is created automatically after user registration 
     public async Task<CartViewModelResponse> Create(Guid id)
     {
-        //todo: передача идентификатора не равного UserId
-
         Cart cart = new() { Id = id };
 
         await _db.Carts.AddAsync(cart);

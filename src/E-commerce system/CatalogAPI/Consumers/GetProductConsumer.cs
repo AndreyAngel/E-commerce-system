@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using CatalogAPI.Services.Interfaces;
-using Infrastructure.DTO;
-using Infrastructure.Exceptions;
+using OrderAPI.Services.Interfaces;
+using OrderAPI.DTO;
+using OrderAPI.Exceptions;
 using MassTransit;
 
-namespace CatalogAPI.Consumers;
+namespace OrderAPI.Consumers;
 
 public class GetProductConsumer: IConsumer<ProductDTO>
 {

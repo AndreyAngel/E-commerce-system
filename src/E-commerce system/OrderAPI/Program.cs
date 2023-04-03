@@ -1,5 +1,5 @@
-using Infrastructure.DTO;
-using Infrastructure.Models;
+using OrderAPI.DTO;
+using OrderAPI.Models;
 using MassTransit;
 using MassTransit.Transports.Fabric;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

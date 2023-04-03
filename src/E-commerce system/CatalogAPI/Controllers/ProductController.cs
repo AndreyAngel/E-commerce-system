@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CatalogAPI.Services.Interfaces;
-using Infrastructure.Exceptions;
-using CatalogAPI.Models.DataBase;
-using CatalogAPI.Models.ViewModels;
+using OrderAPI.Services.Interfaces;
+using OrderAPI.Exceptions;
+using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels;
 using AutoMapper;
-using CatalogAPI.UnitOfWork.Interfaces;
+using OrderAPI.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace CatalogAPI.Controllers;
+namespace OrderAPI.Controllers;
 
 
 [Route("api/v1/cat/[controller]/[action]")]

@@ -1,17 +1,20 @@
-using IdentityAPI.Helpers;
-using IdentityAPI.Models.DataBase;
-using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Services;
-using Infrastructure;
-using Infrastructure.DTO;
-using Infrastructure.Models;
+using OrderAPI.Helpers;
+using OrderAPI.Models.DataBase;
+using OrderAPI.Models.DataBase.Entities;
+using OrderAPI.Services;
+using OrderAPI;
+using OrderAPI.DTO;
+using OrderAPI.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
+using OrderAPI.Models.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,7 +83,42 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = AppContext.BaseDirectory;
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(basePath, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+
+    options.SchemaFilter<EnumTypesSchemaFilter>(xmlPath);
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"Enter access token: Bearer {token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+{
+    {
+      new OpenApiSecurityScheme
+      {
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+        },
+      },
+      new List<string>()
+    }
+});
+});
 
 var app = builder.Build();
 
@@ -88,6 +126,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI();
 }
 

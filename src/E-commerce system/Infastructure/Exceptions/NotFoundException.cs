@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Exceptions;
+﻿namespace OrderAPI.Exceptions;
 
 public class NotFoundException: ArgumentException
 {

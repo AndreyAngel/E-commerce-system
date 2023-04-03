@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using OrderAPI.Models.DataBase;
-using Infrastructure.DTO;
+using OrderAPI.DTO;
 using OrderAPI.Models.ViewModels.Cart;
 using OrderAPI.Models.ViewModels.Order;
 

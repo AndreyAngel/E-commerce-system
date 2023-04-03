@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models.DataBase;
 using AutoMapper;
-using Infrastructure.Exceptions;
+using OrderAPI.Exceptions;
 using OrderAPI.UnitOfWork.Interfaces;
 using OrderAPI.Models.ViewModels.Cart;
 using Microsoft.AspNetCore.Authorization;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 
-namespace CatalogAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {

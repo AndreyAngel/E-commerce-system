@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderAPI.Services.Interfaces;
-using Infrastructure.Exceptions;
-using Infrastructure.DTO;
-using Infrastructure;
+using OrderAPI.Exceptions;
+using OrderAPI.DTO;
+using OrderAPI;
 using MassTransit;
 using OrderAPI.Models.DataBase;
 using AutoMapper;

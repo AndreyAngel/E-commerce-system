@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.UnitOfWork.Interfaces;
+﻿namespace OrderAPI.UnitOfWork.Interfaces;
 
 public interface IUnitOfWork
 {

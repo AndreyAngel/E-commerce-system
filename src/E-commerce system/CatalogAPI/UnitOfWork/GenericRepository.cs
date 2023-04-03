@@ -1,8 +1,8 @@
-﻿using CatalogAPI.Models.DataBase;
-using CatalogAPI.UnitOfWork.Interfaces;
+﻿using OrderAPI.Models.DataBase;
+using OrderAPI.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-namespace CatalogAPI.UnitOfWork;
+namespace OrderAPI.UnitOfWork;
 
 public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
 {

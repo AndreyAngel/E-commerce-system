@@ -1,12 +1,12 @@
-﻿using CatalogAPI.Services.Interfaces;
-using Infrastructure.DTO;
+﻿using OrderAPI.Services.Interfaces;
+using OrderAPI.DTO;
 using AutoMapper;
-using Infrastructure.Exceptions;
-using CatalogAPI.Models.DataBase;
-using CatalogAPI.Models.ViewModels;
-using CatalogAPI.UnitOfWork.Interfaces;
+using OrderAPI.Exceptions;
+using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels;
+using OrderAPI.UnitOfWork.Interfaces;
 
-namespace CatalogAPI.Services;
+namespace OrderAPI.Services;
 
 public class ProductService: IProductService
 {

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.DTO;
+﻿namespace OrderAPI.DTO;
 
 public class ProductDTO
 {

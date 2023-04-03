@@ -1,8 +1,8 @@
-﻿using CatalogAPI.Models.DataBase;
-using CatalogAPI.Models.ViewModels;
-using Infrastructure.DTO;
+﻿using OrderAPI.Models.DataBase;
+using OrderAPI.Models.ViewModels;
+using OrderAPI.DTO;
 
-namespace CatalogAPI.Services.Interfaces;
+namespace OrderAPI.Services.Interfaces;
 
 public interface IProductService
 {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.ViewModels;
-using IdentityAPI.Models.ViewModels.Requests;
-using IdentityAPI.Models.ViewModels.Responses;
+using OrderAPI.Models.DataBase.Entities;
+using OrderAPI.Models.ViewModels;
+using OrderAPI.Models.ViewModels.Requests;
+using OrderAPI.Models.ViewModels.Responses;
 
-namespace IdentityAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 /// <summary>
 /// Class for models mapping

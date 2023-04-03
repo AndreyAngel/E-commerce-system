@@ -1,8 +1,8 @@
 ﻿using MassTransit;
-using Infrastructure.DTO;
-using CatalogAPI.Services.Interfaces;
+using OrderAPI.DTO;
+using OrderAPI.Services.Interfaces;
 
-namespace CatalogAPI.Consumers;
+namespace OrderAPI.Consumers;
 
 public class CheckProductsConsumer : IConsumer<ProductListDTO<Guid>>
 {

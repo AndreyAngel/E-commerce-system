@@ -11,7 +11,7 @@ namespace OrderAPI.Controllers
 {
     [ApiController]
     [Authorize (Policy = "Cart")]
-    [Route("api/v1/ord/cart/[action]")]
+    [Route("api/v1/ord/[controller]/[action]")]
     public class CartController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +19,8 @@ namespace OrderAPI.Controllers
         private readonly ICartProductService _productService;
         private readonly IMapper _mapper;
 
-        public CartController(IUnitOfWork unitOfWork, ICartService cartService, ICartProductService productService, IMapper mapper)
+        public CartController(IUnitOfWork unitOfWork, ICartService cartService,
+                              ICartProductService productService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _cartService = cartService;
@@ -27,17 +28,13 @@ namespace OrderAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{cartId:int}")]
-        public async Task<ActionResult<CartViewModel>> GetById(int cartId)
+        [HttpGet("{cartId:Guid}")]
+        public async Task<ActionResult<CartViewModel>> GetById(Guid cartId)
         {
             try
             {
                 CartViewModel cart = await _cartService.GetById(cartId);
                 return Ok(cart);
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch(NotFoundException ex)
             {
@@ -63,13 +60,8 @@ namespace OrderAPI.Controllers
                 await _cartService.ComputeTotalValue(cartProduct.CartId);
 
                 await _unitOfWork.SaveChangesAsync();
-                product.Id = cartProduct.Id;
 
-                return Created(new Uri($"https://localhost:7045/api/v1/ord/cart/GetById/{model.CartId}"), product);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return BadRequest(ex.Message);
+                return Created(new Uri($"https://localhost:7045/api/v1/ord/Cart/GetById/{cartProduct.CartId}"), product);
             }
             catch (NotFoundException ex)
             {
@@ -85,8 +77,8 @@ namespace OrderAPI.Controllers
             }
         }
 
-        [HttpDelete("{cartId:int},{cartProductId:int}")]
-        public async Task<ActionResult<CartViewModel>> DeleteProduct(int cartId, int cartProductId)
+        [HttpDelete("{cartId:Guid},{cartProductId:Guid}")]
+        public async Task<ActionResult<CartViewModel>> DeleteProduct(Guid cartId, Guid cartProductId)
         {
             try
             {
@@ -96,10 +88,6 @@ namespace OrderAPI.Controllers
                 await _unitOfWork.SaveChangesAsync();
                 
                 return Ok(cart);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -111,8 +99,8 @@ namespace OrderAPI.Controllers
             }
         }
 
-        [HttpPut("{cartProductId:int}")]
-        public async Task<ActionResult<CartViewModel>> QuantityChange(int cartProductId, CartProductViewModelRequest model)
+        [HttpPut("{cartProductId:Guid}")]
+        public async Task<ActionResult<CartViewModel>> QuantityChange(Guid cartProductId, CartProductViewModelRequest model)
         {
             try
             {
@@ -126,10 +114,6 @@ namespace OrderAPI.Controllers
 
                 return Ok(cart);
             }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -144,8 +128,8 @@ namespace OrderAPI.Controllers
             }
         }
 
-        [HttpDelete("{cartId:int}")]
-        public async Task<ActionResult<CartViewModel>> Clear(int cartId)
+        [HttpDelete("{cartId:Guid}")]
+        public async Task<ActionResult<CartViewModel>> Clear(Guid cartId)
         {
             try
             {
@@ -153,10 +137,6 @@ namespace OrderAPI.Controllers
                 await _unitOfWork.SaveChangesAsync();
 
                 return Ok(res);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (NotFoundException ex)
             {

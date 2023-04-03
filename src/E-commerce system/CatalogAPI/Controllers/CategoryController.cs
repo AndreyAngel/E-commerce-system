@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CatalogAPI.Controllers;
 
 
-[Route("api/v1/cat/category/[action]")]
+[Route("api/v1/cat/[controller]/[action]")]
 [ApiController]
 public class CategoryController : ControllerBase
 {
@@ -41,8 +41,8 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<CategoryViewModelResponce> GetById(int id)
+    [HttpGet("{id:Guid}")]
+    public ActionResult<CategoryViewModelResponce> GetById(Guid id)
     {
         try
         {
@@ -50,10 +50,6 @@ public class CategoryController : ControllerBase
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
             return Ok(res);
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch (NotFoundException ex)
         {
@@ -98,7 +94,7 @@ public class CategoryController : ControllerBase
 
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
-            return Created(new Uri($"https://localhost:5192/api/v1/cat/category/GetById/{result.Id}"), res);
+            return Created(new Uri($"https://localhost:5192/api/v1/cat/Category/GetById/{result.Id}"), res);
         }
         catch(ObjectNotUniqueException ex)
         {
@@ -110,9 +106,9 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<CategoryViewModelResponce>> Update(int id, CategoryViewModelRequest model)
+    public async Task<ActionResult<CategoryViewModelResponce>> Update(Guid id, CategoryViewModelRequest model)
     {
         try
         {
@@ -125,10 +121,6 @@ public class CategoryController : ControllerBase
             var res = _mapper.Map<CategoryViewModelResponce>(result);
 
             return Ok(res);
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch (NotFoundException ex)
         {

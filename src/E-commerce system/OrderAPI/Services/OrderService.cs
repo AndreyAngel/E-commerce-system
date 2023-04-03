@@ -21,7 +21,7 @@ public class OrderService : IOrderService
         return _db.Orders.GetAll().ToList();
     }
 
-    public Order GetById(int id)
+    public Order GetById(Guid id)
     {
         var res = _db.Orders.Include(x => x.CartProducts).AsNoTracking().SingleOrDefault(x => x.Id == id);
 
@@ -74,9 +74,7 @@ public class OrderService : IOrderService
             cartProducts.Add(new CartProduct() { Id = order.CartProducts[i].Id });
         }
 
-        order.CartProducts = new List<CartProduct>();
         await _db.Orders.AddAsync(order);
-        order.Id = _db.Orders.GetAll().Count() + 1;
 
         for (int i = 0; i < cartProducts.Count; i++)
         {
@@ -112,7 +110,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order> IsReady(int id)
+    public async Task<Order> IsReady(Guid id)
     {
         var order = _db.Orders.GetById(id);
 
@@ -127,7 +125,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order> IsReceived(int id)
+    public async Task<Order> IsReceived(Guid id)
     {
         var order = _db.Orders.GetById(id);
 
@@ -142,7 +140,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order> Cancel(int id)
+    public async Task<Order> Cancel(Guid id)
     {
         var order = _db.Orders.GetById(id);
 
@@ -157,7 +155,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order> IsPaymented(int id)
+    public async Task<Order> IsPaymented(Guid id)
     {
         var order = _db.Orders.GetById(id);
 

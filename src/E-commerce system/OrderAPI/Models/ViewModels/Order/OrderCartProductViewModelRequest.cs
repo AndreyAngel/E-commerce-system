@@ -1,6 +1,9 @@
-﻿namespace OrderAPI.Models.ViewModels.Order;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OrderAPI.Models.ViewModels.Order;
 
 public class OrderCartProductViewModelRequest
 {
-    public int Id { get; set; }
+    [Required]
+    public Guid Id { get; set; }
 }

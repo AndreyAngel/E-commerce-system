@@ -24,19 +24,19 @@ public class GetProductConsumer: IConsumer<ProductDTO>
         {
             var product = _service.GetById(content.Id);
             var result = _mapper.Map<ProductDTO>(product);
-            await context.RespondAsync<ProductDTO>(result);
+            await context.RespondAsync(result);
         }
         catch(NotFoundException ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message});
+            await context.RespondAsync(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message});
         }
         catch (ArgumentOutOfRangeException ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
+            await context.RespondAsync(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
         }
         catch(Exception ex)
         {
-            await context.RespondAsync<ProductDTO>(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
+            await context.RespondAsync(new ProductDTO() { Id = content.Id, ErrorMessage = ex.Message });
         }
     }
 }

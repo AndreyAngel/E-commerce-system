@@ -18,14 +18,8 @@ public class CategoryService: ICategoryService
         return _db.Categories.GetAll().ToList();
     }
 
-    public Category GetById(int id)
+    public Category GetById(Guid id)
     {
-
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid categoryId");
-        }
-
         var res = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -62,11 +56,6 @@ public class CategoryService: ICategoryService
 
     public async Task<Category> Update(Category category)
     {
-        if (category.Id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(category.Id), "Invalid categoryId");
-        }
-
         var res = _db.Categories.GetById(category.Id);
 
         if (res == null)

@@ -8,7 +8,7 @@ public interface IProductService
 {
     public List<Product> Get();
 
-    public Product GetById(int id);
+    public Product GetById(Guid id);
 
     public Product GetByName(string name);
 
@@ -18,5 +18,5 @@ public interface IProductService
 
     public Task<Product> Update(Product product);
 
-    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<int> products);
+    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<Guid> products);
 }

@@ -7,5 +7,5 @@ public interface ICartProductService
 {
     Task<CartProductViewModelResponse> Create(CartProduct cartProduct);
     Task<CartProduct> Update(CartProduct cartProduct);
-    Task Delete(int id);
+    Task Delete(Guid id);
 }

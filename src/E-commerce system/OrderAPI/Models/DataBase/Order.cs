@@ -2,7 +2,7 @@
 
 public class Order : BaseEntity
 {
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public List<CartProduct> CartProducts { get; set; } = new();
 

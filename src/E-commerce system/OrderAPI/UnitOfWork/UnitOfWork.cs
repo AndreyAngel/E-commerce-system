@@ -44,11 +44,11 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     {
         if (!_isDisposed && disposing)
         {
-            // Освобождаем управляемые ресурсы
+            // Освобождаем все ресурсы ресурсы
+            _context.Dispose();
+            _isDisposed = true;
         }
-
         // Освобождаем неуправляемые ресурсы
-        _context.Dispose();
-        _isDisposed = true;
+        
     }
 }

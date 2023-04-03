@@ -17,7 +17,7 @@ namespace IdentityAPI.Controllers;
 /// </summary>
 [Authorize]
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/v1/identity/[controller]/[action]")]
 public class UserController : ControllerBase
 {
     /// <summary>
@@ -132,6 +132,7 @@ public class UserController : ControllerBase
             var user = _mapper.Map<User>(model);
             var result = await _userService.Register(user, model.Password, model.Role);
 
+            // todo: изменить reaponse на Created
             return Ok(result);
         }
         catch (Exception ex)

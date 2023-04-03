@@ -5,12 +5,12 @@ namespace OrderAPI.Models.ViewModels.Cart;
 
 public class CartProductViewModel
 {
-    [Range(1, int.MaxValue, ErrorMessage = "Invalid Id")]
-    public int Id { get; set; }
+    [Required]
+    public Guid Id { get; set; }
 
 
-    [Range(1, int.MaxValue, ErrorMessage = "Invalid ProductId")]
-    public int ProductId { get; set; }
+    [Required]
+    public Guid ProductId { get; set; }
     public ProductDTO? Product { get; set; }
 
 
@@ -22,8 +22,8 @@ public class CartProductViewModel
     public double TotalValue { get; set; } = 0;
 
 
-    [Range(1, int.MaxValue, ErrorMessage = "Invalid CartId")]
-    public int CartId { get; set; }
+    [Required]
+    public Guid CartId { get; set; }
 
     public void ComputeTotalValue()
     {

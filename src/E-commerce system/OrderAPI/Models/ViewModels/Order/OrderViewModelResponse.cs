@@ -1,14 +1,17 @@
 ﻿using OrderAPI.Models.ViewModels.Cart;
+using System.ComponentModel.DataAnnotations;
 
 namespace OrderAPI.Models.ViewModels.Order;
 
 public class OrderViewModelResponse
 {
-    public int Id { get; set; }
+    [Required]
+    public Guid Id { get; set; }
 
-    public int UserId { get; set; }
+    [Required]
+    public Guid UserId { get; set; }
 
-    public List<CartProductViewModel> CartProducts { get; set; }
+    public List<CartProductViewModel> CartProducts { get; set; } = new();
 
     public bool IsReady { get; set; }
 

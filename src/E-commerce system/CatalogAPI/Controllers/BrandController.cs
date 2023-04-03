@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CatalogAPI.Controllers;
 
 
-[Route("api/v1/cat/brand/[action]")]
+[Route("api/v1/cat/[controller]/[action]")]
 [ApiController]
 public class BrandController : ControllerBase
 {
@@ -40,8 +40,8 @@ public class BrandController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<BrandViewModelResponce> GetById(int id)
+    [HttpGet("{id:Guid}")]
+    public ActionResult<BrandViewModelResponce> GetById(Guid id)
     {
         try
         {
@@ -49,10 +49,6 @@ public class BrandController : ControllerBase
             var res = _mapper.Map<BrandViewModelResponce>(result);
 
             return Ok(res);
-        }
-        catch(ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch(NotFoundException ex)
         {
@@ -97,7 +93,7 @@ public class BrandController : ControllerBase
 
             var res = _mapper.Map<BrandViewModelResponce>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/brand/GetById/{res.Id}"), res);
+            return Created(new Uri($"http://localhost:5192/api/v1/cat/Brand/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -109,9 +105,9 @@ public class BrandController : ControllerBase
         }
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<BrandViewModelResponce>> Update(int id, BrandViewModelRequest model)
+    public async Task<ActionResult<BrandViewModelResponce>> Update(Guid id, BrandViewModelRequest model)
     {
         try
         {

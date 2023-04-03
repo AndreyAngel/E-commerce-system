@@ -23,13 +23,8 @@ public class ProductService: IProductService
         return _db.Products.GetAll().Where(x => x.IsSale).ToList();
     }
 
-    public Product GetById(int id)
+    public Product GetById(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid productId");
-        }
-
         var res = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -105,11 +100,6 @@ public class ProductService: IProductService
 
     public async Task<Product> Update(Product product)
     {
-        if (product.Id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(product.Id), "Invalid productId");
-        }
-
         var res = _db.Products.GetById(product.Id);
 
         if ((res.Name != product.Name) && _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name) != null)
@@ -138,7 +128,7 @@ public class ProductService: IProductService
     }
 
     // Returns actuality products by ID
-    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<int> productList)
+    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<Guid> productList)
     {
         ProductListDTO<ProductDTO> products = new();
         foreach (var productId in productList.Products)

@@ -67,11 +67,6 @@ public class CartProductService: ICartProductService
 
     public async Task<CartProduct> Update(CartProduct cartProduct)
     {
-        if (cartProduct.Id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(cartProduct.Id), "Invalid cart product Id");
-        }
-
         //todo: new Exception - передача идентификатора не своей корзины
 
         if (_db.CartProducts.GetById(cartProduct.Id) == null)
@@ -96,13 +91,8 @@ public class CartProductService: ICartProductService
         return cartProduct;
     }
 
-    public async Task Delete(int id)
+    public async Task Delete(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart product Id");
-        }
-
         var res = _db.CartProducts.GetById(id);
 
         if (res == null)

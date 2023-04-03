@@ -18,13 +18,8 @@ public class BrandService: IBrandService
         return _db.Brands.GetAll().ToList();
     }
 
-    public Brand GetById(int id)
+    public Brand GetById(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid BrandId");
-        }
-
         var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -61,11 +56,6 @@ public class BrandService: IBrandService
 
     public async Task<Brand> Update(Brand brand)
     {
-        if (brand.Id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(brand.Id), "Invalid brandId");
-        }
-
         var res = _db.Brands.GetById(brand.Id);
 
         if (res == null)

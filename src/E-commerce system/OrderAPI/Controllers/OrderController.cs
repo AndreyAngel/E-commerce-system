@@ -11,7 +11,7 @@ namespace OrderAPI.Controllers;
 
 [ApiController]
 [Authorize(Policy = "LimitedAccessToOrders")]
-[Route("api/v1/ord/order/[action]")]
+[Route("api/v1/ord/[controller]/[action]")]
 public class OrderController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -43,8 +43,8 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<OrderViewModelResponse> GetById(int id)
+    [HttpGet("{id:Guid}")]
+    public ActionResult<OrderViewModelResponse> GetById(Guid id)
     {
         try
         {
@@ -91,7 +91,7 @@ public class OrderController : ControllerBase
 
             var response = _mapper.Map<OrderViewModelResponse>(res);
 
-            return Created(new Uri($"https://localhost:7045/api/v1/ord/order/GetById/{response.Id}"), response);
+            return Created(new Uri($"https://localhost:7045/api/v1/ord/Order/GetById/{response.Id}"), response);
         }
         //Сделать Exception
         finally
@@ -100,8 +100,8 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult<OrderViewModelResponse>> Update(int id, OrderViewModelRequest model)
+    [HttpPut("{id:Guid}")]
+    public async Task<ActionResult<OrderViewModelResponse>> Update(Guid id, OrderViewModelRequest model)
     {
         try
         {
@@ -124,9 +124,9 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpPatch("{id:int}")]
+    [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsReady(int id)
+    public async Task<ActionResult<OrderViewModelResponse>> IsReady(Guid id)
     {
         try
         {
@@ -147,9 +147,9 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpPatch("{id:int}")]
+    [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsReceived(int id)
+    public async Task<ActionResult<OrderViewModelResponse>> IsReceived(Guid id)
     {
         try
         {
@@ -170,8 +170,8 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpPatch("{id:int}")]
-    public async Task<ActionResult<OrderViewModelResponse>> Cancel(int id)
+    [HttpPatch("{id:Guid}")]
+    public async Task<ActionResult<OrderViewModelResponse>> Cancel(Guid id)
     {
         try
         {
@@ -194,7 +194,7 @@ public class OrderController : ControllerBase
 
     [HttpPatch("{id:int}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsPaymented(int id)
+    public async Task<ActionResult<OrderViewModelResponse>> IsPaymented(Guid id)
     {
         try
         {

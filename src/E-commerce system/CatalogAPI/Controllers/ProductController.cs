@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CatalogAPI.Controllers;
 
 
-[Route("api/v1/cat/product/[action]")]
+[Route("api/v1/cat/[controller]/[action]")]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -40,8 +40,8 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<ProductViewModelResponce> GetById(int id)
+    [HttpGet("{id:Guid}")]
+    public ActionResult<ProductViewModelResponce> GetById(Guid id)
     {
         try
         {
@@ -49,10 +49,6 @@ public class ProductController : ControllerBase
             var res = _mapper.Map<ProductViewModelResponce>(result);
 
             return Ok(res);
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch (NotFoundException ex)
         {
@@ -111,7 +107,7 @@ public class ProductController : ControllerBase
 
             var res = _mapper.Map<ProductViewModelResponce>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/product/GetById/{res.Id}"), res);
+            return Created(new Uri($"http://localhost:5192/api/v1/cat/Product/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -127,9 +123,9 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<ProductViewModelResponce>> Update(int id, ProductViewModelRequest model)
+    public async Task<ActionResult<ProductViewModelResponce>> Update(Guid id, ProductViewModelRequest model)
     {
         try
         {
@@ -143,10 +139,6 @@ public class ProductController : ControllerBase
 
             return Ok(res);
         }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
-        }
         catch (ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
@@ -161,9 +153,9 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(Guid id)
     {
         try
         {
@@ -174,10 +166,6 @@ public class ProductController : ControllerBase
             await _unitOfWork.SaveChangesAsync();
 
             return Ok();
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch (NotFoundException ex)
         {

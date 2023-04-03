@@ -25,13 +25,8 @@ public class CartService: ICartService
         _cartProductService = cartProductService;
     }
 
-    public async Task<CartViewModel> GetById(int id)
+    public async Task<CartViewModel> GetById(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
-        }
-
         var cart = await _db.Carts.Include(x => x.CartProducts.Where(x => x.OrderId == null))
                                   .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
@@ -50,13 +45,8 @@ public class CartService: ICartService
     }
 
     // The cart is created automatically after user registration 
-    public async Task<CartViewModel> Create(int id)
+    public async Task<CartViewModel> Create(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
-        }
-
         //todo: передача идентификатора не равного UserId
 
         Cart cart = new() { Id = id };
@@ -68,13 +58,8 @@ public class CartService: ICartService
         return model;
     }
 
-    public async Task<CartViewModel> ComputeTotalValue(int id)
+    public async Task<CartViewModel> ComputeTotalValue(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
-        }
-            
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -92,15 +77,8 @@ public class CartService: ICartService
         return model;
     }
 
-    public async Task<CartViewModel> Clear(int id)
+    public async Task<CartViewModel> Clear(Guid id)
     {
-        if (id <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Invalid cart id!");
-        } 
-
-        //todo: передача идентификатора не равного UserId
-
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -120,7 +98,7 @@ public class CartService: ICartService
     // Checks the relevance of products and returns a new cart
     public async Task<CartViewModel> Check(Cart cart)
     {
-        ProductListDTO<int> productsId = new ProductListDTO<int>();
+        ProductListDTO<Guid> productsId = new();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
         {
@@ -129,7 +107,7 @@ public class CartService: ICartService
 
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
         ProductListDTO<ProductDTO> response =
-            await RabbitMQClient.Request<ProductListDTO<int>, ProductListDTO<ProductDTO>>(_bus, productsId, uri);
+            await RabbitMQClient.Request<ProductListDTO<Guid>, ProductListDTO<ProductDTO>>(_bus, productsId, uri);
 
         CartViewModel model = _mapper.Map<CartViewModel>(cart);
 

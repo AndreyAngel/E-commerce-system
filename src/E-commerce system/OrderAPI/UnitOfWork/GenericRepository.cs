@@ -28,7 +28,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
             .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
     }
 
-    public TEntity? GetById(int Id)
+    public TEntity? GetById(Guid Id)
     {
         var entity = _db.Find(Id);
 

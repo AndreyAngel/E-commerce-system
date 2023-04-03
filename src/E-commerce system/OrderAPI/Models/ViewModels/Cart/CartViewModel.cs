@@ -7,7 +7,7 @@ public class CartViewModel
 {
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required(ErrorMessage = "Invalid CartId")]
-    public int Id { get; set; } // Generated during user registration (UserId == CartId)
+    public Guid Id { get; set; } // Generated during user registration (UserId == CartId)
 
     public List<CartProductViewModelResponse> CartProducts { get; set; } = new List<CartProductViewModelResponse>();
 

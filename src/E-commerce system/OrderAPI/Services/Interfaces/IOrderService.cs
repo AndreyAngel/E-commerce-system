@@ -7,7 +7,7 @@ public interface IOrderService
 {
     List<Order> GetAll();
 
-    Order GetById(int id);
+    Order GetById(Guid id);
 
     List<Order> GetByFilter(OrderFilterViewModelRequest filetr);
 
@@ -15,11 +15,11 @@ public interface IOrderService
 
     Task<Order> Update(Order order);
 
-    Task<Order> IsReady(int id);
+    Task<Order> IsReady(Guid id);
 
-    Task<Order> IsReceived(int id);
+    Task<Order> IsReceived(Guid id);
 
-    Task<Order> Cancel(int id);
+    Task<Order> Cancel(Guid id);
 
-    Task<Order> IsPaymented(int id);
+    Task<Order> IsPaymented(Guid id);
 }

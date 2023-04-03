@@ -4,7 +4,7 @@ using CatalogAPI.Services.Interfaces;
 
 namespace CatalogAPI.Consumers;
 
-public class CheckProductsConsumer : IConsumer<ProductListDTO<int>>
+public class CheckProductsConsumer : IConsumer<ProductListDTO<Guid>>
 {
     private readonly IProductService _service;
 
@@ -12,7 +12,7 @@ public class CheckProductsConsumer : IConsumer<ProductListDTO<int>>
     {
         _service = service;
     }
-    public async Task Consume(ConsumeContext<ProductListDTO<int>> context)
+    public async Task Consume(ConsumeContext<ProductListDTO<Guid>> context)
     {
         var content = context.Message;
         var res = _service.CheckProducts(content);

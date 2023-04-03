@@ -10,8 +10,8 @@ using CatalogAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +36,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", builder =>
+    options.AddPolicy("ChangingOfCatalog", builder =>
     {
-        builder.RequireClaim(ClaimTypes.Role, "Admin");
+        builder.RequireRole(Role.Admin.ToString() , Role.Salesman.ToString());
     });
 });
 
@@ -86,7 +86,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseMiddleware<AuthorizeMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

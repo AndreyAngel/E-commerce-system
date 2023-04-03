@@ -2,12 +2,12 @@ using IdentityAPI.Helpers;
 using IdentityAPI.Models.DataBase;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Services;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,7 +51,7 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", builder =>
     {
-        builder.RequireClaim(ClaimTypes.Role, "Admin");
+        builder.RequireRole(Role.Admin.ToString());
     });
 });
 
@@ -61,6 +61,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

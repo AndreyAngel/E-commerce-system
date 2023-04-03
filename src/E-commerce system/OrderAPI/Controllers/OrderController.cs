@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderAPI.Models.DataBase;
 using OrderAPI.Models.ViewModels.Order;
@@ -8,8 +9,9 @@ using OrderAPI.UnitOfWork.Interfaces;
 
 namespace OrderAPI.Controllers;
 
-[Route("api/v1/ord/order/[action]")]
 [ApiController]
+[Authorize(Policy = "LimitedAccessToOrders")]
+[Route("api/v1/ord/order/[action]")]
 public class OrderController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -123,6 +125,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [Authorize(Policy = "FullAccessToOrders")]
     public async Task<ActionResult<OrderViewModelResponse>> IsReady(int id)
     {
         try
@@ -145,6 +148,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [Authorize(Policy = "FullAccessToOrders")]
     public async Task<ActionResult<OrderViewModelResponse>> IsReceived(int id)
     {
         try
@@ -167,11 +171,11 @@ public class OrderController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsCanceled(int id)
+    public async Task<ActionResult<OrderViewModelResponse>> Cancel(int id)
     {
         try
         {
-            var order = await _orderService.IsCanceled(id);
+            var order = await _orderService.Cancel(id);
             await _unitOfWork.SaveChangesAsync();
 
             var response = _mapper.Map<OrderViewModelResponse>(order);
@@ -189,6 +193,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
+    [Authorize(Policy = "FullAccessToOrders")]
     public async Task<ActionResult<OrderViewModelResponse>> IsPaymented(int id)
     {
         try

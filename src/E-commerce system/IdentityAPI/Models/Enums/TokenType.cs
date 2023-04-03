@@ -1,6 +1,6 @@
 ﻿namespace IdentityAPI.Models.Enums;
 
-public enum TypeToken
+public enum TokenType
 {
     Refresh,
     Access

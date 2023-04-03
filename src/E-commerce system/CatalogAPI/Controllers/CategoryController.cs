@@ -86,7 +86,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "ChangingOfCatalog")]
     public async Task<ActionResult<CategoryViewModelResponce>> Create(CategoryViewModelRequest model)
     {
         try
@@ -111,7 +111,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "ChangingOfCatalog")]
     public async Task<ActionResult<CategoryViewModelResponce>> Update(int id, CategoryViewModelRequest model)
     {
         try

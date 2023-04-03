@@ -4,7 +4,7 @@ using Infrastructure.DTO;
 using OrderAPI.Models.ViewModels.Cart;
 using OrderAPI.Models.ViewModels.Order;
 
-namespace OrderAPI;
+namespace OrderAPI.Helpers;
 
 public class MappingProfile : Profile
 {
@@ -22,7 +22,7 @@ public class MappingProfile : Profile
 
         CreateMap<ProductDTO, ProductViewModel>();
 
-        CreateMap<OrderViewModelRequest,  Order>();
+        CreateMap<OrderViewModelRequest, Order>();
 
         CreateMap<Order, OrderViewModelResponse>();
 

@@ -4,10 +4,13 @@ using System.Security.Claims;
 
 namespace IdentityAPI.Helpers;
 
-public class AuthorizeHandler : AuthorizationHandler<ClaimsAuthorizationRequirement>
+/// <summary>
+/// Class for authorization handlers that need to be called for a specific requirement type
+/// </summary>
+public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-                                                   ClaimsAuthorizationRequirement requirement)
+                                                   RolesAuthorizationRequirement requirement)
     {
         if (!context.User.HasClaim(c => c.Type == ClaimTypes.Role))
         {
@@ -16,7 +19,7 @@ public class AuthorizeHandler : AuthorizationHandler<ClaimsAuthorizationRequirem
 
         var role = context.User.FindFirst(c => c.Type == ClaimTypes.Role);
 
-        if (requirement.AllowedValues.ToList().Select(x => x.ToLower()).Contains(role.Value.ToLower()))
+        if (requirement.AllowedRoles.ToList().Select(x => x.ToLower()).Contains(role.Value.ToLower()))
         {
             context.Succeed(requirement);
         }

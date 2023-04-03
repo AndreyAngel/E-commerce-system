@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using IdentityAPI.Models.Enums;
+using Infrastructure.Models;
 
 namespace IdentityAPI.Models.ViewModels.Requests;
 

@@ -1,5 +1,4 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Models.Enums;
+﻿using IdentityAPI.Models.Enums;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,18 +6,39 @@ using System.Text;
 
 namespace IdentityAPI.Helpers;
 
+/// <summary>
+/// Class for working with JWT tokens
+/// </summary>
 public static class JwtTokenHelper
 {
+    /// <summary>
+    /// Generate of the JWT refresh token
+    /// </summary>
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="claims"> User claims </param>
+    /// <returns> A string containing the JWT refresh token </returns>
     public static string GenerateJwtRefreshToken(IConfiguration configuration, List<Claim> claims)
     {
-        return GenerateJwtToken(configuration, claims, TypeToken.Refresh);
+        return GenerateJwtToken(configuration, claims, TokenType.Refresh);
     }
 
+    /// <summary>
+    /// Generate of the JWT access token
+    /// </summary>
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="claims"> User claims </param>
+    /// <returns> A string containing the JWT access token </returns>
     public static string GenerateJwtAccessToken(IConfiguration configuration, List<Claim> claims)
     {
-        return GenerateJwtToken(configuration, claims, TypeToken.Access);
+        return GenerateJwtToken(configuration, claims, TokenType.Access);
     }
 
+    /// <summary>
+    /// Validate of token
+    /// </summary>
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="token"> Token to verify </param>
+    /// <returns> Validated token </returns>
     public static string ValidateToken(IConfiguration configuration, string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -35,15 +55,22 @@ public static class JwtTokenHelper
         return tokenHandler.WriteToken((JwtSecurityToken)validatedToken);
     }
 
-    private static string GenerateJwtToken(IConfiguration configuration, List<Claim> claims, TypeToken typeToken)
+    /// <summary>
+    /// Generate JWT token
+    /// </summary>
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="claims"> User claims </param>
+    /// <param name="typeToken"> Token type </param>
+    /// <returns> JWT token </returns>
+    private static string GenerateJwtToken(IConfiguration configuration, List<Claim> claims, TokenType tokenType)
     {
         var key = Encoding.UTF8.GetBytes(configuration["Secret"]);
 
         DateTime expirationTime;
 
-        if (typeToken == TypeToken.Refresh)
+        if (tokenType == TokenType.Refresh)
         {
-            expirationTime = DateTime.UtcNow.AddMonths(1);
+            expirationTime = DateTime.UtcNow.AddMonths(3);
         }
 
         else

@@ -5,7 +5,6 @@ using CatalogAPI.Models.ViewModels;
 using CatalogAPI.Models.DataBase;
 using AutoMapper;
 using CatalogAPI.UnitOfWork.Interfaces;
-using CatalogAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CatalogAPI.Controllers;
@@ -86,7 +85,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "ChangingOfCatalog")]
     public async Task<ActionResult<BrandViewModelResponce>> Create(BrandViewModelRequest model)
     {
         try
@@ -111,7 +110,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "ChangingOfCatalog")]
     public async Task<ActionResult<BrandViewModelResponce>> Update(int id, BrandViewModelRequest model)
     {
         try

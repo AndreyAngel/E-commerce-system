@@ -19,7 +19,7 @@ public interface IOrderService
 
     Task<Order> IsReceived(int id);
 
-    Task<Order> IsCanceled(int id);
+    Task<Order> Cancel(int id);
 
     Task<Order> IsPaymented(int id);
 }

@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 
-namespace CatalogAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-                                                    RolesAuthorizationRequirement requirement)
+                                                   RolesAuthorizationRequirement requirement)
     {
         if (!context.User.HasClaim(c => c.Type == ClaimTypes.Role))
         {

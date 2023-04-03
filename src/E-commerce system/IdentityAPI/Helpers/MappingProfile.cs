@@ -6,12 +6,14 @@ using IdentityAPI.Models.ViewModels.Responses;
 
 namespace IdentityAPI.Helpers;
 
+/// <summary>
+/// Class for models mapping
+/// </summary>
 public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<RegisterViewModel, User>()
-            .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
+        CreateMap<RegisterViewModel, User>().ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
 
         CreateMap<UserUpdateViewModelRequest, User>();
 

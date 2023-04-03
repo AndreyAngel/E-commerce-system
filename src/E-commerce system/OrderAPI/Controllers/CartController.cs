@@ -5,11 +5,13 @@ using AutoMapper;
 using Infrastructure.Exceptions;
 using OrderAPI.UnitOfWork.Interfaces;
 using OrderAPI.Models.ViewModels.Cart;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OrderAPI.Controllers
 {
-    [Route("api/v1/ord/cart/[action]")]
     [ApiController]
+    [Authorize (Policy = "Cart")]
+    [Route("api/v1/ord/cart/[action]")]
     public class CartController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

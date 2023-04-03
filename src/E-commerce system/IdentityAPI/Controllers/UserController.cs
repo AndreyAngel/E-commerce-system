@@ -4,32 +4,48 @@ using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.ViewModels.Requests;
 using IdentityAPI.Models.ViewModels.Responses;
 using IdentityAPI.Services;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security;
 
 namespace IdentityAPI.Controllers;
 
-
+/// <summary>
+/// Provides the APIs for handling all the user logic
+/// </summary>
 [Authorize]
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class UserController : ControllerBase
 {
+    /// <summary>
+    /// Object of class <see cref="IUserService"/> providing the APIs for managing user in a persistence store.
+    /// </summary>
     private readonly IUserService _userService;
 
-    private readonly UserManager<User> _userManager;
-
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
 
-    public UserController(IUserService userService, UserManager<User> userManager, IMapper mapper)
+    /// <summary>
+    /// Creates an instance of the <see cref="UserController"/>.
+    /// </summary>
+    /// <param name="userService"> Object of class providing the APIs for managing user in a persistence store. </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
+    public UserController(IUserService userService, IMapper mapper)
     {
         _userService = userService;
-        _userManager = userManager;
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get the user information by Id
+    /// </summary>
+    /// <param name="userId"> User Id </param>
+    /// <returns> The task object containing the action result of getting user information </returns>
     [Authorize]
     [HttpGet("{userId:Guid}")]
     public async Task<ActionResult<UserViewModelResponse>> GetById(Guid userId)
@@ -47,10 +63,14 @@ public class UserController : ControllerBase
         }
         finally
         {
-            _userManager.Dispose();
+            _userService.Dispose();
         }
     }
 
+    /// <summary>
+    /// Get your user information by access token from headers
+    /// </summary>
+    /// <returns> The task object containing the action result of getting user information </returns>
     [HttpGet]
     [Authorize]
     public async Task<ActionResult<UserViewModelResponse>> GetYourUserData()
@@ -70,28 +90,42 @@ public class UserController : ControllerBase
         }
         finally
         {
-            _userManager.Dispose();
+            _userService.Dispose();
         }
     }
 
+    /// <summary>
+    /// Get new access token with refresh token
+    /// </summary>
+    /// <param name="model"> Request view model for get access token </param>
+    /// <returns> The task object containing the action result of get access token </returns>
     [HttpPost]
     [AllowAnonymous]
-    public ActionResult<AccessTokenViewModelResponse> GetAccessToken(GetAccessTokenRequest model)
+    public async Task<ActionResult<AccessTokenViewModelResponse>> GetAccessToken(GetAccessTokenRequest model)
     {
         try
         {
-            var response = _userService.GetAccessToken(model.RefreshToken);
+            var response = await _userService.GetAccessToken(model.RefreshToken);
             return Ok(response);
+        }
+        catch (SecurityException ex)
+        {
+            return BadRequest(ex.Message);
         }
         finally
         {
-            _userManager.Dispose();
+            _userService.Dispose();
         }
     }
 
+    /// <summary>
+    /// Registration of the new user
+    /// </summary>
+    /// <param name="model"> Registration view model </param>
+    /// <returns> The task object containing the authorization result </returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult<AuthenticateViewModelResponse>> Register(RegisterViewModel model)
+    public async Task<ActionResult<AuthorizationViewModelResponse>> Register(RegisterViewModel model)
     {
         try
         {
@@ -106,13 +140,18 @@ public class UserController : ControllerBase
         }
         finally
         {
-            _userManager.Dispose();
+            _userService.Dispose();
         }
     }
 
+    /// <summary>
+    /// Authorization of the user
+    /// </summary>
+    /// <param name="model"> Login view model </param>
+    /// <returns> The task object containing the authorization result </returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult<AuthenticateViewModelResponse>> Login(LoginViewModel model)
+    public async Task<ActionResult<AuthorizationViewModelResponse>> Login(LoginViewModel model)
     {
         try
         {
@@ -129,10 +168,14 @@ public class UserController : ControllerBase
         }
         finally
         {
-            _userManager.Dispose();
+            _userService.Dispose();
         }
     }
 
+    /// <summary>
+    /// Logout from account
+    /// </summary>
+    /// <returns></returns>
     [HttpPost]
     public async Task Logout()
     {

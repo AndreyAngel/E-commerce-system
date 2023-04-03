@@ -133,7 +133,7 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order wiyh this Id wasn't fouded");
+            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
         }
 
         order.IsReceived = true;
@@ -142,13 +142,13 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order> IsCanceled(int id)
+    public async Task<Order> Cancel(int id)
     {
         var order = _db.Orders.GetById(id);
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order wiyh this Id wasn't fouded");
+            throw new NotFoundException(nameof(id), "Order wth this Id wasn't fouded");
         }
 
         order.IsCanceled = true;
@@ -163,7 +163,7 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order wiyh this Id wasn't fouded");
+            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
         }
 
         order.IsPaymented = true;

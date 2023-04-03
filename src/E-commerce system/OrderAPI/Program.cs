@@ -1,13 +1,45 @@
+using Infrastructure.Models;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using OrderAPI;
+using Microsoft.IdentityModel.Tokens;
+using OrderAPI.Helpers;
 using OrderAPI.Models.DataBase;
 using OrderAPI.Services;
 using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork;
 using OrderAPI.UnitOfWork.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = builder.Configuration["Issuer"],
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"])),
+                });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Cart", builder =>
+    {
+        builder.RequireRole(Role.Buyer.ToString());
+    });
+
+    options.AddPolicy("LimitedAccessToOrders", builder =>
+    {
+        builder.RequireRole(Role.Admin.ToString(), Role.Salesman.ToString(), Role.Buyer.ToString());
+    });
+
+    options.AddPolicy("FullAccessToOrders", builder =>
+    {
+        builder.RequireRole(Role.Admin.ToString(), Role.Salesman.ToString());
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson(x =>
@@ -19,6 +51,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Order.db"));
 
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartProductService, CartProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -49,6 +82,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

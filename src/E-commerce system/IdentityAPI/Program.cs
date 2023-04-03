@@ -2,7 +2,10 @@ using IdentityAPI.Helpers;
 using IdentityAPI.Models.DataBase;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Services;
+using Infrastructure;
+using Infrastructure.DTO;
 using Infrastructure.Models;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -53,6 +56,19 @@ builder.Services.AddAuthorization(options =>
     {
         builder.RequireRole(Role.Admin.ToString());
     });
+});
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddRequestClient<RabbitMQClient>();
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    {
+        cfg.Host("rabbitmq://localhost", settings =>
+        {
+            settings.Username("guest");
+            settings.Password("guest");
+        });
+    }));
 });
 
 // Add services to the container.

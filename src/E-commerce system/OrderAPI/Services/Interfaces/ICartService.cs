@@ -5,9 +5,9 @@ namespace OrderAPI.Services.Interfaces;
 
 public interface ICartService
 {
-    Task<CartViewModel> GetById(Guid id);
-    Task<CartViewModel> Create(Guid id);
-    Task<CartViewModel> ComputeTotalValue(Guid id);
-    Task<CartViewModel> Clear(Guid id);
-    Task<CartViewModel> Check(Cart cart);
+    Task<CartViewModelResponse> GetById(Guid id);
+    Task<CartViewModelResponse> Create(Guid id);
+    Task<CartViewModelResponse> ComputeTotalValue(Guid id);
+    Task<CartViewModelResponse> Clear(Guid id);
+    Task<CartViewModelResponse> Check(Cart cart);
 }

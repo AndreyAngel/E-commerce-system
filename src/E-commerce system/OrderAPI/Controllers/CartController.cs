@@ -29,11 +29,11 @@ namespace OrderAPI.Controllers
         }
 
         [HttpGet("{cartId:Guid}")]
-        public async Task<ActionResult<CartViewModel>> GetById(Guid cartId)
+        public async Task<ActionResult<CartViewModelResponse>> GetById(Guid cartId)
         {
             try
             {
-                CartViewModel cart = await _cartService.GetById(cartId);
+                CartViewModelResponse cart = await _cartService.GetById(cartId);
                 return Ok(cart);
             }
             catch(NotFoundException ex)
@@ -78,12 +78,12 @@ namespace OrderAPI.Controllers
         }
 
         [HttpDelete("{cartId:Guid},{cartProductId:Guid}")]
-        public async Task<ActionResult<CartViewModel>> DeleteProduct(Guid cartId, Guid cartProductId)
+        public async Task<ActionResult<CartViewModelResponse>> DeleteProduct(Guid cartId, Guid cartProductId)
         {
             try
             {
                 await _productService.Delete(cartProductId);
-                CartViewModel cart = await _cartService.ComputeTotalValue(cartId);
+                CartViewModelResponse cart = await _cartService.ComputeTotalValue(cartId);
 
                 await _unitOfWork.SaveChangesAsync();
                 
@@ -100,7 +100,7 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPut("{cartProductId:Guid}")]
-        public async Task<ActionResult<CartViewModel>> QuantityChange(Guid cartProductId, CartProductViewModelRequest model)
+        public async Task<ActionResult<CartViewModelResponse>> QuantityChange(Guid cartProductId, CartProductViewModelRequest model)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace OrderAPI.Controllers
                 product.Id = cartProductId;
 
                 await _productService.Update(product);
-                CartViewModel cart = await _cartService.ComputeTotalValue(model.CartId);
+                CartViewModelResponse cart = await _cartService.ComputeTotalValue(model.CartId);
 
                 await _unitOfWork.SaveChangesAsync();
 
@@ -129,7 +129,7 @@ namespace OrderAPI.Controllers
         }
 
         [HttpDelete("{cartId:Guid}")]
-        public async Task<ActionResult<CartViewModel>> Clear(Guid cartId)
+        public async Task<ActionResult<CartViewModelResponse>> Clear(Guid cartId)
         {
             try
             {

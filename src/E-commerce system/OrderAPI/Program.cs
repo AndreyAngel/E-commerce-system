@@ -1,9 +1,12 @@
+using Infrastructure.DTO;
 using Infrastructure.Models;
 using MassTransit;
+using MassTransit.Transports.Fabric;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OrderAPI.Consumers;
 using OrderAPI.Helpers;
 using OrderAPI.Models.DataBase;
 using OrderAPI.Services;
@@ -41,6 +44,26 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<CreateCartConsumer>();
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    {
+        cfg.Host("rabbitmq://localhost", settings =>
+        {
+            settings.Username("guest");
+            settings.Password("guest");
+        });
+
+        cfg.ReceiveEndpoint("createCartQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<CreateCartConsumer>(provider);
+        });
+    }));
+});
+
 // Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson(x =>
             x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -58,18 +81,6 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-builder.Services.AddMassTransit(x =>
-{
-    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
-    {
-        config.Host("rabbitmq://localhost", settings =>
-        {
-            settings.Username("guest");
-            settings.Password("guest");
-        });
-    }));
-});
 
 var app = builder.Build();
 

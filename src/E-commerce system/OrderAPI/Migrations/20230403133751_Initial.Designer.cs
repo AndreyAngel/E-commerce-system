@@ -11,7 +11,7 @@ using OrderAPI.Models.DataBase;
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230326131837_Initial")]
+    [Migration("20230403133751_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -22,9 +22,8 @@ namespace OrderAPI.Migrations
 
             modelBuilder.Entity("OrderAPI.Models.DataBase.Cart", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("TotalValue")
                         .HasColumnType("REAL");
@@ -36,18 +35,18 @@ namespace OrderAPI.Migrations
 
             modelBuilder.Entity("OrderAPI.Models.DataBase.CartProduct", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
@@ -66,9 +65,9 @@ namespace OrderAPI.Migrations
 
             modelBuilder.Entity("OrderAPI.Models.DataBase.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsCanceled")
                         .HasColumnType("INTEGER");
@@ -82,8 +81,8 @@ namespace OrderAPI.Migrations
                     b.Property<bool>("IsReceived")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

@@ -12,4 +12,11 @@ public class RabbitMQClient
         var res = await client.GetResponse<TResult>(request);
         return res.Message;
     }
+
+    public static async Task Request<TRequest>(IBusControl bus, TRequest request, Uri uri)
+        where TRequest : class
+    {
+        var sendEnpoint = await bus.GetSendEndpoint(uri);
+        await sendEnpoint.Send(request);
+    }
 }

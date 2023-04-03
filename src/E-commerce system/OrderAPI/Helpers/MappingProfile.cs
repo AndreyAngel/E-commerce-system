@@ -10,9 +10,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CartViewModel, Cart>();
+        CreateMap<CartViewModelResponse, Cart>();
 
-        CreateMap<Cart, CartViewModel>();
+        CreateMap<Cart, CartViewModelResponse>();
 
         CreateMap<CartProductViewModelRequest, CartProduct>();
 

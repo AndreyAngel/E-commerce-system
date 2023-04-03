@@ -132,8 +132,7 @@ public class UserController : ControllerBase
             var user = _mapper.Map<User>(model);
             var result = await _userService.Register(user, model.Password, model.Role);
 
-            // todo: изменить reaponse на Created
-            return Ok(result);
+            return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
         }
         catch (Exception ex)
         {

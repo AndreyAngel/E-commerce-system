@@ -3,6 +3,8 @@ using IdentityAPI.Helpers;
 using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.ViewModels.Requests;
 using IdentityAPI.Models.ViewModels.Responses;
+using Infrastructure.DTO;
+using Infrastructure;
 using Infrastructure.Exceptions;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security;
 using System.Security.Claims;
+using MassTransit;
+using System;
 
 namespace IdentityAPI.Services;
 
@@ -22,6 +26,8 @@ public class UserService : UserManager<User>, IUserService
     /// Configurations of application
     /// </summary>
     private readonly IConfiguration _configuration;
+
+    private readonly IBusControl _bus;
 
     /// <summary>
     /// Constructs a new instance of <see cref="UserManager{TUser}"/>.
@@ -37,6 +43,7 @@ public class UserService : UserManager<User>, IUserService
     /// <param name="services">The <see cref="IServiceProvider"/> used to resolve services.</param>
     /// <param name="logger">The logger used to log messages, warnings and errors.</param>
     public UserService( IConfiguration configuration,
+                        IBusControl bus,
                         IUserStore<User> store,
                         IOptions<IdentityOptions> optionsAccessor,
                         IPasswordHasher<User> passwordHasher,
@@ -56,6 +63,7 @@ public class UserService : UserManager<User>, IUserService
                                                                   logger)
     {
         _configuration = configuration;
+        _bus = bus;
     }
 
     /// <summary>
@@ -126,6 +134,7 @@ public class UserService : UserManager<User>, IUserService
     {
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
         var result = await CreateAsync(user, Password);
+        await CreateCart(Guid.Parse(user.Id));
 
         if (!result.Succeeded)
         {
@@ -198,5 +207,14 @@ public class UserService : UserManager<User>, IUserService
     public async Task Logout()
     {
         throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Create cart during user registration (CartId == UserId)
+    /// </summary>
+    /// <param name="userId"> User Id </param>
+    private async Task CreateCart(Guid userId)
+    {
+        await RabbitMQClient.Request<CartDTO>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
     }
 }

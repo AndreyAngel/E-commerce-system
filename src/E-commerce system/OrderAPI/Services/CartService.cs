@@ -25,7 +25,7 @@ public class CartService: ICartService
         _cartProductService = cartProductService;
     }
 
-    public async Task<CartViewModel> GetById(Guid id)
+    public async Task<CartViewModelResponse> GetById(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts.Where(x => x.OrderId == null))
                                   .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
@@ -35,7 +35,7 @@ public class CartService: ICartService
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
         }
 
-        CartViewModel result = await Check(cart);
+        CartViewModelResponse result = await Check(cart);
 
         cart = _mapper.Map<Cart>(result);
 
@@ -45,20 +45,21 @@ public class CartService: ICartService
     }
 
     // The cart is created automatically after user registration 
-    public async Task<CartViewModel> Create(Guid id)
+    public async Task<CartViewModelResponse> Create(Guid id)
     {
         //todo: передача идентификатора не равного UserId
 
         Cart cart = new() { Id = id };
 
         await _db.Carts.AddAsync(cart);
+        await _db.SaveChangesAsync();
 
-        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
 
         return model;
     }
 
-    public async Task<CartViewModel> ComputeTotalValue(Guid id)
+    public async Task<CartViewModelResponse> ComputeTotalValue(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -67,7 +68,7 @@ public class CartService: ICartService
             throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
         }
 
-        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
 
         model.ComputeTotalValue();
         cart.TotalValue = model.TotalValue;
@@ -77,7 +78,7 @@ public class CartService: ICartService
         return model;
     }
 
-    public async Task<CartViewModel> Clear(Guid id)
+    public async Task<CartViewModelResponse> Clear(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -90,13 +91,13 @@ public class CartService: ICartService
 
         await _db.Carts.UpdateAsync(cart);
 
-        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
 
         return model;
     }
 
     // Checks the relevance of products and returns a new cart
-    public async Task<CartViewModel> Check(Cart cart)
+    public async Task<CartViewModelResponse> Check(Cart cart)
     {
         ProductListDTO<Guid> productsId = new();
 
@@ -109,7 +110,7 @@ public class CartService: ICartService
         ProductListDTO<ProductDTO> response =
             await RabbitMQClient.Request<ProductListDTO<Guid>, ProductListDTO<ProductDTO>>(_bus, productsId, uri);
 
-        CartViewModel model = _mapper.Map<CartViewModel>(cart);
+        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones

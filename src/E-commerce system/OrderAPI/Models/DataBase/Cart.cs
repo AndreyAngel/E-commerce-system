@@ -1,8 +1,15 @@
-﻿namespace OrderAPI.Models.DataBase;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Cart : BaseEntity
+namespace OrderAPI.Models.DataBase;
+
+public class Cart
 {
-    public List<CartProduct> CartProducts { get; set; } = new List<CartProduct>();
+    [Required]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public Guid Id { get; set; } // Generated during user registration (UserId == CartId)
+
+    public List<CartProduct> CartProducts { get; set; } = new();
 
     public double TotalValue { get; set; }
 

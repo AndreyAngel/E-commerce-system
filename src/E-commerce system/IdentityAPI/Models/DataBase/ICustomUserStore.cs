@@ -26,7 +26,8 @@ public interface ICustomUserStore : IUserStore<User>
     /// Blocks tokens: Field "IsActive" = false
     /// </summary>
     /// <param name="userId"> User Id </param>
-    public void BlockTokens(Guid userId);
+    /// <returns> Task object </returns>
+    public Task BlockTokens(Guid userId);
 
     /// <summary>
     /// Gets access token and refresh token by user Id

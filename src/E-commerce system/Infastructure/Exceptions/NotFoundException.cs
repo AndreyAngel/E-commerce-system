@@ -4,6 +4,6 @@ public class NotFoundException: ArgumentException
 {
     public NotFoundException() : base() { }
     public NotFoundException(string paramName) : base(paramName) { }
-    public NotFoundException(string paramName, string message) :
-        base(paramName, message) { }
+    public NotFoundException(string message, string paramName) :
+        base(message, paramName) { }
 }

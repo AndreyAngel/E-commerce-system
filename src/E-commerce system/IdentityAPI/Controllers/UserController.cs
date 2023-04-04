@@ -209,19 +209,46 @@ public class UserController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [CustomAuthorize(Policy = "Public")]
-    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-    public async Task<IActionResult> Logout()
+    public IActionResult Logout()
     {
         try
         {
             var user = HttpContext.Items["User"] as User;
-            await _userService.Logout(new Guid(user.Id));
+            _userService.Logout(new Guid(user.Id));
             return Ok();
         }
         finally
         {
             _userService.Dispose();
         }
+    }
+
+    ///<summary>
+    /// Update of user date
+    /// </summary>
+    /// <param name="model"> User data view model </param>
+    /// <param name="userId"> User Id </param>
+    /// <returns> Task object contaning request result </returns>
+    /// <response code="204"> Successful completion </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
+    [HttpPatch("{userId:Guid}")]
+    [CustomAuthorize(Policy = "Public")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> Update(UserUpdateViewModelRequest model, Guid userId)
+    {
+        var user = _mapper.Map<User>(model);
+        var result = await _userService.Update(user, userId);
+
+        if (result != null)
+        {
+            return BadRequest(result);
+        }
+
+        return NoContent();
     }
 }

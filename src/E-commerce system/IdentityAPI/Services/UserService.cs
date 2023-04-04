@@ -195,7 +195,7 @@ public class UserService : UserManager<User>, IUserService
         var refreshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, new List<Claim>() { claims[0] });
         var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
 
-        Store.BlockTokens(userId);
+        await Store.BlockTokens(userId);
         await Store.AddRangeTokenAsync(new List<Token>()
         {
             new Token()
@@ -213,8 +213,6 @@ public class UserService : UserManager<User>, IUserService
             }
         });
 
-        await Store.Context.SaveChangesAsync();
-
         return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
     }
 
@@ -229,5 +227,30 @@ public class UserService : UserManager<User>, IUserService
         }
 
         return (tokens[0].IsActive && tokens[1].IsActive);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId)
+    {
+        var res = await FindByIdAsync(userId.ToString());
+
+        if (res == null)
+        {
+            throw new NotFoundException("User with this Id wasn't founded", nameof(userId));
+        }
+
+        res.Name = user.Name ?? res.Name;
+        res.Surname = user.Surname ?? res.Surname;
+        res.BirthDate = user.BirthDate ?? res.BirthDate;
+        res.Address = user.Address ?? res.Address;
+
+        var result = await UpdateAsync(res);
+
+        if (!result.Succeeded)
+        {
+            return new IdentityErrorsViewModelResponse(result.Errors);
+        }
+
+        return null;
     }
 }

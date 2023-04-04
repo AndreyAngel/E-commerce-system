@@ -9,7 +9,7 @@ namespace OrderAPI.Helpers;
 /// </summary>
 public class EnumTypesSchemaFilter : ISchemaFilter
 {
-    private readonly XDocument _xmlComments;
+    private readonly XDocument? _xmlComments;
 
     /// <summary>
     /// Initializes a new instance of <see cref="EnumTypesSchemaFilter"/>.

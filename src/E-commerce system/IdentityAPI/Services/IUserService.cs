@@ -62,4 +62,13 @@ public interface IUserService : IDisposable
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<bool> TokensIsActive(Guid userId);
+
+    /// <summary>
+    /// Update of user date
+    /// </summary>
+    /// <param name="user"> User </param>
+    /// <param name="userId"> User Id </param>
+    /// <returns> Task object </returns>
+    /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
+    Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId);
 }

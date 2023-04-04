@@ -34,10 +34,11 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
     public async Task AddRangeTokenAsync(IEnumerable<Token> tokens)
     {
         await _context.Tokens.AddRangeAsync(tokens);
+        await _context.SaveChangesAsync();
     }
 
     /// <inheritdoc/>
-    public void BlockTokens(Guid userId)
+    public async Task BlockTokens(Guid userId)
     {
         var accessToken = _context.Tokens.FirstOrDefault(x => x.UserId == userId
                                                            && x.TokenType == TokenType.Access
@@ -56,7 +57,7 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
             refreshToken.IsActive = false;
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
     /// <inheritdoc/>

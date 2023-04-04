@@ -11,6 +11,8 @@ using System.Security;
 using System.Security.Claims;
 using MassTransit;
 using OrderAPI.Models.Enums;
+using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DataBase;
 
 namespace OrderAPI.Services;
 
@@ -24,12 +26,19 @@ public class UserService : UserManager<User>, IUserService
     /// </summary>
     private readonly IConfiguration _configuration;
 
+    /// <summary>
+    /// <see cref="IBusControl"/>.
+    /// </summary>
     private readonly IBusControl _bus;
+
+    /// <inheritdoc/>
+    public new ICustomUserStore Store { get; init;  }
 
     /// <summary>
     /// Constructs a new instance of <see cref="UserManager{TUser}"/>.
     /// </summary>
     /// <param name="configuration"> Configurations of application </param>
+    /// <param name="bus"></param>
     /// <param name="store">The persistence store the manager will operate over.</param>
     /// <param name="optionsAccessor">The accessor used to access the <see cref="IdentityOptions"/>.</param>
     /// <param name="passwordHasher">The password hashing implementation to use when saving passwords.</param>
@@ -41,7 +50,7 @@ public class UserService : UserManager<User>, IUserService
     /// <param name="logger">The logger used to log messages, warnings and errors.</param>
     public UserService( IConfiguration configuration,
                         IBusControl bus,
-                        IUserStore<User> store,
+                        ICustomUserStore store,
                         IOptions<IdentityOptions> optionsAccessor,
                         IPasswordHasher<User> passwordHasher,
                         IEnumerable<IUserValidator<User>> userValidators,
@@ -61,15 +70,11 @@ public class UserService : UserManager<User>, IUserService
     {
         _configuration = configuration;
         _bus = bus;
+        Store = store;
     }
 
-    /// <summary>
-    /// Gets the user by Id
-    /// </summary>
-    /// <param name="id"> The user Id </param>
-    /// <returns> The task object containing the action result of getting user information </returns>
-    /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
-    public async Task<User> GetById(string id)
+    /// <inheritdoc/>
+    public async Task<User> GetById(Guid id)
     {
         var user = await FindByIdAsync(id.ToString());
 
@@ -81,13 +86,7 @@ public class UserService : UserManager<User>, IUserService
         return user;
     }
 
-    /// <summary>
-    /// Authorization of the user
-    /// </summary>
-    /// <param name="model"> Login view model </param>
-    /// <returns> The task object containing the authorization result </returns>
-    /// <exception cref="NotFoundException"> User with this Email wasn't founded </exception>
-    /// <exception cref="IncorrectPasswordException"> Incorrect password </exception>
+    /// <inheritdoc/>
     public async Task<AuthorizationViewModelResponse> Login(LoginViewModel model)
     {
         var user = await FindByEmailAsync(model.Email);
@@ -97,71 +96,36 @@ public class UserService : UserManager<User>, IUserService
             throw new NotFoundException("User with this Email wasn't founded", nameof(model.Email));
         }
 
-        var hashPassword = PasswordHasher.HashPassword(user, model.Password);
-
-        if (await CheckPasswordAsync(user, hashPassword))
-        {
-            throw new IncorrectPasswordException("Incorrect password", nameof(model.Password));
-        }
-
-        var roles = await GetRolesAsync(user);
-
-        var claims = new List<Claim>()
-        {
-            new Claim("Id", user.Id),
-        };
-
-        var refraeshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, claims);
-
-        claims.Add(new Claim(ClaimTypes.Role, roles[0]));
-
-        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
-
-        return new AuthorizationViewModelResponse(900, accessToken, refraeshToken, "Bearer");
+        return await Login(user, model.Password);
     }
 
-    /// <summary>
-    /// Registration of the new user
-    /// </summary>
-    /// <param name="user"> Object of the user </param>
-    /// <param name="Password"> User password </param>
-    /// <param name="role"> User role </param>
-    /// <returns> The task object containing the authorization result </returns>
-    public async Task<IIdentityViewModelResponse> Register(User user, string Password, Role role)
+    /// <inheritdoc/>
+    public async Task<IIdentityViewModelResponse> Register(User user, string password, Role role)
     {
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
-        var result = await CreateAsync(user, Password);
-        await CreateCart(new Guid(user.Id));
+        var result = await CreateAsync(user, password);
 
         if (!result.Succeeded)
         {
             return new IdentityErrorsViewModelResponse(result.Errors);
         }
 
+        await CreateCart(new Guid(user.Id));
+        await AddToRoleAsync(user, userRole.Name);
+
         var claims = new List<Claim>()
         {
-            new Claim("UserId", user.Id)
+            new Claim("UserId", user.Id),
+            new Claim(ClaimTypes.Role, userRole.Name)
         };
 
-        var refreshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, claims);
-
-        await AddToRoleAsync(user, userRole.Name);
         await AddClaimsAsync(user, claims);
 
-        claims.Add(new Claim(ClaimTypes.Role, userRole.Name));
-        
-        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
-
-        return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
+        return await GenerateTokens(new Guid(user.Id), userRole.Name, claims);
     }
 
-    /// <summary>
-    /// Get new access token with refresh token
-    /// </summary>
-    /// <param name="refreshToken"> refresh token </param>
-    /// <returns> The task object containing the action result of get access token </returns>
-    /// <exception cref="SecurityException"> Incorrect refreshToken </exception>
-    public async Task<AccessTokenViewModelResponse> GetAccessToken(string refreshToken)
+    /// <inheritdoc/>
+    public async Task<AuthorizationViewModelResponse> GetAccessToken(string refreshToken)
     {
         var validatedToken = JwtTokenHelper.ValidateToken(_configuration, refreshToken);
         var userId = new JwtSecurityToken(validatedToken).Claims.ToList().FirstOrDefault(x => x.Type == "UserId");
@@ -186,32 +150,84 @@ public class UserService : UserManager<User>, IUserService
             throw new SecurityException("Incorrect refreshToken");
         }
 
-        var claims = new List<Claim>()
-        {
-            new Claim("UserId", userId.Value),
-            new Claim(ClaimTypes.Role, roles[0])
-        };
-
-        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
-
-        return new AccessTokenViewModelResponse(900, accessToken, "Bearer");
+        return await GenerateTokens(new Guid(userId.Value), roles[0]);
     }
 
-    /// <summary>
-    /// Logout from account
-    /// </summary>
-    /// <returns> Task </returns>
-    public async Task Logout()
+    /// <inheritdoc/>
+    public void Logout(Guid userId)
     {
-        throw new NotImplementedException();
+        Store.BlockTokens(userId);
     }
 
-    /// <summary>
-    /// Create cart during user registration (CartId == UserId)
-    /// </summary>
-    /// <param name="userId"> User Id </param>
+    /// <inheritdoc/>
     private async Task CreateCart(Guid userId)
     {
         await RabbitMQClient.Request<CartDTO>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
+    }
+
+    /// <inheritdoc/>
+    private async Task<AuthorizationViewModelResponse> Login(User user , string password)
+    {
+        var hashPassword = PasswordHasher.HashPassword(user, password);
+
+        if (await CheckPasswordAsync(user, hashPassword))
+        {
+            throw new IncorrectPasswordException("Incorrect password", nameof(password));
+        }
+
+        var roles = await GetRolesAsync(user);
+
+        return await GenerateTokens(new Guid(user.Id), roles[0]);
+    }
+
+    /// <inheritdoc/>
+    private async Task<AuthorizationViewModelResponse> GenerateTokens(Guid userId, string roleName, List<Claim>? claims = null)
+    {
+        if (claims == null)
+        {
+            claims = new List<Claim>()
+            {
+                new Claim("UserId", userId.ToString()),
+                new Claim(ClaimTypes.Role, roleName)
+            };
+        }
+
+        var refreshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, new List<Claim>() { claims[0] });
+        var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
+
+        Store.BlockTokens(userId);
+        await Store.AddRangeTokenAsync(new List<Token>()
+        {
+            new Token()
+            {
+                UserId = userId,
+                TokenType = TokenType.Access,
+                Value = accessToken
+            },
+
+            new Token()
+            {
+                UserId = userId,
+                TokenType = TokenType.Refresh,
+                Value = refreshToken
+            }
+        });
+
+        await Store.Context.SaveChangesAsync();
+
+        return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> TokensIsActive(Guid userId)
+    {
+        var tokens = await Store.GetTokensByUserId(userId);
+
+        if (tokens.Count == 0)
+        {
+            return false;
+        }
+
+        return (tokens[0].IsActive && tokens[1].IsActive);
     }
 }

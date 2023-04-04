@@ -9,6 +9,7 @@ namespace OrderAPI.Helpers;
 /// </summary>
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {
+    /// <inheritdoc/>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                    RolesAuthorizationRequirement requirement)
     {

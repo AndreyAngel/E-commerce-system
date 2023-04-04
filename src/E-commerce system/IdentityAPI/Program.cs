@@ -3,8 +3,6 @@ using OrderAPI.Models.DataBase;
 using OrderAPI.Models.DataBase.Entities;
 using OrderAPI.Services;
 using OrderAPI;
-using OrderAPI.DTO;
-using OrderAPI.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +13,13 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using OrderAPI.Models.Enums;
+using IdentityAPI.Helpers;
+using IdentityAPI.Models.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<Context>(options =>options.UseSqlite(connectionString));
+builder.Services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -55,6 +55,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("Public", builder =>
+    {
+        builder.RequireRole(
+            Role.Admin.ToString(),
+            Role.Salesman.ToString(),
+            Role.Courier.ToString(),
+            Role.Buyer.ToString());
+    });
+
     options.AddPolicy("Admin", builder =>
     {
         builder.RequireRole(Role.Admin.ToString());
@@ -76,6 +85,7 @@ builder.Services.AddMassTransit(x =>
 
 // Add services to the container.
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
+builder.Services.AddScoped<ICustomUserStore, CustomUserStore>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -96,10 +106,10 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"Enter access token: Bearer {token}",
+        Description = @"Enter access token",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
@@ -133,6 +143,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<CustomAuthenticateMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

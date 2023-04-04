@@ -4,19 +4,18 @@ using OrderAPI.Models.DataBase.Entities;
 using OrderAPI.Models.ViewModels.Requests;
 using OrderAPI.Models.ViewModels.Responses;
 using OrderAPI.Services;
-using OrderAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security;
+using IdentityAPI.Helpers;
 
 namespace OrderAPI.Controllers;
 
 /// <summary>
 /// Provides the APIs for handling all the user logic
 /// </summary>
-[Authorize]
 [ApiController]
 [Route("api/v1/identity/[controller]/[action]")]
 public class UserController : ControllerBase
@@ -49,15 +48,17 @@ public class UserController : ControllerBase
     /// <returns> The task object containing the action result of getting user information </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="404"> User with this Id wasn't founded </response>
-    [Authorize]
+    /// <response code="401"> Unauthorized </response>
     [HttpGet("{userId:Guid}")]
+    [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<UserViewModelResponse>> GetById(Guid userId)
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> GetById(Guid userId)
     {
         try
         {
-            var user = await _userService.GetById(userId.ToString());
+            var user = await _userService.GetById(userId);
             var response = _mapper.Map<UserViewModelResponse>(user);
 
             return Ok(response);
@@ -78,17 +79,19 @@ public class UserController : ControllerBase
     /// <returns> The task object containing the action result of getting user information </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="404"> User with this Id from the access token wasn't founded </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpGet]
-    [Authorize]
+    [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<UserViewModelResponse>> GetYourUserData()
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> GetYourUserData()
     {
         try
         {
             var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split().Last();
-            var userId = new JwtSecurityToken(accessToken).Claims.First(x => x.Type == "Id");
-            var user = await _userService.GetById(userId.Value);
+            var userId = new JwtSecurityToken(accessToken).Claims.First(x => x.Type == "UserId");
+            var user = await _userService.GetById(new Guid(userId.Value));
             var response = _mapper.Map<UserViewModelResponse>(user);
 
             return Ok(response);
@@ -112,9 +115,9 @@ public class UserController : ControllerBase
     /// <response code="403"> Insecure request </response>
     [HttpPost]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(AccessTokenViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-    public async Task<ActionResult<AccessTokenViewModelResponse>> GetAccessToken(GetAccessTokenRequest model)
+    public async Task<IActionResult> GetAccessToken(GetAccessTokenRequest model)
     {
         try
         {
@@ -142,7 +145,7 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
-    public async Task<ActionResult<AuthorizationViewModelResponse>> Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(RegisterViewModel model)
     {
         try
         {
@@ -153,6 +156,8 @@ public class UserController : ControllerBase
             {
                 return BadRequest(result);
             }
+
+            //await _userService.Store.Context.SaveChangesAsync();
 
             return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
         }
@@ -175,7 +180,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-    public async Task<ActionResult<AuthorizationViewModelResponse>> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
         try
         {
@@ -199,10 +204,24 @@ public class UserController : ControllerBase
     /// <summary>
     /// Logout from account
     /// </summary>
-    /// <returns></returns>
+    /// <returns> The task object </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpPost]
-    public async Task Logout()
+    [CustomAuthorize(Policy = "Public")]
+    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> Logout()
     {
-    
+        try
+        {
+            var user = HttpContext.Items["User"] as User;
+            await _userService.Logout(new Guid(user.Id));
+            return Ok();
+        }
+        finally
+        {
+            _userService.Dispose();
+        }
     }
 }

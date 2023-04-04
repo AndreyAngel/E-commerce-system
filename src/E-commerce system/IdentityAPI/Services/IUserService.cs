@@ -1,11 +1,10 @@
 using OrderAPI.Models.DataBase.Entities;
 using OrderAPI.Models.ViewModels.Requests;
 using OrderAPI.Models.ViewModels.Responses;
-using OrderAPI.Models;
-using OrderAPI.Exceptions;
 using OrderAPI.Exceptions;
 using System.Security;
 using OrderAPI.Models.Enums;
+using IdentityAPI.Models.DataBase;
 
 namespace OrderAPI.Services;
 
@@ -14,13 +13,15 @@ namespace OrderAPI.Services;
 /// </summary>
 public interface IUserService : IDisposable
 {
+    public ICustomUserStore Store { get; }
+
     /// <summary>
     /// Gets the user by Id
     /// </summary>
     /// <param name="id"> The user Id </param>
     /// <returns> The task object containing the action result of getting user information </returns>
     /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
-    Task<User> GetById(string id);
+    Task<User> GetById(Guid id);
 
     /// <summary>
     /// Get new access token with refresh token
@@ -28,7 +29,7 @@ public interface IUserService : IDisposable
     /// <param name="refreshToken"> refresh token </param>
     /// <returns> The task object containing the action result of get access token </returns>
     /// <exception cref="SecurityException"> Incorrect refreshToken </exception>
-    Task<AccessTokenViewModelResponse> GetAccessToken(string refreshToken);
+    Task<AuthorizationViewModelResponse> GetAccessToken(string refreshToken);
 
     /// <summary>
     /// Registration of the new user
@@ -51,6 +52,14 @@ public interface IUserService : IDisposable
     /// <summary>
     /// Logout from account
     /// </summary>
-    /// <returns> Task </returns>
-    Task Logout();
+    void Logout(Guid userId);
+
+    /// <summary>
+    /// Checks tokens
+    /// If true, token is active
+    /// If false, token isn't active
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<bool> TokensIsActive(Guid userId);
 }

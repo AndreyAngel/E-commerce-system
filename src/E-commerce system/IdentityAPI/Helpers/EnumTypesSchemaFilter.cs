@@ -4,10 +4,17 @@ using System.Xml.Linq;
 
 namespace OrderAPI.Helpers;
 
+/// <summary>
+/// Class used for auto-documentation of enums
+/// </summary>
 public class EnumTypesSchemaFilter : ISchemaFilter
 {
     private readonly XDocument _xmlComments;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="EnumTypesSchemaFilter"/>.
+    /// </summary>
+    /// <param name="xmlPath"></param>
     public EnumTypesSchemaFilter(string xmlPath)
     {
         if (File.Exists(xmlPath))
@@ -15,8 +22,8 @@ public class EnumTypesSchemaFilter : ISchemaFilter
             _xmlComments = XDocument.Load(xmlPath);
         }
     }
-/// <inheritdoc/>
 
+    /// <inheritdoc/>
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
         if (_xmlComments == null) return;

@@ -60,7 +60,7 @@ public static class JwtTokenHelper
     /// </summary>
     /// <param name="configuration"> Configurations of application </param>
     /// <param name="claims"> User claims </param>
-    /// <param name="typeToken"> Token type </param>
+    /// <param name="tokenType"> Token type </param>
     /// <returns> JWT token </returns>
     private static string GenerateJwtToken(IConfiguration configuration, List<Claim> claims, TokenType tokenType)
     {

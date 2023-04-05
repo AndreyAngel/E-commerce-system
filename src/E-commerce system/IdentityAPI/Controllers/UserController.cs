@@ -50,10 +50,9 @@ public class UserController : ControllerBase
     /// <response code="404"> User with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpGet("{userId:Guid}")]
-    [CustomAuthorize(Policy = "Public")]
+    [Authorize(Policy = "Public")]
     [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetById(Guid userId)
     {
         try
@@ -81,10 +80,9 @@ public class UserController : ControllerBase
     /// <response code="404"> User with this Id from the access token wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpGet]
-    [CustomAuthorize(Policy = "Public")]
+    [Authorize(Policy = "Public")]
     [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetYourUserData()
     {
         try
@@ -116,7 +114,7 @@ public class UserController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> GetAccessToken(GetAccessTokenRequest model)
     {
         try
@@ -157,7 +155,7 @@ public class UserController : ControllerBase
                 return BadRequest(result);
             }
 
-            //await _userService.Store.Context.SaveChangesAsync();
+            await _userService.Store.Context.SaveChangesAsync();
 
             return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
         }
@@ -173,13 +171,15 @@ public class UserController : ControllerBase
     /// <param name="model"> Login view model </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="404"> Incorrect data was sent during registration </response>
+    /// <response code="404"> Incorrect data was sent during authorization </response>
     /// <response code="401"> Incorrect password </response>
+    /// <response code="403"> Already authorized </response>
+    [Login]
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         try
@@ -208,9 +208,8 @@ public class UserController : ControllerBase
     /// <response code="200"> Successful completion </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
-    [CustomAuthorize(Policy = "Public")]
+    [Authorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public IActionResult Logout()
     {
         try
@@ -235,10 +234,9 @@ public class UserController : ControllerBase
     /// <response code="400"> Bad request </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPatch("{userId:Guid}")]
-    [CustomAuthorize(Policy = "Public")]
+    [Authorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Update(UserUpdateViewModelRequest model, Guid userId)
     {
         var user = _mapper.Map<User>(model);

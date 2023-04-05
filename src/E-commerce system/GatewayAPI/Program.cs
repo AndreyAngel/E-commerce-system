@@ -1,4 +1,19 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.AspNetCore.Hosting;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+
+var builder = HostBuilder.CreateHostBuilder(args) =>
+
+                Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config
+                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                    .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables();
+                });
+
+builder.Services.AddOcelot();
 
 // Add services to the container.
 
@@ -19,5 +34,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseOcelot();
 
 app.Run();

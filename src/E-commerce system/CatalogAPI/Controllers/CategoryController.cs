@@ -26,6 +26,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Public")]
     public ActionResult<List<CategoryViewModelResponce>> Get()
     {
         try
@@ -42,6 +43,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<CategoryViewModelResponce> GetById(Guid id)
     {
         try
@@ -62,6 +64,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("{name}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<CategoryViewModelResponce> GetByName(string name)
     {
         try

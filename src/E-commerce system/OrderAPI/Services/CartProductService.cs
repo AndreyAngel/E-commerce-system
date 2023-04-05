@@ -2,7 +2,6 @@
 using OrderAPI.Services.Interfaces;
 using OrderAPI.Exceptions;
 using OrderAPI.DTO;
-using OrderAPI;
 using MassTransit;
 using OrderAPI.Models.DataBase;
 using AutoMapper;
@@ -25,20 +24,11 @@ public class CartProductService: ICartProductService
 
     public async Task<CartProductViewModelResponse> Create(CartProduct cartProduct)
     {
-        // Getting of product by ID from Catalog service
-        ProductDTO productDTO = new() { Id = cartProduct.ProductId };
-        Uri uri = new("rabbitmq://localhost/getProductQueue");
-        ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
+        var response = await GetProductFromCatalog(cartProduct.ProductId);
 
-        if (response.ErrorMessage != null)
-        {
-            throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
-        }
-
-        //todo: new Exception - передача идентификатора не своей корзины
-
-        
-        // проверка на наличие уже такого товара в карзине
+        // Сheck if there is already such a product in the cart
+        // If there is, to change of quantity
+        // If there isn't, to add a new cart product
         if (_db.CartProducts.GetAll().Any(x => x.ProductId == cartProduct.ProductId && x.CartId == cartProduct.CartId))
         {
             CartProduct product = await _db.CartProducts.GetAll()
@@ -67,22 +57,13 @@ public class CartProductService: ICartProductService
 
     public async Task<CartProduct> Update(CartProduct cartProduct)
     {
-        //todo: new Exception - передача идентификатора не своей корзины
 
         if (_db.CartProducts.GetById(cartProduct.Id) == null)
         {
-            throw new NotFoundException(nameof(cartProduct.Id), "Cart product with this Id not founded!");
+            throw new NotFoundException("Cart product with this Id not founded!", nameof(cartProduct.Id));
         }
 
-        // Getting of product by ID from Catalog service
-        ProductDTO productDTO = new() { Id = cartProduct.ProductId };
-        Uri uri = new("rabbitmq://localhost/getProductQueue");
-        ProductDTO response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
-
-        if (response.ErrorMessage != null)
-        {
-            throw new CatalogApiException(nameof(cartProduct.ProductId), response.ErrorMessage);
-        } 
+        var response = await GetProductFromCatalog(cartProduct.ProductId);
 
         cartProduct.ComputeTotalValue(response.Price.Value);
 
@@ -97,9 +78,23 @@ public class CartProductService: ICartProductService
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(res.Id), "Cart product with this Id not founded!");
+            throw new NotFoundException("Cart product with this Id not founded!", nameof(res.Id));
         } 
 
         await _db.CartProducts.RemoveAsync(res);
+    }
+
+    private async Task<ProductDTO> GetProductFromCatalog(Guid productId)
+    {
+        ProductDTO productDTO = new() { Id = productId };
+        Uri uri = new("rabbitmq://localhost/getProductQueue");
+        var response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
+
+        if (response.ErrorMessage != null)
+        {
+            throw new EmptyOrderException(response.ErrorMessage, nameof(productId));
+        }
+
+        return response;
     }
 }

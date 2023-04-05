@@ -13,6 +13,11 @@ public class Cart
 
     public double TotalValue { get; set; }
 
+    public void ComputeTotalValue()
+    {
+        TotalValue = CartProducts.Sum(x => x.TotalValue);
+    }
+
     public void Clear()
     {
         CartProducts.Clear();

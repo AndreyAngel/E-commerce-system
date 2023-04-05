@@ -8,6 +8,9 @@ using OrderAPI.Models.Enums;
 
 namespace IdentityAPI.Models.DataBase;
 
+/// <summary>
+/// Represents a new instance of a persistence store for users, using the default implementation
+/// </summary>
 public class CustomUserStore : UserStore<User>, ICustomUserStore
 {
     /// <summary>

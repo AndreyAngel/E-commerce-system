@@ -33,10 +33,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
     public void Dispose()
     {
-        // Освобождаем все ресурсы
         Dispose(true);
-
-        // Подавляем финализацию
         GC.SuppressFinalize(this);
     }
 
@@ -44,11 +41,8 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     {
         if (!_isDisposed && disposing)
         {
-            // Освобождаем управляемые ресурсы
+            _context.Dispose();
+            _isDisposed = true;
         }
-
-        // Освобождаем неуправляемые ресурсы
-        _context.Dispose();
-        _isDisposed = true;
     }
 }

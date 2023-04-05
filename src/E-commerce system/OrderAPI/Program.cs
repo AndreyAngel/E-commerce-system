@@ -1,7 +1,5 @@
-using OrderAPI.DTO;
 using OrderAPI.Models;
 using MassTransit;
-using MassTransit.Transports.Fabric;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +12,8 @@ using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork;
 using OrderAPI.UnitOfWork.Interfaces;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,8 +70,6 @@ builder.Services.AddControllers().AddNewtonsoftJson(x =>
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Order.db"));
 
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
@@ -81,6 +79,40 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = AppContext.BaseDirectory;
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(basePath, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"Enter access token",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            },
+          },
+          new List<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -94,6 +126,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<CustomAuthenticateMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

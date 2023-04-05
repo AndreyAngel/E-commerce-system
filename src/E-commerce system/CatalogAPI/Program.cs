@@ -36,6 +36,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("Public", builder =>
+    {
+        builder.RequireRole(
+            Role.Admin.ToString(),
+            Role.Salesman.ToString(),
+            Role.Courier.ToString(),
+            Role.Buyer.ToString());
+    });
+
     options.AddPolicy("ChangingOfCatalog", builder =>
     {
         builder.RequireRole(Role.Admin.ToString() , Role.Salesman.ToString());

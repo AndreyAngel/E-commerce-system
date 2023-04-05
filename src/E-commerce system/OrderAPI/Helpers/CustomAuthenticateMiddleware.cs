@@ -1,7 +1,7 @@
 ﻿using OrderAPI.Services;
 using System.Security.Claims;
 
-namespace IdentityAPI.Helpers;
+namespace OrderAPI.Helpers;
 
 /// <summary>
 /// Middleware adding user in context items
@@ -32,21 +32,20 @@ public class CustomAuthenticateMiddleware
     /// </summary>
     /// <param name="context">The <see cref="HttpContext"/>.</param>
     /// <param name="userService">The <see cref="IUserService"/>.</param>
-    public async Task Invoke(HttpContext context, IUserService userService)
+    public async Task Invoke(HttpContext context)
     {
         var claims = context.User.Identity as ClaimsIdentity;
 
         if (claims == null)
         {
-            context.Items["User"] = null;
+            context.Items["UserId"] = null;
         }
 
         var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
 
-        if (userId != null && await userService.TokensIsActive(new Guid(userId.Value)))
+        if (userId != null)
         {
-            var user = await userService.GetById(new Guid(userId.Value));
-            context.Items["User"] = user;
+            context.Items["UserId"] = userId;
         }
 
         await _next(context);

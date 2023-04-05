@@ -9,7 +9,7 @@ public interface IOrderService
 
     Order GetById(Guid id);
 
-    List<Order> GetByFilter(OrderFilterViewModelRequest filetr);
+    List<Order> GetByFilter(OrderFilterViewModelRequest filter);
 
     Task<Order> Create(Order order);
 

@@ -1,7 +1,6 @@
 ﻿using OrderAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
-using OrderAPI;
 using OrderAPI.DTO;
 using OrderAPI.Exceptions;
 using OrderAPI.Models.DataBase;
@@ -33,7 +32,7 @@ public class CartService: ICartService
 
         if (cart == null)
         {
-            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+            throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
         CartViewModelResponse result = await Check(cart);
@@ -45,17 +44,13 @@ public class CartService: ICartService
         return result;
     }
 
-    // The cart is created automatically after user registration 
-    public async Task<CartViewModelResponse> Create(Guid id)
+    // The cart is created after user registration 
+    public async Task Create(Guid id)
     {
         Cart cart = new() { Id = id };
 
         await _db.Carts.AddAsync(cart);
         await _db.SaveChangesAsync();
-
-        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
-
-        return model;
     }
 
     public async Task<CartViewModelResponse> ComputeTotalValue(Guid id)
@@ -64,7 +59,7 @@ public class CartService: ICartService
 
         if (cart == null)
         {
-            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+            throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
         CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
@@ -83,7 +78,7 @@ public class CartService: ICartService
 
         if (cart == null)
         {
-            throw new NotFoundException(nameof(id), "Cart with this id was not founded!");
+            throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
         cart.Clear();
@@ -96,7 +91,7 @@ public class CartService: ICartService
     }
 
     // Checks the relevance of products and returns a new cart
-    public async Task<CartViewModelResponse> Check(Cart cart)
+    private async Task<CartViewModelResponse> Check(Cart cart)
     {
         ProductListDTO<Guid> productsId = new();
 

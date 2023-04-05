@@ -160,6 +160,44 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
+    public async Task<bool> TokensIsActive(Guid userId)
+    {
+        var tokens = await Store.GetTokensByUserId(userId);
+
+        if (tokens.Count == 0)
+        {
+            return false;
+        }
+
+        return (tokens[0].IsActive && tokens[1].IsActive);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId)
+    {
+        var res = await FindByIdAsync(userId.ToString());
+
+        if (res == null)
+        {
+            throw new NotFoundException("User with this Id wasn't founded", nameof(userId));
+        }
+
+        res.Name = user.Name ?? res.Name;
+        res.Surname = user.Surname ?? res.Surname;
+        res.BirthDate = user.BirthDate ?? res.BirthDate;
+        res.Address = user.Address ?? res.Address;
+
+        var result = await UpdateAsync(res);
+
+        if (!result.Succeeded)
+        {
+            return new IdentityErrorsViewModelResponse(result.Errors);
+        }
+
+        return null;
+    }
+
+    /// <inheritdoc/>
     private async Task CreateCart(Guid userId)
     {
         await RabbitMQClient.Request<CartDTO>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
@@ -168,9 +206,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     private async Task<AuthorizationViewModelResponse> Login(User user , string password)
     {
-        var hashPassword = PasswordHasher.HashPassword(user, password);
-
-        if (await CheckPasswordAsync(user, hashPassword))
+        if (!await CheckPasswordAsync(user, password))
         {
             throw new IncorrectPasswordException("Incorrect password", nameof(password));
         }
@@ -214,43 +250,5 @@ public class UserService : UserManager<User>, IUserService
         });
 
         return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
-    }
-
-    /// <inheritdoc/>
-    public async Task<bool> TokensIsActive(Guid userId)
-    {
-        var tokens = await Store.GetTokensByUserId(userId);
-
-        if (tokens.Count == 0)
-        {
-            return false;
-        }
-
-        return (tokens[0].IsActive && tokens[1].IsActive);
-    }
-
-    /// <inheritdoc/>
-    public async Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId)
-    {
-        var res = await FindByIdAsync(userId.ToString());
-
-        if (res == null)
-        {
-            throw new NotFoundException("User with this Id wasn't founded", nameof(userId));
-        }
-
-        res.Name = user.Name ?? res.Name;
-        res.Surname = user.Surname ?? res.Surname;
-        res.BirthDate = user.BirthDate ?? res.BirthDate;
-        res.Address = user.Address ?? res.Address;
-
-        var result = await UpdateAsync(res);
-
-        if (!result.Succeeded)
-        {
-            return new IdentityErrorsViewModelResponse(result.Errors);
-        }
-
-        return null;
     }
 }

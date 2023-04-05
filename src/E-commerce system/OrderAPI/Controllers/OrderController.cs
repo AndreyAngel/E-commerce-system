@@ -93,7 +93,10 @@ public class OrderController : ControllerBase
 
             return Created(new Uri($"https://localhost:7045/api/v1/ord/Order/GetById/{response.Id}"), response);
         }
-        //Сделать Exception
+        catch (EmptyOrderException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         finally
         {
             _unitOfWork.Dispose();
@@ -117,7 +120,10 @@ public class OrderController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        //Сделать Exception
+        catch (EmptyOrderException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         finally
         {
             _unitOfWork.Dispose();
@@ -140,6 +146,10 @@ public class OrderController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (OrderStatusException ex)
+        {
+            return BadRequest(ex.Message);
         }
         finally
         {
@@ -164,6 +174,10 @@ public class OrderController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        catch (OrderStatusException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         finally
         {
             _unitOfWork.Dispose();
@@ -185,6 +199,10 @@ public class OrderController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (OrderStatusException ex)
+        {
+            return BadRequest(ex.Message);
         }
         finally
         {
@@ -208,6 +226,10 @@ public class OrderController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (OrderStatusException ex)
+        {
+            return BadRequest(ex.Message);
         }
         finally
         {

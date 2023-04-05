@@ -25,6 +25,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Public")]
     public ActionResult<List<BrandViewModelResponce>> Get()
     {
         try
@@ -41,6 +42,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<BrandViewModelResponce> GetById(Guid id)
     {
         try
@@ -61,6 +63,7 @@ public class BrandController : ControllerBase
     }
 
     [HttpGet("{name}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<BrandViewModelResponce> GetByName(string name)
     {
         try

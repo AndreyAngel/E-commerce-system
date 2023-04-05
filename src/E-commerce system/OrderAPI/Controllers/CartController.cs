@@ -33,14 +33,23 @@ namespace OrderAPI.Controllers
         {
             try
             {
+                var userId = (Guid?)HttpContext.Items["UserId"];
+
+                // The user id must match the cart id
+                if (userId != cartId)
+                {
+                    return BadRequest("Incorrect cart Id");
+                }
+
                 CartViewModelResponse cart = await _cartService.GetById(cartId);
+
                 return Ok(cart);
             }
             catch(NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-            catch(CatalogApiException ex)
+            catch(EmptyOrderException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -55,6 +64,14 @@ namespace OrderAPI.Controllers
         {
             try
             {
+                var userId = (Guid?)HttpContext.Items["UserId"];
+
+                // The user id must match the cart id
+                if (userId != model.CartId)
+                {
+                    return BadRequest("Incorrect cart Id");
+                }
+
                 CartProduct cartProduct = _mapper.Map<CartProduct>(model);
                 CartProductViewModelResponse product = await _productService.Create(cartProduct);
                 await _cartService.ComputeTotalValue(cartProduct.CartId);
@@ -67,7 +84,7 @@ namespace OrderAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (CatalogApiException ex)
+            catch (EmptyOrderException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -82,6 +99,14 @@ namespace OrderAPI.Controllers
         {
             try
             {
+                var userId = (Guid?)HttpContext.Items["UserId"];
+
+                // The user id must match the cart id
+                if (userId != cartId)
+                {
+                    return BadRequest("Incorrect cart Id");
+                }
+
                 await _productService.Delete(cartProductId);
                 CartViewModelResponse cart = await _cartService.ComputeTotalValue(cartId);
 
@@ -100,10 +125,19 @@ namespace OrderAPI.Controllers
         }
 
         [HttpPut("{cartProductId:Guid}")]
-        public async Task<ActionResult<CartViewModelResponse>> QuantityChange(Guid cartProductId, CartProductViewModelRequest model)
+        public async Task<ActionResult<CartViewModelResponse>> QuantityChange(Guid cartProductId,
+                                                                              CartProductViewModelRequest model)
         {
             try
             {
+                var userId = (Guid?)HttpContext.Items["UserId"];
+
+                // The user id must match the cart id
+                if (userId != model.CartId)
+                {
+                    return BadRequest("Incorrect cart Id");
+                }
+
                 CartProduct product = _mapper.Map<CartProduct>(model);
                 product.Id = cartProductId;
 
@@ -118,7 +152,7 @@ namespace OrderAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (CatalogApiException ex)
+            catch (EmptyOrderException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -133,6 +167,14 @@ namespace OrderAPI.Controllers
         {
             try
             {
+                var userId = (Guid?)HttpContext.Items["UserId"];
+
+                // The user id must match the cart id
+                if (userId != cartId)
+                {
+                    return BadRequest("Incorrect cart Id");
+                }
+
                 var res = await _cartService.Clear(cartId);
                 await _unitOfWork.SaveChangesAsync();
 

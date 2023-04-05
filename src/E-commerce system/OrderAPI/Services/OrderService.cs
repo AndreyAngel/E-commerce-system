@@ -27,7 +27,7 @@ public class OrderService : IOrderService
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
+            throw new NotFoundException("Order with this Id wasn't fouded", nameof(id));
         }
 
         return res;
@@ -64,8 +64,7 @@ public class OrderService : IOrderService
     {
         if (order.CartProducts.Count == 0)
         {
-            // Изменить исключение
-            throw new Exception(nameof(order));
+            throw new EmptyOrderException("Empty order", nameof(order));
         }
 
         List<CartProduct> cartProducts = new();
@@ -82,7 +81,7 @@ public class OrderService : IOrderService
 
             if (cartProduct == null)
             {
-                throw new NotFoundException("CartProduct.Id", "CartProduct with this Id wasn't founded");
+                throw new NotFoundException("CartProduct with this Id wasn't founded", "CartProduct.Id");
             }
 
             cartProduct.OrderId = order.Id;
@@ -97,13 +96,12 @@ public class OrderService : IOrderService
     {
         if (_db.Orders.GetById(order.Id) == null)
         {
-            throw new NotFoundException(nameof(order.Id), "Order with this Id wasn't founded");
+            throw new NotFoundException("Order with this Id wasn't founded", nameof(order.Id));
         }
 
         if (order.CartProducts.Count == 0)
         {
-            // Изменить исключение
-            throw new Exception(nameof(order));
+            throw new EmptyOrderException("Empty order", nameof(order));
         }
 
         await _db.Orders.UpdateAsync(order);
@@ -116,7 +114,22 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
+            throw new NotFoundException("Order with this Id wasn't fouded", nameof(id));
+        }
+
+        if (order.IsCanceled)
+        {
+            throw new OrderStatusException("Order has been canceled");
+        }
+
+        if (order.IsReceived)
+        {
+            throw new OrderStatusException("Order has already been received");
+        }
+
+        if (order.IsReady)
+        {
+            throw new OrderStatusException("Order has already been readied");
         }
 
         order.IsReady = true;
@@ -131,7 +144,22 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
+            throw new NotFoundException("Order with this Id wasn't fouded", nameof(id));
+        }
+
+        if (order.IsReceived)
+        {
+            throw new OrderStatusException("Order has already been received");
+        }
+
+        if (order.IsCanceled)
+        {
+            throw new OrderStatusException("Order has been canceled");
+        }
+
+        if (!order.IsPaymented)
+        {
+            throw new OrderStatusException("Order hasn't yet been paid");
         }
 
         order.IsReceived = true;
@@ -146,7 +174,17 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order wth this Id wasn't fouded");
+            throw new NotFoundException("Order wth this Id wasn't fouded", nameof(id));
+        }
+
+        if (order.IsReceived)
+        {
+            throw new OrderStatusException("Order has already been received");
+        }
+
+        if (order.IsCanceled)
+        {
+            throw new OrderStatusException("Order has alredy been canceled");
         }
 
         order.IsCanceled = true;
@@ -161,7 +199,17 @@ public class OrderService : IOrderService
 
         if (order == null)
         {
-            throw new NotFoundException(nameof(id), "Order with this Id wasn't fouded");
+            throw new NotFoundException("Order with this Id wasn't fouded", nameof(id));
+        }
+
+        if (!order.IsPaymented)
+        {
+            throw new OrderStatusException("Order has already been paid");
+        }
+
+        if (order.IsCanceled)
+        {
+            throw new OrderStatusException("Order has been canceled");
         }
 
         order.IsPaymented = true;

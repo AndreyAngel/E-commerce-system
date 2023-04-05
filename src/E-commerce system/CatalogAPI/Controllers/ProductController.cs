@@ -25,6 +25,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Public")]
     public ActionResult<List<ProductListViewModelResponce>> Get()
     {
         try
@@ -41,6 +42,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<ProductViewModelResponce> GetById(Guid id)
     {
         try
@@ -61,6 +63,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{name}")]
+    [Authorize(Policy = "Public")]
     public ActionResult<ProductViewModelResponce> GetByName(string name)
     {
         try
@@ -81,6 +84,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Public")]
     public ActionResult< List<ProductListViewModelResponce> > GetByFilter(ProductFilterViewModel filter)
     {
         try

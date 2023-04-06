@@ -110,7 +110,11 @@ public class UserService : UserManager<User>, IUserService
             return new IdentityErrorsDTOResponse(result.Errors);
         }
 
-        await CreateCart(new Guid(user.Id));
+        if (userRole.Name == Role.Buyer.ToString())
+        {
+            await CreateCart(new Guid(user.Id));
+        }
+        
         await AddToRoleAsync(user, userRole.Name);
 
         var claims = new List<Claim>()

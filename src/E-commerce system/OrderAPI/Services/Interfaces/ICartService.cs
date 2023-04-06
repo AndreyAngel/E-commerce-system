@@ -1,14 +1,14 @@
-﻿using OrderAPI.Models.DTO.Cart;
+﻿using OrderAPI.Models;
 
 namespace OrderAPI.Services.Interfaces;
 
 public interface ICartService
 {
-    Task<CartDTOResponse> GetById(Guid id);
+    Task<CartDomainModel> GetById(Guid id);
 
     Task Create(Guid id);
 
-    Task<CartDTOResponse> ComputeTotalValue(Guid id);
+    Task<CartDomainModel> ComputeTotalValue(Guid id);
 
-    Task<CartDTOResponse> Clear(Guid id);
+    Task<CartDomainModel> Clear(Guid id);
 }

@@ -14,7 +14,11 @@ namespace OrderAPI.DataBase
         { }
 
         public DbSet<CartProduct> CartProducts { get; set; }
+
         public DbSet<Cart> Carts { get; set; }
+
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderProduct> OrderProducts { get; set; }
     }
 }

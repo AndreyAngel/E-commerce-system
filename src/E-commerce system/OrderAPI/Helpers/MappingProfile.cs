@@ -3,6 +3,7 @@ using Infrastructure.DTO;
 using OrderAPI.Models.DTO.Cart;
 using OrderAPI.Models.DTO.Order;
 using OrderAPI.DataBase.Entities;
+using OrderAPI.Models;
 
 namespace OrderAPI.Helpers;
 
@@ -10,24 +11,42 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CartDTOResponse, Cart>();
+        CreateMap<Cart, CartDomainModel>();
 
-        CreateMap<Cart, CartDTOResponse>();
+        CreateMap<CartDomainModel, Cart>();
 
-        CreateMap<CartProductDTORequest, CartProduct>();
+        CreateMap<CartProductDomainModel, CartProduct>();
+
+        CreateMap<CartProduct, CartProductDomainModel>();
+
+        CreateMap<CartDTOResponse, CartDomainModel>();
+
+        CreateMap<CartDomainModel, CartDTOResponse>();
+
+        CreateMap<CartProductDTORequest, CartProductDomainModel>();
+
+        CreateMap<CartProductDomainModel, CartProductDTOResponse>();
 
         CreateMap<CartProduct, CartProductDTOResponse>();
 
-        CreateMap<CartProductDTOResponse, CartProduct>();
+        CreateMap<CartProductDTOResponse, CartProductDomainModel>();
 
-        CreateMap<ProductDTORabbitMQ, ProductDTO>();
+        CreateMap<ProductDTORabbitMQ, ProductDomainModel>();
 
-        CreateMap<OrderDTORequest, Order>();
+        CreateMap<ProductDomainModel, ProductDTO>();
 
-        CreateMap<Order, OrderDTOResponse>();
+        CreateMap<CartProduct, OrderProduct>();
+
+        CreateMap<OrderDTORequest, Order>()
+            .ForMember(dst => dst.OrderProducts, opt => opt.MapFrom(src => src.CartProducts));
+
+        CreateMap<Order, OrderDTOResponse>()
+            .ForMember(dst => dst.OrderProducts, opt => opt.MapFrom(src => src.OrderProducts));
 
         CreateMap<Order, OrderListDTOResponse>();
 
-        CreateMap<OrderCartProductDTORequest, CartProduct>();
+        CreateMap<OrderCartProductDTORequest, OrderProduct>();
+
+        CreateMap<OrderProduct, OrderProductDTO>();
     }
 }

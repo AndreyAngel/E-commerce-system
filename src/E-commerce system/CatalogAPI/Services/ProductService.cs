@@ -95,7 +95,10 @@ public class ProductService: IProductService
         product.IsSale = true;
         await _db.Products.AddAsync(product);
 
-        return _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == product.Id);
+        product.Category = _db.Categories.GetById(product.CategoryId);
+        product.Brand = _db.Brands.GetById(product.BrandId);
+
+        return product;
     }
 
     public async Task<Product> Update(Product product)

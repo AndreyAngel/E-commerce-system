@@ -4,6 +4,6 @@ public class ObjectNotUniqueException: ArgumentException
 {
     public ObjectNotUniqueException() : base() { }
     public ObjectNotUniqueException(string paramName) : base(paramName) { }
-    public ObjectNotUniqueException(string paramName, string message)
+    public ObjectNotUniqueException(string message, string paramName)
             : base(message, paramName) { }
 }

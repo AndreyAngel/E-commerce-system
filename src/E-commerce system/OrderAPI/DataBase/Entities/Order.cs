@@ -4,7 +4,7 @@ public class Order : BaseEntity
 {
     public Guid UserId { get; set; }
 
-    public List<CartProduct> CartProducts { get; set; } = new();
+    public List<OrderProduct> OrderProducts { get; set; } = new();
 
     public bool IsReady { get; set; } = false;
 

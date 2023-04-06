@@ -1,4 +1,5 @@
-﻿using IdentityAPI.Services;
+﻿using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Services;
 using System.Security.Claims;
 
 namespace IdentityAPI.Helpers;
@@ -34,19 +35,24 @@ public class CustomAuthenticateMiddleware
     /// <param name="userService">The <see cref="IUserService"/>.</param>
     public async Task Invoke(HttpContext context, IUserService userService)
     {
-        var claims = context.User.Identity as ClaimsIdentity;
+        try
+        {
+            var claims = context.User.Identity as ClaimsIdentity;
+            var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
 
-        if (claims == null)
+            if (userId != null && await userService.TokensIsActive(new Guid(userId.Value)))
+            {
+                var user = await userService.GetById(new Guid(userId.Value));
+                context.Items["User"] = user;
+            }
+        }
+        catch (ArgumentNullException)
         {
             context.Items["User"] = null;
         }
-
-        var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
-
-        if (userId != null && await userService.TokensIsActive(new Guid(userId.Value)))
+        catch (NullReferenceException)
         {
-            var user = await userService.GetById(new Guid(userId.Value));
-            context.Items["User"] = user;
+            context.Items["User"] = null;
         }
 
         await _next(context);

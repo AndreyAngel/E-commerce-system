@@ -5,16 +5,20 @@ using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork.Interfaces;
 using Infrastructure.Exceptions;
 using OrderAPI.DataBase.Entities;
+using AutoMapper;
 
 namespace OrderAPI.Services;
 
 public class OrderService : IOrderService
 {
+    private readonly IMapper _mapper;
+
     private readonly IUnitOfWork _db;
 
-    public OrderService(IUnitOfWork unitOfWork)
+    public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _db = unitOfWork;
+        _mapper = mapper;
     }
 
     public List<Order> GetAll()
@@ -24,7 +28,7 @@ public class OrderService : IOrderService
 
     public Order GetById(Guid id)
     {
-        var res = _db.Orders.Include(x => x.CartProducts).AsNoTracking().SingleOrDefault(x => x.Id == id);
+        var res = _db.Orders.Include(x => x.OrderProducts).AsNoTracking().SingleOrDefault(x => x.Id == id);
 
         if (res == null)
         {
@@ -63,32 +67,31 @@ public class OrderService : IOrderService
 
     public async Task<Order> Create(Order order)
     {
-        if (order.CartProducts.Count == 0)
+        if (order.OrderProducts.Count == 0)
         {
             throw new EmptyOrderException("Empty order", nameof(order));
         }
 
-        List<CartProduct> cartProducts = new();
-        for (int i = 0; i < order.CartProducts.Count; i++)
+        for (int i = 0; i < order.OrderProducts.Count; i++)
         {
-            cartProducts.Add(new CartProduct() { Id = order.CartProducts[i].Id });
-        }
-
-        await _db.Orders.AddAsync(order);
-
-        for (int i = 0; i < cartProducts.Count; i++)
-        {
-            var cartProduct = _db.CartProducts.GetById(cartProducts[i].Id);
+            var cartProduct = _db.CartProducts.GetById(order.OrderProducts[i].Id);
 
             if (cartProduct == null)
             {
-                throw new NotFoundException("CartProduct with this Id wasn't founded", "CartProduct.Id");
+                throw new NotFoundException("CartProduct with this Id wasn't founded", nameof(cartProduct.Id));
             }
 
-            cartProduct.OrderId = order.Id;
-            await _db.CartProducts.UpdateAsync(cartProduct);
-            order.CartProducts.Add(cartProduct);
+            if (cartProduct.Id == order.OrderProducts[i].Id)
+            {
+                throw new ObjectNotUniqueException("Order with cart product Id has already exists", nameof(cartProduct.Id));
+            }
+
+            var orderProduct = _mapper.Map<OrderProduct>(cartProduct);
+            order.OrderProducts[i] = orderProduct;
+            await _db.CartProducts.RemoveAsync(cartProduct);
         }
+
+        await _db.Orders.AddAsync(order);
 
         return order;
     }
@@ -100,7 +103,7 @@ public class OrderService : IOrderService
             throw new NotFoundException("Order with this Id wasn't founded", nameof(order.Id));
         }
 
-        if (order.CartProducts.Count == 0)
+        if (order.OrderProducts.Count == 0)
         {
             throw new EmptyOrderException("Empty order", nameof(order));
         }

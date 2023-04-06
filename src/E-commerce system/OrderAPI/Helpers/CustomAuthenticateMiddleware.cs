@@ -1,5 +1,4 @@
-﻿using OrderAPI.Services;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace OrderAPI.Helpers;
 
@@ -31,21 +30,26 @@ public class CustomAuthenticateMiddleware
     /// Invokes the middleware performing authentication.
     /// </summary>
     /// <param name="context">The <see cref="HttpContext"/>.</param>
-    /// <param name="userService">The <see cref="IUserService"/>.</param>
     public async Task Invoke(HttpContext context)
     {
         var claims = context.User.Identity as ClaimsIdentity;
 
-        if (claims == null)
+        try
+        {
+            var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
+
+            if (userId == null)
+            {
+                context.Items["User"] = null;
+            }
+            else
+            {
+                context.Items["UserId"] = userId.Value;
+            }
+        }
+        catch (ArgumentNullException)
         {
             context.Items["UserId"] = null;
-        }
-
-        var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
-
-        if (userId != null)
-        {
-            context.Items["UserId"] = userId;
         }
 
         await _next(context);

@@ -5,9 +5,9 @@ using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using AutoMapper;
 using OrderAPI.UnitOfWork.Interfaces;
-using OrderAPI.Models.DTO.Cart;
 using Infrastructure;
 using OrderAPI.DataBase.Entities;
+using OrderAPI.Models;
 
 namespace OrderAPI.Services;
 
@@ -26,9 +26,9 @@ public class CartService: ICartService
         _cartProductService = cartProductService;
     }
 
-    public async Task<CartDTOResponse> GetById(Guid id)
+    public async Task<CartDomainModel> GetById(Guid id)
     {
-        var cart = await _db.Carts.Include(x => x.CartProducts.Where(x => x.OrderId == null))
+        var cart = await _db.Carts.Include(x => x.CartProducts)
                                   .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -36,7 +36,7 @@ public class CartService: ICartService
             throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
-        CartDTOResponse result = await Check(cart);
+        CartDomainModel result = await Check(cart);
 
         cart = _mapper.Map<Cart>(result);
 
@@ -54,7 +54,7 @@ public class CartService: ICartService
         await _db.SaveChangesAsync();
     }
 
-    public async Task<CartDTOResponse> ComputeTotalValue(Guid id)
+    public async Task<CartDomainModel> ComputeTotalValue(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -63,7 +63,7 @@ public class CartService: ICartService
             throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
-        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
+        CartDomainModel model = _mapper.Map<CartDomainModel>(cart);
 
         model.ComputeTotalValue();
         cart.TotalValue = model.TotalValue;
@@ -73,7 +73,7 @@ public class CartService: ICartService
         return model;
     }
 
-    public async Task<CartDTOResponse> Clear(Guid id)
+    public async Task<CartDomainModel> Clear(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -82,17 +82,17 @@ public class CartService: ICartService
             throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
-        cart.Clear();
+        CartDomainModel model = _mapper.Map<CartDomainModel>(cart);
+        model.Clear();
+        cart.TotalValue = model.TotalValue;
 
         await _db.Carts.UpdateAsync(cart);
-
-        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
 
         return model;
     }
 
     // Checks the relevance of products and returns a new cart
-    private async Task<CartDTOResponse> Check(Cart cart)
+    private async Task<CartDomainModel> Check(Cart cart)
     {
         ProductListDTORabbitMQ<Guid> productsId = new();
 
@@ -102,10 +102,10 @@ public class CartService: ICartService
         }
 
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
-        ProductListDTORabbitMQ<Infrastructure.DTO.ProductDTORabbitMQ> response =
-            await RabbitMQClient.Request<ProductListDTORabbitMQ<Guid>, ProductListDTORabbitMQ<Infrastructure.DTO.ProductDTORabbitMQ>>(_bus, productsId, uri);
+        ProductListDTORabbitMQ<ProductDTORabbitMQ> response =
+        await RabbitMQClient.Request<ProductListDTORabbitMQ<Guid>, ProductListDTORabbitMQ<ProductDTORabbitMQ>>(_bus, productsId, uri);
 
-        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
+        CartDomainModel model = _mapper.Map<CartDomainModel>(cart);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones
@@ -118,7 +118,7 @@ public class CartService: ICartService
             }
             else if (response.Products[i].Id == model.CartProducts[i].ProductId)
             {
-                var product = _mapper.Map<Models.DTO.Cart.ProductDTO>(response.Products[i]);
+                var product = _mapper.Map<ProductDomainModel>(response.Products[i]);
                 model.CartProducts[i].Product = product;
                 model.CartProducts[i].ComputeTotalValue();
             }

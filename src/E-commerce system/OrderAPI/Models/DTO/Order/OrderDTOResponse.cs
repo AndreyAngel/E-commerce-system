@@ -1,5 +1,4 @@
-﻿using OrderAPI.Models.DTO.Cart;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace OrderAPI.Models.DTO.Order;
 
@@ -11,7 +10,7 @@ public class OrderDTOResponse
     [Required]
     public Guid UserId { get; set; }
 
-    public List<CartProductDTO> CartProducts { get; set; } = new();
+    public List<OrderProductDTO> OrderProducts { get; set; } = new();
 
     public bool IsReady { get; set; }
 
@@ -20,6 +19,4 @@ public class OrderDTOResponse
     public bool IsCanceled { get; set; }
 
     public bool IsPaymented { get; set; }
-
-    public static DateTime DateTime { get; set; }
 }

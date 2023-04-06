@@ -88,6 +88,8 @@ builder.Services.AddMassTransit(x =>
 
 builder.Services.AddSwaggerGen(options =>
 {
+
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "CatalogAPI", Version = "v1" });
     var basePath = AppContext.BaseDirectory;
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

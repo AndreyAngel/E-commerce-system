@@ -12,7 +12,7 @@ namespace OrderAPI.Controllers;
 
 [ApiController]
 [Authorize(Policy = "LimitedAccessToOrders")]
-[Route("api/v1/ord/[controller]/[action]")]
+[Route("api/v1/OrderAPI/[controller]/[action]")]
 public class OrderController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;

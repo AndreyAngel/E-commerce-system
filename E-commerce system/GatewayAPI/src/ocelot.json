@@ -1,0 +1,89 @@
+{
+  "Routes": [
+    // CatalogAPI
+    {
+      "DownstreamPathTemplate": "/api/v1/CatalogAPI/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5045
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/CatalogAPI/{everything}",
+      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
+      "ServiceName": "CatalogAPI",
+      "SwaggerKey": "CatalogAPI"
+    },
+
+    // OrderAPI
+    {
+      "DownstreamPathTemplate": "/api/v1/OrderAPI/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7045
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/OrderAPI/{everything}",
+      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
+      "ServiceName": "OrderAPI",
+      "SwaggerKey": "OrderAPI"
+    },
+
+    // IdentityAPI
+    {
+      "DownstreamPathTemplate": "/api/v1/IdentityAPI{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7281
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
+      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
+      "ServiceName": "IdentityAPI",
+      "SwaggerKey": "IdentityAPI"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "CatalogAPI",
+      "Config": [
+        {
+          "Name": "CatalogAPI",
+          "Version": "v1",
+          "Url": "https://localhost:5045/swagger/v1/swagger.json"
+        }
+      ]
+    },
+
+    {
+      "Key": "OrderAPI",
+      "Config": [
+        {
+          "Name": "OrderAPI",
+          "Version": "v1",
+          "Url": "https://localhost:7045/swagger/v1/swagger.json"
+        }
+      ]
+    },
+
+    {
+      "Key": "IdentityAPI",
+      "Config": [
+        {
+          "Name": "IdentityAPI",
+          "Version": "v1",
+          "Url": "https://localhost:7281/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8500"
+  }
+}

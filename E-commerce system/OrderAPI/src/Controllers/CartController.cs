@@ -12,7 +12,7 @@ namespace OrderAPI.Controllers
 {
     [ApiController]
     [Authorize (Policy = "Cart")]
-    [Route("api/v1/ord/[controller]/[action]")]
+    [Route("api/v1/OrderAPI/[controller]/[action]")]
     public class CartController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

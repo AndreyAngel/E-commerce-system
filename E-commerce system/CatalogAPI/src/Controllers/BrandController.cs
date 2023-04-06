@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CatalogAPI.Controllers;
 
 
-[Route("api/v1/cat/[controller]/[action]")]
+[Route("api/v1/CatalogAPI/[controller]/[action]")]
 [ApiController]
 public class BrandController : ControllerBase
 {
@@ -26,7 +26,7 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "Public")]
-    public ActionResult<List<BrandDTOResponce>> Get()
+    public ActionResult<List<BrandDTOResponce>> GetAll()
     {
         try
         {

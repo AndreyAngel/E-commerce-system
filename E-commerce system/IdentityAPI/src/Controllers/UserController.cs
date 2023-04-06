@@ -17,7 +17,7 @@ namespace IdentityAPI.Controllers;
 /// Provides the APIs for handling all the user logic
 /// </summary>
 [ApiController]
-[Route("api/v1/identity/[controller]/[action]")]
+[Route("api/v1/IdentityAPI/[controller]/[action]")]
 public class UserController : ControllerBase
 {
     /// <summary>

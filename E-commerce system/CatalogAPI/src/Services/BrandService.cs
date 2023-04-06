@@ -24,7 +24,7 @@ public class BrandService: IBrandService
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(id), "Brand with this Id was not founded!");
+            throw new NotFoundException("Brand with this Id was not founded!", nameof(id));
         }
 
         return res;
@@ -36,7 +36,7 @@ public class BrandService: IBrandService
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(name), "Brand with this name was not founded!");
+            throw new NotFoundException("Brand with this name was not founded!", nameof(name));
         }
 
         return res;
@@ -46,7 +46,7 @@ public class BrandService: IBrandService
     {
         if (_db.Brands.GetAll().SingleOrDefault(x => x.Name == brand.Name) != null)
         {
-            throw new ObjectNotUniqueException(nameof(brand.Name), "Brand with this name alredy exists!");
+            throw new ObjectNotUniqueException("Brand with this name alredy exists!", nameof(brand.Name));
         }
 
         await _db.Brands.AddAsync(brand);
@@ -60,12 +60,12 @@ public class BrandService: IBrandService
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(brand.Id), "Brand with this Id was not founded!");
+            throw new NotFoundException("Brand with this Id was not founded!", nameof(brand.Id));
         }
 
         else if ((res.Name != brand.Name) && _db.Brands.GetAll().SingleOrDefault(x => x.Name == brand.Name) != null)
         {
-            throw new ObjectNotUniqueException(nameof(brand.Name), "Brand with this name already exists!");
+            throw new ObjectNotUniqueException("Brand with this name already exists!", nameof(brand.Name));
         }
 
         await _db.Brands.UpdateAsync(brand);

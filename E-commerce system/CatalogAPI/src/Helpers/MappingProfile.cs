@@ -13,16 +13,16 @@ public class MappingProfile : Profile
 
         CreateMap<BrandDTORequest, Brand>();
 
-        CreateMap<Brand, BrandDTOResponce>();
+        CreateMap<Brand, BrandDTOResponse>();
 
         CreateMap<CategoryDTORequest, Category>();
 
-        CreateMap<Category, CategoryDTOResponce>();
+        CreateMap<Category, CategoryDTOResponse>();
 
         CreateMap<ProductDTORequest, Product>();
 
-        CreateMap<Product, ProductDTOResponce>();
+        CreateMap<Product, ProductDTOResponse>();
 
-        CreateMap<Product, ProductListDTOResponce>();
+        CreateMap<Product, ProductListDTOResponse>();
     }
 }

@@ -135,7 +135,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Registration of the new user
     /// </summary>
-    /// <param name="model"> Registration view model </param>
+    /// <param name="model"> Registration DTO </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="201"> User registrated </response>
     /// <response code="400"> Incorrect data was sent during registration </response>
@@ -168,7 +168,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Authorization of the user
     /// </summary>
-    /// <param name="model"> Login view model </param>
+    /// <param name="model"> Login DTO </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="404"> Incorrect data was sent during authorization </response>
@@ -227,7 +227,7 @@ public class UserController : ControllerBase
     ///<summary>
     /// Update of user date
     /// </summary>
-    /// <param name="model"> User data view model </param>
+    /// <param name="model"> User data DTO </param>
     /// <param name="userId"> User Id </param>
     /// <returns> Task object contaning request result </returns>
     /// <response code="204"> Successful completion </response>

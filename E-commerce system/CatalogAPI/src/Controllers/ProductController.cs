@@ -6,17 +6,39 @@ using CatalogAPI.Models.DTO;
 using AutoMapper;
 using CatalogAPI.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace CatalogAPI.Controllers;
 
-
+/// <summary>
+/// Provides the APIs for handling all the category logic
+/// </summary>
 [Route("api/v1/CatalogAPI/[controller]/[action]")]
 [ApiController]
 public class ProductController : ControllerBase
 {
+    /// <summary>
+    /// Repository group interface showing data context
+    /// </summary>
     private readonly IUnitOfWork _unitOfWork;
+
+    /// <summary>
+    /// Object of class <see cref="IProductService"/> providing the APIs for managing product in a persistence store.
+    /// </summary>
     private readonly IProductService _service;
+
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Creates an instance of the <see cref="ProductController"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="service"> Object of class <see cref="IProductService"/>
+    /// providing the APIs for managing product in a persistence store </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public ProductController(IUnitOfWork unitOfWork, IProductService service, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
@@ -24,14 +46,19 @@ public class ProductController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get the all products information
+    /// </summary>
+    /// <returns> The action result of getting products information </returns>
+    /// <response code="200"> Successful completion </response>
     [HttpGet]
-    [Authorize(Policy = "Public")]
-    public ActionResult<List<ProductListDTOResponce>> GetAll()
+    [ProducesResponseType(typeof(List<ProductListDTOResponse>), (int)HttpStatusCode.OK)]
+    public IActionResult GetAll()
     {
         try
         {
             var result = _service.Get();
-            var res = _mapper.Map<List<ProductListDTOResponce>>(result);
+            var res = _mapper.Map<List<ProductListDTOResponse>>(result);
 
             return Ok(res);
         }
@@ -41,14 +68,22 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get the product information by Id
+    /// </summary>
+    /// <param name="id"> Product Id </param>
+    /// <returns> The action result of getting product information </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> Product with this Id wasn't founded </response>
     [HttpGet("{id:Guid}")]
-    [Authorize(Policy = "Public")]
-    public ActionResult<ProductDTOResponce> GetById(Guid id)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    public IActionResult GetById(Guid id)
     {
         try
         {
             var result = _service.GetById(id);
-            var res = _mapper.Map<ProductDTOResponce>(result);
+            var res = _mapper.Map<ProductDTOResponse>(result);
 
             return Ok(res);
         }
@@ -62,14 +97,22 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get the product information by name
+    /// </summary>
+    /// <param name="name"> Product name </param>
+    /// <returns> The action result of getting product information </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> Product with this name wasn't founded </response>
     [HttpGet("{name}")]
-    [Authorize(Policy = "Public")]
-    public ActionResult<ProductDTOResponce> GetByName(string name)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    public IActionResult GetByName(string name)
     {
         try
         {
             var result = _service.GetByName(name);
-            var res = _mapper.Map<ProductDTOResponce>(result);
+            var res = _mapper.Map<ProductDTOResponse>(result);
 
             return Ok(res);
         }
@@ -83,13 +126,19 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get the products information by filters
+    /// </summary>
+    /// <param name="filter"> Filters </param>
+    /// <returns> The action resuslt to getting information about filtered products </returns>
+    /// <response code="200"> Successful completion </response>
     [HttpPost]
-    [Authorize(Policy = "Public")]
-    public ActionResult< List<ProductListDTOResponce> > GetByFilter(ProductFilterDTO filter)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    public IActionResult GetByFilter(ProductFilterDTO filter)
     {
         try
         {
-            var result = _mapper.Map<List<ProductListDTOResponce>>(_service.GetByFilter(filter));
+            var result = _mapper.Map<List<ProductListDTOResponse>>(_service.GetByFilter(filter));
             return Ok(result);
         }
         finally
@@ -98,9 +147,21 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Create a new product or put it back on sale
+    /// </summary>
+    /// <param name="model"> Product data transfer object </param>
+    /// <returns> The task object containing the action result of creating a new product </returns>
+    /// <response code="201"> Successful completion </response>
+    /// <response code="409"> Product with this name already exists </response>
+    /// <response code="404"> Brand or category with this id wasn't founded </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<ProductDTOResponce>> Create(ProductDTORequest model)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> Create(ProductDTORequest model)
     {
         try
         {
@@ -109,7 +170,7 @@ public class ProductController : ControllerBase
             var result = await _service.Create(product);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<ProductDTOResponce>(result);
+            var res = _mapper.Map<ProductDTOResponse>(result);
 
             return Created(new Uri($"http://localhost:5192/api/v1/cat/Product/GetById/{res.Id}"), res);
         }
@@ -127,9 +188,22 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Change product data
+    /// </summary>
+    /// <param name="id"> Product Id </param>
+    /// <param name="model"> Product data transfer object </param>
+    /// <returns> The task object containing the action result of changing product </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="409"> Product with this name already exists </response>
+    /// <response code="404"> Product, brand or category with this Id wasn't founded </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<ProductDTOResponce>> Update(Guid id, ProductDTORequest model)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> Update(Guid id, ProductDTORequest model)
     {
         try
         {
@@ -139,7 +213,7 @@ public class ProductController : ControllerBase
             var result = await _service.Update(product);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<ProductDTOResponce>(result);
+            var res = _mapper.Map<ProductDTOResponse>(result);
 
             return Ok(res);
         }
@@ -157,9 +231,19 @@ public class ProductController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Remove a product from the public domain.
+    /// Product is withdrawn from sale.
+    /// </summary>
+    /// <param name="id"> Product Id </param>
+    /// <returns> The task object containing the action result of delete product </returns>
+    /// <response code="200"> Successful completion </response>
+    /// <response code="404"> Product with this Id wasn't founded </response>
     [HttpDelete("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult> Delete(Guid id)
+    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> Delete(Guid id)
     {
         try
         {

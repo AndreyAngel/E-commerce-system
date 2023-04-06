@@ -1,6 +1,6 @@
 ﻿namespace CatalogAPI.Models.DTO;
 
-public class ProductDTOResponce
+public class ProductDTOResponse
 {
     public Guid Id { get; set; }
 
@@ -12,7 +12,7 @@ public class ProductDTOResponce
 
     public bool IsSale { get; set; }
 
-    public virtual CategoryDTOResponce? Category { get; set; }
+    public virtual CategoryDTOResponse? Category { get; set; }
 
-    public virtual BrandDTOResponce? Brand { get; set; }
+    public virtual BrandDTOResponse? Brand { get; set; }
 }

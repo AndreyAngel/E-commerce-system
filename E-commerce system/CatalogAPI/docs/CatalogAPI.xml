@@ -4,6 +4,252 @@
         <name>CatalogAPI</name>
     </assembly>
     <members>
+        <member name="T:CatalogAPI.Controllers.BrandController">
+            <summary>
+            Provides the APIs for handling all the brand logic
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.BrandController._unitOfWork">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.BrandController._service">
+            <summary>
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IBrandService"/> providing the APIs for managing brand in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.BrandController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,CatalogAPI.Services.Interfaces.IBrandService,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Controllers.BrandController"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="service"> Object of class <see cref="T:CatalogAPI.Services.Interfaces.IBrandService"/>
+            providing the APIs for managing brand in a persistence store </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.GetAll">
+            <summary>
+            Get the all brands information
+            </summary>
+            <returns> The action result of getting brands information </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.GetById(System.Guid)">
+            <summary>
+            Get the brand information by Id
+            </summary>
+            <param name="id"> Brand Id </param>
+            <returns> The action result of getting brand information </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.GetByName(System.String)">
+            <summary>
+            Get the brand information by name
+            </summary>
+            <param name="name"> Brand name </param>
+            <returns> The action result of getting brand information </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Brand with this name wasn't founded </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.Create(CatalogAPI.Models.DTO.BrandDTORequest)">
+            <summary>
+            Create a new brand
+            </summary>
+            <param name="model"> Brand data transfer object </param>
+            <returns> The task object containing the action result of creating a new brand </returns>
+            <response code="201"> Successful completion </response>
+            <response code="409"> Brand with this name already exists </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.BrandController.Update(System.Guid,CatalogAPI.Models.DTO.BrandDTORequest)">
+            <summary>
+            Change brand data
+            </summary>
+            <param name="id"> Brand Id </param>
+            <param name="model"> Brand data transfer object </param>
+            <returns> The task object containing the action result of changing brand </returns>
+            <response code="200"> Successful completion </response>
+            <response code="409"> Brand with this name already exists </response>
+            <response code="404"> Brand with this Id wasn't founded </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="T:CatalogAPI.Controllers.CategoryController">
+            <summary>
+            Provides the APIs for handling all the category logic
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.CategoryController._unitOfWork">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.CategoryController._service">
+            <summary>
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.ICategoryService"/> providing the APIs for managing category in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.CategoryController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,CatalogAPI.Services.Interfaces.ICategoryService,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Controllers.CategoryController"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="service"> Object of class <see cref="T:CatalogAPI.Services.Interfaces.ICategoryService"/>
+            providing the APIs for managing category in a persistence store </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.GetAll">
+            <summary>
+            Get the all categories information
+            </summary>
+            <returns> The action result of getting categories information </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.GetById(System.Guid)">
+            <summary>
+            Get the category information by Id
+            </summary>
+            <param name="id"> Category Id </param>
+            <returns> The action result of getting category information </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Category with this Id wasn't founded </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.GetByName(System.String)">
+            <summary>
+            Get the category information by name
+            </summary>
+            <param name="name"> Category name </param>
+            <returns> The action result of getting category information </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Category with this name wasn't founded </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.Create(CatalogAPI.Models.DTO.CategoryDTORequest)">
+            <summary>
+            Create a new category
+            </summary>
+            <param name="model"> Category data transfer object </param>
+            <returns> The task object containing the action result of creating a new category </returns>
+            <response code="201"> Successful completion </response>
+            <response code="409"> Category with this name already exists </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.CategoryController.Update(System.Guid,CatalogAPI.Models.DTO.CategoryDTORequest)">
+            <summary>
+            Change category data
+            </summary>
+            <param name="id"> Category Id </param>
+            <param name="model"> Category data transfer object </param>
+            <returns> The task object containing the action result of changing category </returns>
+            <response code="200"> Successful completion </response>
+            <response code="409"> Category with this name already exists </response>
+            <response code="404"> Category with this Id wasn't founded </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="T:CatalogAPI.Controllers.ProductController">
+            <summary>
+            Provides the APIs for handling all the category logic
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.ProductController._unitOfWork">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.ProductController._service">
+            <summary>
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IProductService"/> providing the APIs for managing product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Controllers.ProductController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,CatalogAPI.Services.Interfaces.IProductService,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Controllers.ProductController"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="service"> Object of class <see cref="T:CatalogAPI.Services.Interfaces.IProductService"/>
+            providing the APIs for managing product in a persistence store </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.GetAll">
+            <summary>
+            Get the all products information
+            </summary>
+            <returns> The action result of getting products information </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.GetById(System.Guid)">
+            <summary>
+            Get the product information by Id
+            </summary>
+            <param name="id"> Product Id </param>
+            <returns> The action result of getting product information </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Product with this Id wasn't founded </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.GetByName(System.String)">
+            <summary>
+            Get the product information by name
+            </summary>
+            <param name="name"> Product name </param>
+            <returns> The action result of getting product information </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Product with this name wasn't founded </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.GetByFilter(CatalogAPI.Models.DTO.ProductFilterDTO)">
+            <summary>
+            Get the products information by filters
+            </summary>
+            <param name="filter"> Filters </param>
+            <returns> The action resuslt to getting information about filtered products </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.Create(CatalogAPI.Models.DTO.ProductDTORequest)">
+            <summary>
+            Create a new product or put it back on sale
+            </summary>
+            <param name="model"> Product data transfer object </param>
+            <returns> The task object containing the action result of creating a new product </returns>
+            <response code="201"> Successful completion </response>
+            <response code="409"> Product with this name already exists </response>
+            <response code="404"> Brand or category with this id wasn't founded </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.Update(System.Guid,CatalogAPI.Models.DTO.ProductDTORequest)">
+            <summary>
+            Change product data
+            </summary>
+            <param name="id"> Product Id </param>
+            <param name="model"> Product data transfer object </param>
+            <returns> The task object containing the action result of changing product </returns>
+            <response code="200"> Successful completion </response>
+            <response code="409"> Product with this name already exists </response>
+            <response code="404"> Product, brand or category with this Id wasn't founded </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:CatalogAPI.Controllers.ProductController.Delete(System.Guid)">
+            <summary>
+            Remove a product from the public domain.
+            Product is withdrawn from sale.
+            </summary>
+            <param name="id"> Product Id </param>
+            <returns> The task object containing the action result of delete product </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Product with this Id wasn't founded </response>
+        </member>
         <member name="T:CatalogAPI.Migrations.Initial">
             <inheritdoc />
         </member>

@@ -1,10 +1,9 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Provider.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOcelot(); //.AddConsul().AddConfigStoredInConsul();
+builder.Services.AddOcelot();
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
@@ -22,7 +21,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerForOcelotUI(builder.Configuration);
-    app.UseOcelot();
+    app.UseOcelot().Wait();
 }
 
 app.UseAuthorization();

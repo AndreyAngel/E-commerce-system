@@ -1,6 +1,5 @@
 {
   "Routes": [
-    // CatalogAPI
     {
       "DownstreamPathTemplate": "/api/v1/CatalogAPI/{everything}",
       "DownstreamScheme": "https",
@@ -11,12 +10,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/CatalogAPI/{everything}",
-      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
-      "ServiceName": "CatalogAPI",
+      "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
       "SwaggerKey": "CatalogAPI"
     },
 
-    // OrderAPI
     {
       "DownstreamPathTemplate": "/api/v1/OrderAPI/{everything}",
       "DownstreamScheme": "https",
@@ -27,14 +24,12 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/OrderAPI/{everything}",
-      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
-      "ServiceName": "OrderAPI",
+      "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
       "SwaggerKey": "OrderAPI"
     },
 
-    // IdentityAPI
     {
-      "DownstreamPathTemplate": "/api/v1/IdentityAPI{everything}",
+      "DownstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -43,8 +38,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
-      "UsstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ],
-      "ServiceName": "IdentityAPI",
+      "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
       "SwaggerKey": "IdentityAPI"
     }
   ],
@@ -81,9 +75,5 @@
         }
       ]
     }
-  ],
-
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:8500"
-  }
+  ]
 }

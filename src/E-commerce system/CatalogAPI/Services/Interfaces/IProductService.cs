@@ -1,8 +1,8 @@
-﻿using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.DTO;
+﻿using CatalogAPI.Models.DataBase;
+using CatalogAPI.Models.DTO;
+using Infrastructure.DTO;
 
-namespace OrderAPI.Services.Interfaces;
+namespace CatalogAPI.Services.Interfaces;
 
 public interface IProductService
 {
@@ -12,11 +12,11 @@ public interface IProductService
 
     public Product GetByName(string name);
 
-    public List<Product> GetByFilter(ProductFilterViewModel model);
+    public List<Product> GetByFilter(ProductFilterDTO model);
 
     public Task<Product> Create(Product product);
 
     public Task<Product> Update(Product product);
 
-    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<Guid> products);
+    public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> products);
 }

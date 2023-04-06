@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using OrderAPI.Models.DataBase.Entities;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.Models.ViewModels.Requests;
-using OrderAPI.Models.ViewModels.Responses;
+using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DTO;
 
-namespace OrderAPI.Helpers;
+namespace IdentityAPI.Helpers;
 
 /// <summary>
 /// Class for models mapping
@@ -16,14 +14,14 @@ public class MappingProfile : Profile
     /// </summary>
     public MappingProfile()
     {
-        CreateMap<RegisterViewModel, User>().ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
+        CreateMap<RegisterDTORequest, User>().ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
 
-        CreateMap<UserUpdateViewModelRequest, User>();
+        CreateMap<UserDTORequest, User>();
 
-        CreateMap<User, UserViewModelResponse>();
+        CreateMap<User, UserDTOResponse>();
 
-        CreateMap<AddressViewModel, Address>();
+        CreateMap<AddressDTO, Address>();
 
-        CreateMap<Address, AddressViewModel>();
+        CreateMap<Address, AddressDTO>();
     }
 }

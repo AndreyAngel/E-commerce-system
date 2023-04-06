@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.Models;
+﻿namespace CatalogAPI.Models;
 
 /// <summary>
 /// User role

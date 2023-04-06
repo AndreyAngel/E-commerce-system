@@ -2,16 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
-var builder = HostBuilder.CreateHostBuilder(args) =>
-
-                Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config
-                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                    .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
-                    .AddEnvironmentVariables();
-                });
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOcelot();
 

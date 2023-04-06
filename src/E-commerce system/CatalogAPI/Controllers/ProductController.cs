@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OrderAPI.Services.Interfaces;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
+using CatalogAPI.Services.Interfaces;
+using Infrastructure.Exceptions;
+using CatalogAPI.Models.DataBase;
+using CatalogAPI.Models.DTO;
 using AutoMapper;
-using OrderAPI.UnitOfWork.Interfaces;
+using CatalogAPI.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace OrderAPI.Controllers;
+namespace CatalogAPI.Controllers;
 
 
 [Route("api/v1/cat/[controller]/[action]")]
@@ -26,12 +26,12 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "Public")]
-    public ActionResult<List<ProductListViewModelResponce>> Get()
+    public ActionResult<List<ProductListDTOResponce>> Get()
     {
         try
         {
             var result = _service.Get();
-            var res = _mapper.Map<List<ProductListViewModelResponce>>(result);
+            var res = _mapper.Map<List<ProductListDTOResponce>>(result);
 
             return Ok(res);
         }
@@ -43,12 +43,12 @@ public class ProductController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<ProductViewModelResponce> GetById(Guid id)
+    public ActionResult<ProductDTOResponce> GetById(Guid id)
     {
         try
         {
             var result = _service.GetById(id);
-            var res = _mapper.Map<ProductViewModelResponce>(result);
+            var res = _mapper.Map<ProductDTOResponce>(result);
 
             return Ok(res);
         }
@@ -64,12 +64,12 @@ public class ProductController : ControllerBase
 
     [HttpGet("{name}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<ProductViewModelResponce> GetByName(string name)
+    public ActionResult<ProductDTOResponce> GetByName(string name)
     {
         try
         {
             var result = _service.GetByName(name);
-            var res = _mapper.Map<ProductViewModelResponce>(result);
+            var res = _mapper.Map<ProductDTOResponce>(result);
 
             return Ok(res);
         }
@@ -85,11 +85,11 @@ public class ProductController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "Public")]
-    public ActionResult< List<ProductListViewModelResponce> > GetByFilter(ProductFilterViewModel filter)
+    public ActionResult< List<ProductListDTOResponce> > GetByFilter(ProductFilterDTO filter)
     {
         try
         {
-            var result = _mapper.Map<List<ProductListViewModelResponce>>(_service.GetByFilter(filter));
+            var result = _mapper.Map<List<ProductListDTOResponce>>(_service.GetByFilter(filter));
             return Ok(result);
         }
         finally
@@ -100,7 +100,7 @@ public class ProductController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<ProductViewModelResponce>> Create(ProductViewModelRequest model)
+    public async Task<ActionResult<ProductDTOResponce>> Create(ProductDTORequest model)
     {
         try
         {
@@ -109,7 +109,7 @@ public class ProductController : ControllerBase
             var result = await _service.Create(product);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<ProductViewModelResponce>(result);
+            var res = _mapper.Map<ProductDTOResponce>(result);
 
             return Created(new Uri($"http://localhost:5192/api/v1/cat/Product/GetById/{res.Id}"), res);
         }
@@ -129,7 +129,7 @@ public class ProductController : ControllerBase
 
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<ProductViewModelResponce>> Update(Guid id, ProductViewModelRequest model)
+    public async Task<ActionResult<ProductDTOResponce>> Update(Guid id, ProductDTORequest model)
     {
         try
         {
@@ -139,7 +139,7 @@ public class ProductController : ControllerBase
             var result = await _service.Update(product);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<ProductViewModelResponce>(result);
+            var res = _mapper.Map<ProductDTOResponce>(result);
 
             return Ok(res);
         }

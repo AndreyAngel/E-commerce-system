@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace OrderAPI.Models.DataBase.Entities;
+namespace IdentityAPI.Models.DataBase.Entities;
 
 /// <summary>
 /// Entity storing user data

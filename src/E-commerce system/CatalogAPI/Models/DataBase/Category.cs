@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.Models.DataBase;
+﻿namespace CatalogAPI.Models.DataBase;
 
 public class Category : BaseEntity
 {

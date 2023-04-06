@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.Exceptions;
+﻿namespace IdentityAPI.Exceptions;
 
 /// <summary>
 /// The exception that is throw when a incorrect password error is detected

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OrderAPI.Models.DataBase;
+using OrderAPI.DataBase;
 using OrderAPI.UnitOfWork.Interfaces;
 using System.Linq.Expressions;
 

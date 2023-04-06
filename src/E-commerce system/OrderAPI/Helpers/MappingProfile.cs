@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using OrderAPI.Models.DataBase;
-using OrderAPI.DTO;
-using OrderAPI.Models.ViewModels.Cart;
-using OrderAPI.Models.ViewModels.Order;
+using Infrastructure.DTO;
+using OrderAPI.Models.DTO.Cart;
+using OrderAPI.Models.DTO.Order;
+using OrderAPI.DataBase.Entities;
 
 namespace OrderAPI.Helpers;
 
@@ -10,24 +10,24 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CartViewModelResponse, Cart>();
+        CreateMap<CartDTOResponse, Cart>();
 
-        CreateMap<Cart, CartViewModelResponse>();
+        CreateMap<Cart, CartDTOResponse>();
 
-        CreateMap<CartProductViewModelRequest, CartProduct>();
+        CreateMap<CartProductDTORequest, CartProduct>();
 
-        CreateMap<CartProduct, CartProductViewModelResponse>();
+        CreateMap<CartProduct, CartProductDTOResponse>();
 
-        CreateMap<CartProductViewModelResponse, CartProduct>();
+        CreateMap<CartProductDTOResponse, CartProduct>();
 
-        CreateMap<ProductDTO, ProductViewModel>();
+        CreateMap<ProductDTORabbitMQ, ProductDTO>();
 
-        CreateMap<OrderViewModelRequest, Order>();
+        CreateMap<OrderDTORequest, Order>();
 
-        CreateMap<Order, OrderViewModelResponse>();
+        CreateMap<Order, OrderDTOResponse>();
 
-        CreateMap<Order, OrderListViewModelResponse>();
+        CreateMap<Order, OrderListDTOResponse>();
 
-        CreateMap<OrderCartProductViewModelRequest, CartProduct>();
+        CreateMap<OrderCartProductDTORequest, CartProduct>();
     }
 }

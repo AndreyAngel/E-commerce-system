@@ -1,4 +1,3 @@
-using OrderAPI.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderAPI.Consumers;
 using OrderAPI.Helpers;
-using OrderAPI.Models.DataBase;
 using OrderAPI.Services;
 using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork;
@@ -14,6 +12,8 @@ using OrderAPI.UnitOfWork.Interfaces;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using OrderAPI.DataBase;
+using OrderAPI.Models.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 

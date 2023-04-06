@@ -1,9 +1,10 @@
 ﻿using OrderAPI.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels.Order;
+using OrderAPI.Models.DTO.Order;
 using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork.Interfaces;
+using Infrastructure.Exceptions;
+using OrderAPI.DataBase.Entities;
 
 namespace OrderAPI.Services;
 
@@ -33,7 +34,7 @@ public class OrderService : IOrderService
         return res;
     }
 
-    public List<Order> GetByFilter(OrderFilterViewModelRequest filter)
+    public List<Order> GetByFilter(OrderFilterDTORequest filter)
     {
         var orders = _db.Orders.GetAll();
 

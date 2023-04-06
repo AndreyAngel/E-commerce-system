@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.Models.Enums;
+﻿namespace IdentityAPI.Models.Enums;
 
 /// <summary>
 /// Token type

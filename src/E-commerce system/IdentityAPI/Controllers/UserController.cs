@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.DataBase.Entities;
-using OrderAPI.Models.ViewModels.Requests;
-using OrderAPI.Models.ViewModels.Responses;
-using OrderAPI.Services;
+using IdentityAPI.Exceptions;
+using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DTO;
+using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security;
 using IdentityAPI.Helpers;
+using Infrastructure.Exceptions;
 
-namespace OrderAPI.Controllers;
+namespace IdentityAPI.Controllers;
 
 /// <summary>
 /// Provides the APIs for handling all the user logic
@@ -51,14 +51,14 @@ public class UserController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpGet("{userId:Guid}")]
     [Authorize(Policy = "Public")]
-    [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetById(Guid userId)
     {
         try
         {
             var user = await _userService.GetById(userId);
-            var response = _mapper.Map<UserViewModelResponse>(user);
+            var response = _mapper.Map<UserDTOResponse>(user);
 
             return Ok(response);
         }
@@ -81,7 +81,7 @@ public class UserController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpGet]
     [Authorize(Policy = "Public")]
-    [ProducesResponseType(typeof(UserViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetYourUserData()
     {
@@ -90,7 +90,7 @@ public class UserController : ControllerBase
             var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split().Last();
             var userId = new JwtSecurityToken(accessToken).Claims.First(x => x.Type == "UserId");
             var user = await _userService.GetById(new Guid(userId.Value));
-            var response = _mapper.Map<UserViewModelResponse>(user);
+            var response = _mapper.Map<UserDTOResponse>(user);
 
             return Ok(response);
         }
@@ -113,9 +113,9 @@ public class UserController : ControllerBase
     /// <response code="403"> Insecure request </response>
     [HttpPost]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Forbidden)]
-    public async Task<IActionResult> GetAccessToken(GetAccessTokenRequest model)
+    public async Task<IActionResult> GetAccessToken(GetAccessTokenDTORequest model)
     {
         try
         {
@@ -141,16 +141,16 @@ public class UserController : ControllerBase
     /// <response code="400"> Incorrect data was sent during registration </response>
     [HttpPost]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Register(RegisterViewModel model)
+    [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> Register(RegisterDTORequest model)
     {
         try
         {
             var user = _mapper.Map<User>(model);
             var result = await _userService.Register(user, model.Password, model.Role);
 
-            if (result.GetType() == typeof(IdentityErrorsViewModelResponse))
+            if (result.GetType() == typeof(IdentityErrorsDTOResponse))
             {
                 return BadRequest(result);
             }
@@ -177,10 +177,10 @@ public class UserController : ControllerBase
     [Login]
     [HttpPost]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(AuthorizationViewModelResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Forbidden)]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginDTORequest model)
     {
         try
         {
@@ -236,8 +236,8 @@ public class UserController : ControllerBase
     [HttpPatch("{userId:Guid}")]
     [Authorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType(typeof(IdentityErrorsViewModelResponse), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Update(UserUpdateViewModelRequest model, Guid userId)
+    [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> Update(UserDTORequest model, Guid userId)
     {
         var user = _mapper.Map<User>(model);
         var result = await _userService.Update(user, userId);

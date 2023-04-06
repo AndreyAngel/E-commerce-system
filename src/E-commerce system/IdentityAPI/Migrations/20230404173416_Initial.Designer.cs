@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OrderAPI.Models.DataBase;
+using IdentityAPI.Models.DataBase;
 
 #nullable disable
 
@@ -172,7 +172,7 @@ namespace IdentityAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.DataBase.Entities.Address", b =>
+            modelBuilder.Entity("IdentityAPI.Models.DataBase.Entities.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,7 +198,7 @@ namespace IdentityAPI.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.DataBase.Entities.User", b =>
+            modelBuilder.Entity("IdentityAPI.Models.DataBase.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -290,7 +290,7 @@ namespace IdentityAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("OrderAPI.Models.DataBase.Entities.User", null)
+                    b.HasOne("IdentityAPI.Models.DataBase.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -299,7 +299,7 @@ namespace IdentityAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("OrderAPI.Models.DataBase.Entities.User", null)
+                    b.HasOne("IdentityAPI.Models.DataBase.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -314,7 +314,7 @@ namespace IdentityAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OrderAPI.Models.DataBase.Entities.User", null)
+                    b.HasOne("IdentityAPI.Models.DataBase.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -323,16 +323,16 @@ namespace IdentityAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("OrderAPI.Models.DataBase.Entities.User", null)
+                    b.HasOne("IdentityAPI.Models.DataBase.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OrderAPI.Models.DataBase.Entities.User", b =>
+            modelBuilder.Entity("IdentityAPI.Models.DataBase.Entities.User", b =>
                 {
-                    b.HasOne("OrderAPI.Models.DataBase.Entities.Address", "Address")
+                    b.HasOne("IdentityAPI.Models.DataBase.Entities.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId");
 

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace OrderAPI.UnitOfWork.Interfaces;
+namespace CatalogAPI.UnitOfWork.Interfaces;
 
 public interface IGenericRepository<TEntity> where TEntity : class
 {

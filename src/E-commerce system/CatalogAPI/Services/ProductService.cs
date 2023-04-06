@@ -1,12 +1,12 @@
-﻿using OrderAPI.Services.Interfaces;
-using OrderAPI.DTO;
+﻿using CatalogAPI.Services.Interfaces;
+using Infrastructure.DTO;
 using AutoMapper;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.UnitOfWork.Interfaces;
+using Infrastructure.Exceptions;
+using CatalogAPI.Models.DataBase;
+using CatalogAPI.Models.DTO;
+using CatalogAPI.UnitOfWork.Interfaces;
 
-namespace OrderAPI.Services;
+namespace CatalogAPI.Services;
 
 public class ProductService: IProductService
 {
@@ -48,7 +48,7 @@ public class ProductService: IProductService
         return res;
     }
 
-    public List<Product> GetByFilter(ProductFilterViewModel model)
+    public List<Product> GetByFilter(ProductFilterDTO model)
     {
         var products = _db.Products.GetAll();
 
@@ -128,15 +128,15 @@ public class ProductService: IProductService
     }
 
     // Returns actuality products by ID
-    public ProductListDTO<ProductDTO> CheckProducts(ProductListDTO<Guid> productList)
+    public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> productList)
     {
-        ProductListDTO<ProductDTO> products = new();
+        ProductListDTORabbitMQ<ProductDTORabbitMQ> products = new();
         foreach (var productId in productList.Products)
         {
             var product = _db.Products.GetById(productId);
 
             if (product != null && product.IsSale)
-                products.Products.Add(_mapper.Map<ProductDTO>(product));
+                products.Products.Add(_mapper.Map<ProductDTORabbitMQ>(product));
             else
                 products.Products.Add(null);
         }

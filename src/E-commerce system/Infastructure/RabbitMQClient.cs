@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 
-namespace OrderAPI;
+namespace Infrastructure;
 
 public class RabbitMQClient
 {

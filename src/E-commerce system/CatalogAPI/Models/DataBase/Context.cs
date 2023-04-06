@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace OrderAPI.Models.DataBase;
+namespace CatalogAPI.Models.DataBase;
 
 public class Context : DbContext
 {

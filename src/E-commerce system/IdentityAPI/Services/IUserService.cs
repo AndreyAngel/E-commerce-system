@@ -1,12 +1,11 @@
-using OrderAPI.Models.DataBase.Entities;
-using OrderAPI.Models.ViewModels.Requests;
-using OrderAPI.Models.ViewModels.Responses;
-using OrderAPI.Exceptions;
+using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DTO;
+using IdentityAPI.Exceptions;
 using System.Security;
-using OrderAPI.Models.Enums;
+using IdentityAPI.Models.Enums;
 using IdentityAPI.Models.DataBase;
 
-namespace OrderAPI.Services;
+namespace IdentityAPI.Services;
 
 /// <summary>
 /// Interface for class providing the APIs for managing user in a persistence store.
@@ -29,7 +28,7 @@ public interface IUserService : IDisposable
     /// <param name="refreshToken"> refresh token </param>
     /// <returns> The task object containing the action result of get access token </returns>
     /// <exception cref="SecurityException"> Incorrect refreshToken </exception>
-    Task<AuthorizationViewModelResponse> GetAccessToken(string refreshToken);
+    Task<AuthorizationDTOResponse> GetAccessToken(string refreshToken);
 
     /// <summary>
     /// Registration of the new user
@@ -38,7 +37,7 @@ public interface IUserService : IDisposable
     /// <param name="Password"> User password </param>
     /// <param name="role"> User role </param>
     /// <returns> The task object containing the authorization result </returns>
-    Task<IIdentityViewModelResponse> Register(User user, string Password, Role role);
+    Task<IIdentityDTOResponse> Register(User user, string Password, Role role);
 
     /// <summary>
     /// Authorization of the user
@@ -47,7 +46,7 @@ public interface IUserService : IDisposable
     /// <returns> The task object containing the authorization result </returns>
     /// <exception cref="NotFoundException"> User with this Email wasn't founded </exception>
     /// <exception cref="IncorrectPasswordException"> Incorrect password </exception>
-    Task<AuthorizationViewModelResponse> Login(LoginViewModel model);
+    Task<AuthorizationDTOResponse> Login(LoginDTORequest model);
 
     /// <summary>
     /// Logout from account
@@ -70,5 +69,5 @@ public interface IUserService : IDisposable
     /// <param name="userId"> User Id </param>
     /// <returns> Task object </returns>
     /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
-    Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId);
+    Task<IdentityErrorsDTOResponse?> Update(User user, Guid userId);
 }

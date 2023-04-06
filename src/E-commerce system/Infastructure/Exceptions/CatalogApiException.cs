@@ -1,4 +1,4 @@
-﻿namespace OrderAPI.Exceptions;
+﻿namespace Infrastructure.Exceptions;
 
 public class CatalogApiException: ArgumentException
 {

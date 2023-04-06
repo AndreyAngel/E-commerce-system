@@ -1,9 +1,9 @@
-﻿using OrderAPI.Services.Interfaces;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.DataBase;
-using OrderAPI.UnitOfWork.Interfaces;
+﻿using CatalogAPI.Services.Interfaces;
+using Infrastructure.Exceptions;
+using CatalogAPI.Models.DataBase;
+using CatalogAPI.UnitOfWork.Interfaces;
 
-namespace OrderAPI.Services;
+namespace CatalogAPI.Services;
 
 public class BrandService: IBrandService
 {

@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Xml.Linq;
 
-namespace OrderAPI.Helpers;
+namespace IdentityAPI.Helpers;
 
 /// <summary>
 /// Class used for auto-documentation of enums

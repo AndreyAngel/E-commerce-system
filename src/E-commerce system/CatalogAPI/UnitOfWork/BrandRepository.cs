@@ -1,7 +1,7 @@
-﻿using OrderAPI.Models.DataBase;
-using OrderAPI.UnitOfWork.Interfaces;
+﻿using CatalogAPI.Models.DataBase;
+using CatalogAPI.UnitOfWork.Interfaces;
 
-namespace OrderAPI.UnitOfWork;
+namespace CatalogAPI.UnitOfWork;
 
 public class BrandRepository : GenericRepository<Brand>, IBrandRepository
 {

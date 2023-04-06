@@ -1,13 +1,13 @@
-﻿using OrderAPI.Services.Interfaces;
+﻿using CatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.Models.DataBase;
+using Infrastructure.Exceptions;
+using CatalogAPI.Models.DTO;
+using CatalogAPI.Models.DataBase;
 using AutoMapper;
-using OrderAPI.UnitOfWork.Interfaces;
+using CatalogAPI.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace OrderAPI.Controllers;
+namespace CatalogAPI.Controllers;
 
 
 [Route("api/v1/cat/[controller]/[action]")]
@@ -26,12 +26,12 @@ public class BrandController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "Public")]
-    public ActionResult<List<BrandViewModelResponce>> Get()
+    public ActionResult<List<BrandDTOResponce>> Get()
     {
         try
         {
             var result = _service.Get();
-            var res = _mapper.Map<List<BrandViewModelResponce>>(result);
+            var res = _mapper.Map<List<BrandDTOResponce>>(result);
 
             return Ok(res);
         }
@@ -43,12 +43,12 @@ public class BrandController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<BrandViewModelResponce> GetById(Guid id)
+    public ActionResult<BrandDTOResponce> GetById(Guid id)
     {
         try
         {
             var result = _service.GetById(id);
-            var res = _mapper.Map<BrandViewModelResponce>(result);
+            var res = _mapper.Map<BrandDTOResponce>(result);
 
             return Ok(res);
         }
@@ -64,12 +64,12 @@ public class BrandController : ControllerBase
 
     [HttpGet("{name}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<BrandViewModelResponce> GetByName(string name)
+    public ActionResult<BrandDTOResponce> GetByName(string name)
     {
         try
         {
             var result = _service.GetByName(name);
-            var res = _mapper.Map<BrandViewModelResponce>(result);
+            var res = _mapper.Map<BrandDTOResponce>(result);
 
             return Ok(res);
         }
@@ -85,7 +85,7 @@ public class BrandController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<BrandViewModelResponce>> Create(BrandViewModelRequest model)
+    public async Task<ActionResult<BrandDTOResponce>> Create(BrandDTORequest model)
     {
         try
         {
@@ -94,7 +94,7 @@ public class BrandController : ControllerBase
             var result = await _service.Create(brand);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<BrandViewModelResponce>(result);
+            var res = _mapper.Map<BrandDTOResponce>(result);
 
             return Created(new Uri($"http://localhost:5192/api/v1/cat/Brand/GetById/{res.Id}"), res);
         }
@@ -110,7 +110,7 @@ public class BrandController : ControllerBase
 
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<BrandViewModelResponce>> Update(Guid id, BrandViewModelRequest model)
+    public async Task<ActionResult<BrandDTOResponce>> Update(Guid id, BrandDTORequest model)
     {
         try
         {
@@ -120,7 +120,7 @@ public class BrandController : ControllerBase
             var result = await _service.Update(brand);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<BrandViewModelResponce>(result);
+            var res = _mapper.Map<BrandDTOResponce>(result);
 
             return Ok(res);
         }

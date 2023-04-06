@@ -1,20 +1,20 @@
-using OrderAPI.Exceptions;
-using OrderAPI.Helpers;
-using OrderAPI.Models.DataBase.Entities;
-using OrderAPI.Models.ViewModels.Requests;
-using OrderAPI.Models.ViewModels.Responses;
-using OrderAPI.DTO;
+using IdentityAPI.Exceptions;
+using IdentityAPI.Helpers;
+using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DTO;
+using Infrastructure.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security;
 using System.Security.Claims;
 using MassTransit;
-using OrderAPI.Models.Enums;
-using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.Enums;
 using IdentityAPI.Models.DataBase;
+using Infrastructure.Exceptions;
+using Infrastructure;
 
-namespace OrderAPI.Services;
+namespace IdentityAPI.Services;
 
 /// <summary>
 /// Provides the APIs for managing user in a persistence store.
@@ -87,7 +87,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<AuthorizationViewModelResponse> Login(LoginViewModel model)
+    public async Task<AuthorizationDTOResponse> Login(LoginDTORequest model)
     {
         var user = await FindByEmailAsync(model.Email);
 
@@ -100,14 +100,14 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IIdentityViewModelResponse> Register(User user, string password, Role role)
+    public async Task<IIdentityDTOResponse> Register(User user, string password, Role role)
     {
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
         var result = await CreateAsync(user, password);
 
         if (!result.Succeeded)
         {
-            return new IdentityErrorsViewModelResponse(result.Errors);
+            return new IdentityErrorsDTOResponse(result.Errors);
         }
 
         await CreateCart(new Guid(user.Id));
@@ -125,7 +125,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<AuthorizationViewModelResponse> GetAccessToken(string refreshToken)
+    public async Task<AuthorizationDTOResponse> GetAccessToken(string refreshToken)
     {
         var validatedToken = JwtTokenHelper.ValidateToken(_configuration, refreshToken);
         var userId = new JwtSecurityToken(validatedToken).Claims.ToList().FirstOrDefault(x => x.Type == "UserId");
@@ -173,7 +173,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IdentityErrorsViewModelResponse?> Update(User user, Guid userId)
+    public async Task<IdentityErrorsDTOResponse?> Update(User user, Guid userId)
     {
         var res = await FindByIdAsync(userId.ToString());
 
@@ -191,7 +191,7 @@ public class UserService : UserManager<User>, IUserService
 
         if (!result.Succeeded)
         {
-            return new IdentityErrorsViewModelResponse(result.Errors);
+            return new IdentityErrorsDTOResponse(result.Errors);
         }
 
         return null;
@@ -200,11 +200,11 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     private async Task CreateCart(Guid userId)
     {
-        await RabbitMQClient.Request<CartDTO>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
+        await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
     }
 
     /// <inheritdoc/>
-    private async Task<AuthorizationViewModelResponse> Login(User user , string password)
+    private async Task<AuthorizationDTOResponse> Login(User user , string password)
     {
         if (!await CheckPasswordAsync(user, password))
         {
@@ -217,7 +217,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    private async Task<AuthorizationViewModelResponse> GenerateTokens(Guid userId, string roleName, List<Claim>? claims = null)
+    private async Task<AuthorizationDTOResponse> GenerateTokens(Guid userId, string roleName, List<Claim>? claims = null)
     {
         if (claims == null)
         {
@@ -249,6 +249,6 @@ public class UserService : UserManager<User>, IUserService
             }
         });
 
-        return new AuthorizationViewModelResponse(900, accessToken, refreshToken, "Bearer");
+        return new AuthorizationDTOResponse(900, accessToken, refreshToken, "Bearer");
     }
 }

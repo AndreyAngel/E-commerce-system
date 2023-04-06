@@ -1,5 +1,5 @@
-﻿using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels.Order;
+﻿using OrderAPI.DataBase.Entities;
+using OrderAPI.Models.DTO.Order;
 
 namespace OrderAPI.Services.Interfaces;
 
@@ -9,7 +9,7 @@ public interface IOrderService
 
     Order GetById(Guid id);
 
-    List<Order> GetByFilter(OrderFilterViewModelRequest filter);
+    List<Order> GetByFilter(OrderFilterDTORequest filter);
 
     Task<Order> Create(Order order);
 

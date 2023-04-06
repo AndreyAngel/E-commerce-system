@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using OrderAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DataBase.Entities;
 
 namespace IdentityAPI.Helpers;
 

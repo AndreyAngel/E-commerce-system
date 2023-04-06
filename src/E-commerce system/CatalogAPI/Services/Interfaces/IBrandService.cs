@@ -1,6 +1,6 @@
-﻿using OrderAPI.Models.DataBase;
+﻿using CatalogAPI.Models.DataBase;
 
-namespace OrderAPI.Services.Interfaces;
+namespace CatalogAPI.Services.Interfaces;
 public interface IBrandService
 {
     public List<Brand> Get();

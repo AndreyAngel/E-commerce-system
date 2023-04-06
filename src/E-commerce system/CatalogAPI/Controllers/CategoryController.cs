@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Services.Interfaces;
-using OrderAPI.Exceptions;
+using CatalogAPI.Models.DTO;
+using CatalogAPI.Models.DataBase;
+using CatalogAPI.Services.Interfaces;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.UnitOfWork.Interfaces;
-using OrderAPI.Helpers;
+using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
-namespace OrderAPI.Controllers;
+namespace CatalogAPI.Controllers;
 
 
 [Route("api/v1/cat/[controller]/[action]")]
@@ -27,12 +27,12 @@ public class CategoryController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "Public")]
-    public ActionResult<List<CategoryViewModelResponce>> Get()
+    public ActionResult<List<CategoryDTOResponce>> Get()
     {
         try
         {
             var result = _service.Get();
-            var res = _mapper.Map<List<CategoryViewModelResponce>>(result);
+            var res = _mapper.Map<List<CategoryDTOResponce>>(result);
 
             return Ok(res);
         }
@@ -44,12 +44,12 @@ public class CategoryController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<CategoryViewModelResponce> GetById(Guid id)
+    public ActionResult<CategoryDTOResponce> GetById(Guid id)
     {
         try
         {
             var result = _service.GetById(id);
-            var res = _mapper.Map<CategoryViewModelResponce>(result);
+            var res = _mapper.Map<CategoryDTOResponce>(result);
 
             return Ok(res);
         }
@@ -65,12 +65,12 @@ public class CategoryController : ControllerBase
 
     [HttpGet("{name}")]
     [Authorize(Policy = "Public")]
-    public ActionResult<CategoryViewModelResponce> GetByName(string name)
+    public ActionResult<CategoryDTOResponce> GetByName(string name)
     {
         try
         {
             var result = _service.GetByName(name);
-            var res = _mapper.Map<CategoryViewModelResponce>(result);
+            var res = _mapper.Map<CategoryDTOResponce>(result);
 
             return Ok(res);
         }
@@ -86,7 +86,7 @@ public class CategoryController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<CategoryViewModelResponce>> Create(CategoryViewModelRequest model)
+    public async Task<ActionResult<CategoryDTOResponce>> Create(CategoryDTORequest model)
     {
         try
         {
@@ -95,7 +95,7 @@ public class CategoryController : ControllerBase
             var result = await _service.Create(category);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<CategoryViewModelResponce>(result);
+            var res = _mapper.Map<CategoryDTOResponce>(result);
 
             return Created(new Uri($"https://localhost:5192/api/v1/cat/Category/GetById/{result.Id}"), res);
         }
@@ -111,7 +111,7 @@ public class CategoryController : ControllerBase
 
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    public async Task<ActionResult<CategoryViewModelResponce>> Update(Guid id, CategoryViewModelRequest model)
+    public async Task<ActionResult<CategoryDTOResponce>> Update(Guid id, CategoryDTORequest model)
     {
         try
         {
@@ -121,7 +121,7 @@ public class CategoryController : ControllerBase
             var result = await _service.Update(category);
             await _unitOfWork.SaveChangesAsync();
 
-            var res = _mapper.Map<CategoryViewModelResponce>(result);
+            var res = _mapper.Map<CategoryDTOResponce>(result);
 
             return Ok(res);
         }

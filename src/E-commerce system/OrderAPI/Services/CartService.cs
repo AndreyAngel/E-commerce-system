@@ -1,12 +1,13 @@
 ﻿using OrderAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
-using OrderAPI.DTO;
-using OrderAPI.Exceptions;
-using OrderAPI.Models.DataBase;
+using Infrastructure.DTO;
+using Infrastructure.Exceptions;
 using AutoMapper;
 using OrderAPI.UnitOfWork.Interfaces;
-using OrderAPI.Models.ViewModels.Cart;
+using OrderAPI.Models.DTO.Cart;
+using Infrastructure;
+using OrderAPI.DataBase.Entities;
 
 namespace OrderAPI.Services;
 
@@ -25,7 +26,7 @@ public class CartService: ICartService
         _cartProductService = cartProductService;
     }
 
-    public async Task<CartViewModelResponse> GetById(Guid id)
+    public async Task<CartDTOResponse> GetById(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts.Where(x => x.OrderId == null))
                                   .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
@@ -35,7 +36,7 @@ public class CartService: ICartService
             throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
-        CartViewModelResponse result = await Check(cart);
+        CartDTOResponse result = await Check(cart);
 
         cart = _mapper.Map<Cart>(result);
 
@@ -53,7 +54,7 @@ public class CartService: ICartService
         await _db.SaveChangesAsync();
     }
 
-    public async Task<CartViewModelResponse> ComputeTotalValue(Guid id)
+    public async Task<CartDTOResponse> ComputeTotalValue(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -62,7 +63,7 @@ public class CartService: ICartService
             throw new NotFoundException("Cart with this id was not founded!", nameof(id));
         }
 
-        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
+        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
 
         model.ComputeTotalValue();
         cart.TotalValue = model.TotalValue;
@@ -72,7 +73,7 @@ public class CartService: ICartService
         return model;
     }
 
-    public async Task<CartViewModelResponse> Clear(Guid id)
+    public async Task<CartDTOResponse> Clear(Guid id)
     {
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -85,15 +86,15 @@ public class CartService: ICartService
 
         await _db.Carts.UpdateAsync(cart);
 
-        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
+        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
 
         return model;
     }
 
     // Checks the relevance of products and returns a new cart
-    private async Task<CartViewModelResponse> Check(Cart cart)
+    private async Task<CartDTOResponse> Check(Cart cart)
     {
-        ProductListDTO<Guid> productsId = new();
+        ProductListDTORabbitMQ<Guid> productsId = new();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
         {
@@ -101,10 +102,10 @@ public class CartService: ICartService
         }
 
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
-        ProductListDTO<ProductDTO> response =
-            await RabbitMQClient.Request<ProductListDTO<Guid>, ProductListDTO<ProductDTO>>(_bus, productsId, uri);
+        ProductListDTORabbitMQ<Infrastructure.DTO.ProductDTORabbitMQ> response =
+            await RabbitMQClient.Request<ProductListDTORabbitMQ<Guid>, ProductListDTORabbitMQ<Infrastructure.DTO.ProductDTORabbitMQ>>(_bus, productsId, uri);
 
-        CartViewModelResponse model = _mapper.Map<CartViewModelResponse>(cart);
+        CartDTOResponse model = _mapper.Map<CartDTOResponse>(cart);
 
         // The order of the objects in the response matches the order in the request
         // Replacing old objects with current ones
@@ -117,7 +118,7 @@ public class CartService: ICartService
             }
             else if (response.Products[i].Id == model.CartProducts[i].ProductId)
             {
-                var product = _mapper.Map<ProductViewModel>(response.Products[i]);
+                var product = _mapper.Map<Models.DTO.Cart.ProductDTO>(response.Products[i]);
                 model.CartProducts[i].Product = product;
                 model.CartProducts[i].ComputeTotalValue();
             }

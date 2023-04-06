@@ -1,4 +1,4 @@
-﻿using OrderAPI.Models.Enums;
+﻿using IdentityAPI.Models.Enums;
 
 namespace IdentityAPI.Models.DataBase.Entities;
 

@@ -1,10 +1,10 @@
 ﻿using MassTransit;
-using OrderAPI.DTO;
-using OrderAPI.Services.Interfaces;
+using Infrastructure.DTO;
+using CatalogAPI.Services.Interfaces;
 
-namespace OrderAPI.Consumers;
+namespace CatalogAPI.Consumers;
 
-public class CheckProductsConsumer : IConsumer<ProductListDTO<Guid>>
+public class CheckProductsConsumer : IConsumer<ProductListDTORabbitMQ<Guid>>
 {
     private readonly IProductService _service;
 
@@ -12,10 +12,10 @@ public class CheckProductsConsumer : IConsumer<ProductListDTO<Guid>>
     {
         _service = service;
     }
-    public async Task Consume(ConsumeContext<ProductListDTO<Guid>> context)
+    public async Task Consume(ConsumeContext<ProductListDTORabbitMQ<Guid>> context)
     {
         var content = context.Message;
         var res = _service.CheckProducts(content);
-        await context.RespondAsync<ProductListDTO<ProductDTO>>(res);
+        await context.RespondAsync<ProductListDTORabbitMQ<ProductDTORabbitMQ>>(res);
     }
 }

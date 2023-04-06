@@ -2,10 +2,11 @@
 using OrderAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels.Order;
+using OrderAPI.Models.DTO.Order;
 using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork.Interfaces;
+using Infrastructure.Exceptions;
+using OrderAPI.DataBase.Entities;
 
 namespace OrderAPI.Controllers;
 
@@ -28,12 +29,12 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult< List<OrderListViewModelResponse> > GetAll()
+    public ActionResult< List<OrderListDTOResponse> > GetAll()
     {
         try
         {
             var order = _orderService.GetAll();
-            var response = _mapper.Map<OrderListViewModelResponse>(order);
+            var response = _mapper.Map<OrderListDTOResponse>(order);
 
             return Ok(response);
         }
@@ -44,12 +45,12 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
-    public ActionResult<OrderViewModelResponse> GetById(Guid id)
+    public ActionResult<OrderDTOResponse> GetById(Guid id)
     {
         try
         {
             var order = _orderService.GetById(id);
-            var response = _mapper.Map<OrderViewModelResponse>(order);
+            var response = _mapper.Map<OrderDTOResponse>(order);
 
             return Ok(response);
         }
@@ -64,12 +65,12 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<List<OrderListViewModelResponse>> GetByFilter(OrderFilterViewModelRequest filter)
+    public ActionResult<List<OrderListDTOResponse>> GetByFilter(OrderFilterDTORequest filter)
     {
         try
         {
             var orders = _orderService.GetByFilter(filter);
-            var response = _mapper.Map<OrderListViewModelResponse>(orders);
+            var response = _mapper.Map<OrderListDTOResponse>(orders);
 
             return Ok(response);
         }
@@ -80,7 +81,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult< OrderViewModelResponse >> Create(OrderViewModelRequest model)
+    public async Task<ActionResult< OrderDTOResponse >> Create(OrderDTORequest model)
     {
         try
         {
@@ -89,7 +90,7 @@ public class OrderController : ControllerBase
             var res = await _orderService.Create(order);
             await _unitOfWork.SaveChangesAsync();
 
-            var response = _mapper.Map<OrderViewModelResponse>(res);
+            var response = _mapper.Map<OrderDTOResponse>(res);
 
             return Created(new Uri($"https://localhost:7045/api/v1/ord/Order/GetById/{response.Id}"), response);
         }
@@ -104,7 +105,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("{id:Guid}")]
-    public async Task<ActionResult<OrderViewModelResponse>> Update(Guid id, OrderViewModelRequest model)
+    public async Task<ActionResult<OrderDTOResponse>> Update(Guid id, OrderDTORequest model)
     {
         try
         {
@@ -112,7 +113,7 @@ public class OrderController : ControllerBase
             order.Id = id;
 
             var res = await _orderService.Update(order);
-            var response = _mapper.Map<OrderViewModelResponse>(res);
+            var response = _mapper.Map<OrderDTOResponse>(res);
 
             return Ok(response);
         }
@@ -132,14 +133,14 @@ public class OrderController : ControllerBase
 
     [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsReady(Guid id)
+    public async Task<ActionResult<OrderDTOResponse>> IsReady(Guid id)
     {
         try
         {
             var order = await _orderService.IsReady(id);
             await _unitOfWork.SaveChangesAsync();
 
-            var response = _mapper.Map<OrderViewModelResponse>(order);
+            var response = _mapper.Map<OrderDTOResponse>(order);
 
             return Ok(response);
         }
@@ -159,14 +160,14 @@ public class OrderController : ControllerBase
 
     [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsReceived(Guid id)
+    public async Task<ActionResult<OrderDTOResponse>> IsReceived(Guid id)
     {
         try
         {
             var order = await _orderService.IsReceived(id);
             await _unitOfWork.SaveChangesAsync();
 
-            var response = _mapper.Map<OrderViewModelResponse>(order);
+            var response = _mapper.Map<OrderDTOResponse>(order);
 
             return Ok(response);
         }
@@ -185,14 +186,14 @@ public class OrderController : ControllerBase
     }
 
     [HttpPatch("{id:Guid}")]
-    public async Task<ActionResult<OrderViewModelResponse>> Cancel(Guid id)
+    public async Task<ActionResult<OrderDTOResponse>> Cancel(Guid id)
     {
         try
         {
             var order = await _orderService.Cancel(id);
             await _unitOfWork.SaveChangesAsync();
 
-            var response = _mapper.Map<OrderViewModelResponse>(order);
+            var response = _mapper.Map<OrderDTOResponse>(order);
 
             return Ok(response);
         }
@@ -212,14 +213,14 @@ public class OrderController : ControllerBase
 
     [HttpPatch("{id:int}")]
     [Authorize(Policy = "FullAccessToOrders")]
-    public async Task<ActionResult<OrderViewModelResponse>> IsPaymented(Guid id)
+    public async Task<ActionResult<OrderDTOResponse>> IsPaymented(Guid id)
     {
         try
         {
             var order = await _orderService.IsPaymented(id);
             await _unitOfWork.SaveChangesAsync();
 
-            var response = _mapper.Map<OrderViewModelResponse>(order);
+            var response = _mapper.Map<OrderDTOResponse>(order);
 
             return Ok(response);
         }

@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderAPI.Services.Interfaces;
 using OrderAPI.Exceptions;
-using OrderAPI.DTO;
+using Infrastructure.DTO;
 using MassTransit;
-using OrderAPI.Models.DataBase;
 using AutoMapper;
 using OrderAPI.UnitOfWork.Interfaces;
-using OrderAPI.Models.ViewModels.Cart;
+using OrderAPI.Models.DTO.Cart;
+using Infrastructure.Exceptions;
+using Infrastructure;
+using OrderAPI.DataBase.Entities;
 
 namespace OrderAPI.Services;
 
@@ -22,7 +24,7 @@ public class CartProductService: ICartProductService
         _mapper = mapper;
     }
 
-    public async Task<CartProductViewModelResponse> Create(CartProduct cartProduct)
+    public async Task<CartProductDTOResponse> Create(CartProduct cartProduct)
     {
         var response = await GetProductFromCatalog(cartProduct.ProductId);
 
@@ -39,8 +41,8 @@ public class CartProductService: ICartProductService
 
             await Update(product);
 
-            var res = _mapper.Map<CartProductViewModelResponse>(product);
-            res.Product = _mapper.Map<ProductViewModel>(response);
+            var res = _mapper.Map<CartProductDTOResponse>(product);
+            res.Product = _mapper.Map<Models.DTO.Cart.ProductDTO>(response);
 
             return res;
         }
@@ -49,8 +51,8 @@ public class CartProductService: ICartProductService
 
         await _db.CartProducts.AddAsync(cartProduct);
 
-        var model = _mapper.Map<CartProductViewModelResponse>(cartProduct);
-        model.Product = _mapper.Map<ProductViewModel>(response);
+        var model = _mapper.Map<CartProductDTOResponse>(cartProduct);
+        model.Product = _mapper.Map<Models.DTO.Cart.ProductDTO>(response);
 
         return model;
     }
@@ -84,11 +86,11 @@ public class CartProductService: ICartProductService
         await _db.CartProducts.RemoveAsync(res);
     }
 
-    private async Task<ProductDTO> GetProductFromCatalog(Guid productId)
+    private async Task<Infrastructure.DTO.ProductDTORabbitMQ> GetProductFromCatalog(Guid productId)
     {
-        ProductDTO productDTO = new() { Id = productId };
+        Infrastructure.DTO.ProductDTORabbitMQ productDTO = new() { Id = productId };
         Uri uri = new("rabbitmq://localhost/getProductQueue");
-        var response = await RabbitMQClient.Request<ProductDTO, ProductDTO>(_bus, productDTO, uri);
+        var response = await RabbitMQClient.Request<Infrastructure.DTO.ProductDTORabbitMQ, Infrastructure.DTO.ProductDTORabbitMQ>(_bus, productDTO, uri);
 
         if (response.ErrorMessage != null)
         {

@@ -1,28 +1,28 @@
 ﻿using AutoMapper;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.ViewModels;
-using OrderAPI.DTO;
+using CatalogAPI.Models.DataBase;
+using CatalogAPI.Models.DTO;
+using Infrastructure.DTO;
 
-namespace OrderAPI.Helpers;
+namespace CatalogAPI.Helpers;
 
 public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Product, ProductDTO>();
+        CreateMap<Product, ProductDTORabbitMQ>();
 
-        CreateMap<BrandViewModelRequest, Brand>();
+        CreateMap<BrandDTORequest, Brand>();
 
-        CreateMap<Brand, BrandViewModelResponce>();
+        CreateMap<Brand, BrandDTOResponce>();
 
-        CreateMap<CategoryViewModelRequest, Category>();
+        CreateMap<CategoryDTORequest, Category>();
 
-        CreateMap<Category, CategoryViewModelResponce>();
+        CreateMap<Category, CategoryDTOResponce>();
 
-        CreateMap<ProductViewModelRequest, Product>();
+        CreateMap<ProductDTORequest, Product>();
 
-        CreateMap<Product, ProductViewModelResponce>();
+        CreateMap<Product, ProductDTOResponce>();
 
-        CreateMap<Product, ProductListViewModelResponce>();
+        CreateMap<Product, ProductListDTOResponce>();
     }
 }

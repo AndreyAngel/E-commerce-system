@@ -1,9 +1,9 @@
-﻿using OrderAPI.Models.DataBase.Entities;
+﻿using IdentityAPI.Models.DataBase.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using IdentityAPI.Models.DataBase.Entities;
 
-namespace OrderAPI.Models.DataBase;
+namespace IdentityAPI.Models.DataBase;
 
 /// <summary>
 /// Class for the Entity Framework database context used for identity

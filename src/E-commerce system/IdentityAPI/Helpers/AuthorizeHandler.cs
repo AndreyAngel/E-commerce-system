@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 
-namespace OrderAPI.Helpers;
+namespace IdentityAPI.Helpers;
 
 /// <summary>
 /// Class for authorization handlers that need to be called for a specific requirement type

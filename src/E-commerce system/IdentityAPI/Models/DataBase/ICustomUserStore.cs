@@ -1,7 +1,7 @@
 ﻿using IdentityAPI.Models.DataBase.Entities;
 using Microsoft.AspNetCore.Identity;
-using OrderAPI.Models.DataBase;
-using OrderAPI.Models.DataBase.Entities;
+using IdentityAPI.Models.DataBase;
+using IdentityAPI.Models.DataBase.Entities;
 
 namespace IdentityAPI.Models.DataBase;
 

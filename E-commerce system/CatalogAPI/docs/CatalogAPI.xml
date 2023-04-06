@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CatalogAPI</name>
+    </assembly>
+    <members>
+        <member name="T:CatalogAPI.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogAPI.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogAPI.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogAPI.Models.Role">
+            <summary>
+            User role
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Models.Role.Admin">
+            <summary>
+            Administrator
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Models.Role.Buyer">
+            <summary>
+            Buyer
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Models.Role.Salesman">
+            <summary>
+            Salesman
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Models.Role.Courier">
+            <summary>
+            Courier
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OrderAPI</name>
+    </assembly>
+    <members>
+        <member name="T:OrderAPI.Helpers.CustomAuthenticateMiddleware">
+            <summary>
+            Middleware adding user in context items
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Helpers.CustomAuthenticateMiddleware._next">
+            <summary>
+            Request delegate
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Helpers.CustomAuthenticateMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of <see cref="T:OrderAPI.Helpers.CustomAuthenticateMiddleware"/>.
+            </summary>
+            <param name="next">The next item in the middleware pipeline.</param>
+        </member>
+        <member name="M:OrderAPI.Helpers.CustomAuthenticateMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the middleware performing authentication.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
+        <member name="T:OrderAPI.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:OrderAPI.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:OrderAPI.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:OrderAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:OrderAPI.Models.Enums.Role">
+            <summary>
+            User role
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Models.Enums.Role.Admin">
+            <summary>
+            Administrator
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Models.Enums.Role.Buyer">
+            <summary>
+            Buyer
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Models.Enums.Role.Salesman">
+            <summary>
+            Salesman
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Models.Enums.Role.Courier">
+            <summary>
+            Courier
+            </summary>
+        </member>
+    </members>
+</doc>

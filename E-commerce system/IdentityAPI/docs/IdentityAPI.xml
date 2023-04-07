@@ -222,16 +222,6 @@
             </summary>
             <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
         </member>
-        <member name="P:IdentityAPI.Models.DataBase.Context.Addresses">
-            <summary>
-            Addresses DataBase set
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Context.Tokens">
-            <summary>
-            Tokens DataBase set
-            </summary>
-        </member>
         <member name="T:IdentityAPI.Models.DataBase.CustomUserStore">
             <summary>
             Represents a new instance of a persistence store for users, using the default implementation
@@ -403,32 +393,32 @@
         </member>
         <member name="T:IdentityAPI.Models.DTO.AddressDTO">
             <summary>
-            Address
+            Address data transfer object
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AddressDTO.City">
             <summary>
-            Gets or sets a city
+            City
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AddressDTO.Street">
             <summary>
-            Gets or sets a street
+            Street
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AddressDTO.NumberOfHome">
             <summary>
-            Gets or sets a number of home
+            Number of home
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AddressDTO.ApartmentNumber">
             <summary>
-            Gets or sets a apartment number
+            Apartment number
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AddressDTO.PostalCode">
             <summary>
-            Gets or sets a postal code
+            Postal code
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.DTO.GetAccessTokenDTORequest">
@@ -438,102 +428,102 @@
         </member>
         <member name="P:IdentityAPI.Models.DTO.GetAccessTokenDTORequest.RefreshToken">
             <summary>
-            Gets or sets a refresh token
+            Refresh token
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.DTO.LoginDTORequest">
             <summary>
-            Login view model
+            Login data transfer object
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.LoginDTORequest.Email">
             <summary>
-            Gets or sets a Email
+            Email
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.LoginDTORequest.Password">
             <summary>
-            Gets or sets a password
+            Password
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.DTO.RegisterDTORequest">
             <summary>
-            Registration view model
+            Registration data transfer object
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Email">
             <summary>
-            Gets or sets a Email
+            Email
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.BirthDate">
             <summary>
-            Gets or sets a BirthDate
+            BirthDate
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Password">
             <summary>
-            Gets or sets a password
+            Password
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.PasswordConfirm">
             <summary>
-            Gets or sets a password confirm
+            Password confirm
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Role">
             <summary>
-            Gets or sets a role
+            User role
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.DTO.UserDTORequest">
             <summary>
-            View model for update user data
+            Data transfer object for changing user data
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Name">
             <summary>
-            Gets or sets a name
+            Name
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Surname">
             <summary>
-            Gets or sets a surname
+            Surname
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTORequest.BirthDate">
             <summary>
-            Gets or sets a BirthDate
+            BirthDate
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Address">
             <summary>
-            Gets or sets a address
+            Address data transfer object
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.DTO.AuthorizationDTOResponse">
             <summary>
-            The view model of the response containing the access token and refresh token
+            The data transfer object of the response containing the access token and refresh token
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.ExpiresIn">
             <summary>
-            Gets or sets a access token lifetime in seconds
+            Access token lifetime in seconds
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.TokenType">
             <summary>
-            Gets or sets a access token type
+            Access token type
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.AccessToken">
             <summary>
-            Gets or sets a access token
+            Access token
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.RefreshToken">
             <summary>
-            Gets or sets a refresh token
+            Refresh token
             </summary>
         </member>
         <member name="M:IdentityAPI.Models.DTO.AuthorizationDTOResponse.#ctor(System.Int32,System.String,System.String,System.String)">
@@ -543,16 +533,16 @@
             <param name="expiresIn"> Access token lifetime in seconds </param>
             <param name="accessToken"> Access token </param>
             <param name="refreshToken"> Refresh token </param>
-            <param name="tokenType"> Refresh token </param>
+            <param name="tokenType"> Access token type </param>
         </member>
         <member name="T:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse">
             <summary>
-            The view model of the response containing the identity errors
+            The data transfer object of the response containing the identity errors
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse.Errors">
             <summary>
-            Gets or sets a identity errors list
+            Identity errors list
             </summary>
         </member>
         <member name="M:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse.#ctor(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IdentityError})">
@@ -568,42 +558,42 @@
         </member>
         <member name="T:IdentityAPI.Models.DTO.UserDTOResponse">
             <summary>
-            The view model of the response containing the user data
+            The data transfer object of the response containing the user data
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Id">
             <summary>
-            Gets or sets a Id
+            User Id
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Email">
             <summary>
-            Gets or sets a Email
+            Email
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.PhoneNumber">
             <summary>
-            Gets or sets a phone number
+            Phone number
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Name">
             <summary>
-            Gets or sets a name
+            Name
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Surname">
             <summary>
-            Gets or sets a surname
+            Surname
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.BirthDate">
             <summary>
-            Gets or sets a BirthDate
+            BirthDate
             </summary>
         </member>
         <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Address">
             <summary>
-            Gets or sets a address
+            Address data transfer object
             </summary>
         </member>
         <member name="T:IdentityAPI.Models.Enums.Role">
@@ -657,7 +647,7 @@
             </summary>
             <param name="id"> The user Id </param>
             <returns> The task object containing the action result of getting user information </returns>
-            <exception cref="!:NotFoundException"> User with this Id wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> User with this Id wasn't founded </exception>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.GetAccessToken(System.String)">
             <summary>
@@ -682,7 +672,7 @@
             </summary>
             <param name="model"> Login view model </param>
             <returns> The task object containing the authorization result </returns>
-            <exception cref="!:NotFoundException"> User with this Email wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> User with this Email wasn't founded </exception>
             <exception cref="T:IdentityAPI.Exceptions.IncorrectPasswordException"> Incorrect password </exception>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.Logout(System.Guid)">
@@ -697,7 +687,11 @@
             If false, token isn't active
             </summary>
             <param name="userId"></param>
-            <returns></returns>
+            <returns> 
+            True or false 
+            If true, token is active
+            If false, token isn't active
+            </returns>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.Update(IdentityAPI.Models.DataBase.Entities.User,System.Guid)">
             <summary>
@@ -706,7 +700,7 @@
             <param name="user"> User </param>
             <param name="userId"> User Id </param>
             <returns> Task object </returns>
-            <exception cref="!:NotFoundException"> User with this Id wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> User with this Id wasn't founded </exception>
         </member>
         <member name="T:IdentityAPI.Services.UserService">
             <summary>

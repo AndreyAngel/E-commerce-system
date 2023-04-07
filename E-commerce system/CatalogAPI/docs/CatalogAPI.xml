@@ -4,9 +4,48 @@
         <name>CatalogAPI</name>
     </assembly>
     <members>
+        <member name="T:CatalogAPI.Consumers.CheckProductsConsumer">
+            <summary>
+            Consumer of the check products message
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Consumers.CheckProductsConsumer._service">
+            <summary>
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IProductService"/> providing the APIs for managing product in a persistence store.
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Consumers.CheckProductsConsumer.#ctor(CatalogAPI.Services.Interfaces.IProductService)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Consumers.CheckProductsConsumer"/>.
+            </summary>
+            <param name="service"> Object of class <see cref="T:CatalogAPI.Services.Interfaces.IProductService"/>
+            providing the APIs for managing product in a persistence store </param>
+        </member>
+        <member name="M:CatalogAPI.Consumers.CheckProductsConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid}})">
+            <inheritdoc/>
+        </member>
+        <member name="T:CatalogAPI.Consumers.GetProductConsumer">
+            <summary>
+            Consumer of the get products message
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Consumers.GetProductConsumer._service">
+            <summary>
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IProductService"/> providing the APIs for managing product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Consumers.GetProductConsumer._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CatalogAPI.Consumers.GetProductConsumer.#ctor(CatalogAPI.Services.Interfaces.IProductService,AutoMapper.IMapper)" -->
+        <member name="M:CatalogAPI.Consumers.GetProductConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.ProductDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:CatalogAPI.Controllers.BrandController">
             <summary>
-            Provides the APIs for handling all the brand logic
+            Provides the APIs for handling all the category logic
             </summary>
         </member>
         <member name="F:CatalogAPI.Controllers.BrandController._unitOfWork">
@@ -16,7 +55,7 @@
         </member>
         <member name="F:CatalogAPI.Controllers.BrandController._service">
             <summary>
-            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IBrandService"/> providing the APIs for managing brand in a persistence store.
+            Object of class <see cref="T:CatalogAPI.Services.Interfaces.IBrandService"/> providing the APIs for managing category in a persistence store.
             </summary>
         </member>
         <member name="F:CatalogAPI.Controllers.BrandController._mapper">
@@ -30,7 +69,7 @@
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
             <param name="service"> Object of class <see cref="T:CatalogAPI.Services.Interfaces.IBrandService"/>
-            providing the APIs for managing brand in a persistence store </param>
+            providing the APIs for managing category in a persistence store </param>
             <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.GetAll">
@@ -42,41 +81,41 @@
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.GetById(System.Guid)">
             <summary>
-            Get the brand information by Id
+            Get the category information by Id
             </summary>
-            <param name="id"> Brand Id </param>
-            <returns> The action result of getting brand information </returns>
+            <param name="id"> category Id </param>
+            <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.GetByName(System.String)">
             <summary>
-            Get the brand information by name
+            Get the category information by name
             </summary>
-            <param name="name"> Brand name </param>
-            <returns> The action result of getting brand information </returns>
+            <param name="name"> category name </param>
+            <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> Brand with this name wasn't founded </response>
+            <response code="404"> category with this name wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.Create(CatalogAPI.Models.DTO.BrandDTORequest)">
             <summary>
-            Create a new brand
+            Create a new category
             </summary>
-            <param name="model"> Brand data transfer object </param>
-            <returns> The task object containing the action result of creating a new brand </returns>
+            <param name="model"> category data transfer object </param>
+            <returns> The task object containing the action result of creating a new category </returns>
             <response code="201"> Successful completion </response>
-            <response code="409"> Brand with this name already exists </response>
+            <response code="409"> category with this name already exists </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.Update(System.Guid,CatalogAPI.Models.DTO.BrandDTORequest)">
             <summary>
-            Change brand data
+            Change category data
             </summary>
-            <param name="id"> Brand Id </param>
-            <param name="model"> Brand data transfer object </param>
-            <returns> The task object containing the action result of changing brand </returns>
+            <param name="id"> category Id </param>
+            <param name="model"> category data transfer object </param>
+            <returns> The task object containing the action result of changing category </returns>
             <response code="200"> Successful completion </response>
-            <response code="409"> Brand with this name already exists </response>
-            <response code="404"> Brand with this Id wasn't founded </response>
+            <response code="409"> category with this name already exists </response>
+            <response code="404"> category with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="T:CatalogAPI.Controllers.CategoryController">
@@ -119,40 +158,40 @@
             <summary>
             Get the category information by Id
             </summary>
-            <param name="id"> Category Id </param>
+            <param name="id"> category Id </param>
             <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> Category with this Id wasn't founded </response>
+            <response code="404"> category with this Id wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.GetByName(System.String)">
             <summary>
             Get the category information by name
             </summary>
-            <param name="name"> Category name </param>
+            <param name="name"> category name </param>
             <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> Category with this name wasn't founded </response>
+            <response code="404"> category with this name wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.Create(CatalogAPI.Models.DTO.CategoryDTORequest)">
             <summary>
             Create a new category
             </summary>
-            <param name="model"> Category data transfer object </param>
+            <param name="model"> category data transfer object </param>
             <returns> The task object containing the action result of creating a new category </returns>
             <response code="201"> Successful completion </response>
-            <response code="409"> Category with this name already exists </response>
+            <response code="409"> category with this name already exists </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.Update(System.Guid,CatalogAPI.Models.DTO.CategoryDTORequest)">
             <summary>
             Change category data
             </summary>
-            <param name="id"> Category Id </param>
-            <param name="model"> Category data transfer object </param>
+            <param name="id"> category Id </param>
+            <param name="model"> category data transfer object </param>
             <returns> The task object containing the action result of changing category </returns>
             <response code="200"> Successful completion </response>
-            <response code="409"> Category with this name already exists </response>
-            <response code="404"> Category with this Id wasn't founded </response>
+            <response code="409"> category with this name already exists </response>
+            <response code="404"> category with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="T:CatalogAPI.Controllers.ProductController">
@@ -225,7 +264,7 @@
             <returns> The task object containing the action result of creating a new product </returns>
             <response code="201"> Successful completion </response>
             <response code="409"> Product with this name already exists </response>
-            <response code="404"> Brand or category with this id wasn't founded </response>
+            <response code="404"> category or category with this id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.ProductController.Update(System.Guid,CatalogAPI.Models.DTO.ProductDTORequest)">
@@ -237,7 +276,7 @@
             <returns> The task object containing the action result of changing product </returns>
             <response code="200"> Successful completion </response>
             <response code="409"> Product with this name already exists </response>
-            <response code="404"> Product, brand or category with this Id wasn't founded </response>
+            <response code="404"> Product, category or category with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.ProductController.Delete(System.Guid)">
@@ -250,6 +289,24 @@
             <response code="200"> Successful completion </response>
             <response code="404"> Product with this Id wasn't founded </response>
         </member>
+        <member name="T:CatalogAPI.Helpers.AuthorizeHandler">
+            <summary>
+            Class for authorization handlers that need to be called for a specific requirement type
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Helpers.AuthorizeHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,Microsoft.AspNetCore.Authorization.Infrastructure.RolesAuthorizationRequirement)">
+            <inheritdoc/>
+        </member>
+        <member name="T:CatalogAPI.Helpers.MappingProfile">
+            <summary>
+            Class for models mapping
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Helpers.MappingProfile.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:CatalogAPI.Helpers.MappingProfile"/>.
+            </summary>
+        </member>
         <member name="T:CatalogAPI.Migrations.Initial">
             <inheritdoc />
         </member>
@@ -261,6 +318,301 @@
         </member>
         <member name="M:CatalogAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.BaseEntity">
+            <summary>
+            Stores base entity data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Id">
+            <summary>
+            Gets or sets a Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Name">
+            <summary>
+            Gets or sets a name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Description">
+            <summary>
+            Gets or sets a descriptions
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.CreationDate">
+            <summary>
+            Gets or sets a creation date
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.Brand">
+            <summary>
+            Stores category data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Brand.Products">
+            <summary>
+            Gets or sets a product list in this category
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.Category">
+            <summary>
+            Stores category data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Category.Products">
+            <summary>
+            Gets or sets a product list in this category
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.Context">
+            <summary>
+            Class for the Entity Framework database context
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Models.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{CatalogAPI.Models.DataBase.Context})">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Models.DataBase.Context"/>.
+            </summary>
+            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.IEntity">
+            <summary>
+            Base entity interface
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.IEntity.Id">
+            <summary>
+            Gets or sets a Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.IEntity.Name">
+            <summary>
+            Gets or sets a name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.IEntity.Description">
+            <summary>
+            Gets or sets description
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.IEntity.CreationDate">
+            <summary>
+            Gets or sets creation date
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DataBase.Product">
+            <summary>
+            Stores product data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.Price">
+            <summary>
+            Gets or sets a price
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.CategoryId">
+            <summary>
+            Gets or sets a category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.Category">
+            <summary>
+            Gets or sets a category
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.BrandId">
+            <summary>
+            Gets or sets a category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.Brand">
+            <summary>
+            Gets or sets a brand
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DataBase.Product.IsSale">
+            <summary>
+            Gets or sets a stausa producta
+            true, if is salling
+            false, if isn't salling
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.BrandDTORequest">
+            <summary>
+            Brand data transfer object for request
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.BrandDTORequest.Name">
+            <summary>
+            Brand name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.BrandDTORequest.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.BrandDTOResponse">
+            <summary>
+            Brand data transfer object for response
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.BrandDTOResponse.Id">
+            <summary>
+            Brand Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.BrandDTOResponse.Name">
+            <summary>
+            Brand name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.BrandDTOResponse.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.CategoryDTORequest">
+            <summary>
+            Category data transfer object for request
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.CategoryDTORequest.Name">
+            <summary>
+            Category name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.CategoryDTORequest.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.CategoryDTOResponse">
+            <summary>
+            Category data transfer object for response
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.CategoryDTOResponse.Id">
+            <summary>
+            Category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.CategoryDTOResponse.Name">
+            <summary>
+            Category name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.CategoryDTOResponse.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.ProductDTORequest">
+            <summary>
+            Product data transfer object for request
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTORequest.Name">
+            <summary>
+            Product name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTORequest.Description">
+            <summary>
+            Descriptions
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTORequest.Price">
+            <summary>
+            Product price
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTORequest.CategoryId">
+            <summary>
+            Product category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTORequest.BrandId">
+            <summary>
+            Product category Id
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.ProductDTOResponse">
+            <summary>
+            Product data transfer object for response
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Id">
+            <summary>
+            Product Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Name">
+            <summary>
+            Product name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Price">
+            <summary>
+            Product price
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.IsSale">
+            <summary>
+            Flag
+            true, if product is selling
+            false, if product isn't selling
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Category">
+            <summary>
+            Product category
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductDTOResponse.Brand">
+            <summary>
+            Product brand
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.ProductFilterDTO">
+            <summary>
+            Product filter data transfer object
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductFilterDTO.CategoryId">
+            <summary>
+            Product category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductFilterDTO.BrandId">
+            <summary>
+            Product brand Id
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.Models.DTO.ProductListDTOResponse">
+            <summary>
+            Product list data transfer object for response
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductListDTOResponse.Id">
+            <summary>
+            Product Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductListDTOResponse.Name">
+            <summary>
+            Product name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.Models.DTO.ProductListDTOResponse.Price">
+            <summary>
+            Product price
+            </summary>
         </member>
         <member name="T:CatalogAPI.Models.Role">
             <summary>
@@ -286,6 +638,258 @@
             <summary>
             Courier
             </summary>
+        </member>
+        <member name="T:CatalogAPI.Services.BrandService">
+            <summary>
+            Сlass providing the APIs for managing brand in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Services.BrandService._db">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Services.BrandService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.GetByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.Create(CatalogAPI.Models.DataBase.Brand)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.Update(CatalogAPI.Models.DataBase.Brand)">
+            <inheritdoc/>
+        </member>
+        <member name="T:CatalogAPI.Services.CategoryService">
+            <summary>
+            Class providing the APIs for managing category in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Services.CategoryService._db">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.GetByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.Create(CatalogAPI.Models.DataBase.Category)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.Update(CatalogAPI.Models.DataBase.Category)">
+            <inheritdoc/>
+        </member>
+        <member name="T:CatalogAPI.Services.Interfaces.IBrandService">
+            <summary>
+            Interface for class providing the APIs for managing category in a persistence store.
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.GetAll">
+            <summary>
+            Get all brands
+            </summary>
+            <returns> Brands list, <see cref="T:System.Collections.Generic.List`1"/> </returns>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.GetById(System.Guid)">
+            <summary>
+            Get category by Id
+            </summary>
+            <param name="id"> category Id </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this Id wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.GetByName(System.String)">
+            <summary>
+            Get category by name
+            </summary>
+            <param name="name"> category name </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this name wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Create(CatalogAPI.Models.DataBase.Brand)">
+            <summary>
+            Create a new category
+            </summary>
+            <param name="category"> New category </param>
+            <returns> Task containing a created category, <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> category with this name alredy exists </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Update(CatalogAPI.Models.DataBase.Brand)">
+            <summary>
+            Change category data
+            </summary>
+            <param name="category"> category data for changing </param>
+            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this name wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> category with this name alredy exists </exception>
+        </member>
+        <member name="T:CatalogAPI.Services.Interfaces.ICategoryService">
+            <summary>
+            Interface for class providing the APIs for managing category in a persistence store.
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.GetAll">
+            <summary>
+            Get all categories
+            </summary>
+            <returns> Categories list, <see cref="T:System.Collections.Generic.List`1"/> </returns>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.GetById(System.Guid)">
+            <summary>
+            Get category by Id
+            </summary>
+            <param name="id"> category Id </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this Id wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.GetByName(System.String)">
+            <summary>
+            Get category by name
+            </summary>
+            <param name="name"> Category name </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this name wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Create(CatalogAPI.Models.DataBase.Category)">
+            <summary>
+            Create a new category
+            </summary>
+            <param name="category"> New category </param>
+            <returns> Task containing a created category, <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Category with this name alredy exists </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Update(CatalogAPI.Models.DataBase.Category)">
+            <summary>
+            Change category data
+            </summary>
+            <param name="category"> category data for changing </param>
+            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this name wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Category with this name alredy exists </exception>
+        </member>
+        <member name="T:CatalogAPI.Services.Interfaces.IProductService">
+            <summary>
+            Interface for class providing the APIs for managing product in a persistence store.
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetAll">
+            <summary>
+            Get all products
+            </summary>
+            <returns> Products list, <see cref="T:System.Collections.Generic.List`1"/> </returns>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetById(System.Guid)">
+            <summary>
+            Get product by Id
+            </summary>
+            <param name="id"> Product Id </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this Id wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetByName(System.String)">
+            <summary>
+            Get product by name
+            </summary>
+            <param name="name"> Product name </param>
+            <returns> <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetByFilter(CatalogAPI.Models.DTO.ProductFilterDTO)">
+            <summary>
+            Get product by filters
+            </summary>
+            <param name="model"> Model with filters </param>
+            <returns> Products list, <see cref="T:System.Collections.Generic.List`1"/> </returns>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Create(CatalogAPI.Models.DataBase.Product)">
+            <summary>
+            Create a new product
+            </summary>
+            <param name="product"> New product </param>
+            <returns> Task containing a created product, <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Product with this name alredy exists </exception>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name or Id wasn't founded </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Update(CatalogAPI.Models.DataBase.Product)">
+            <summary>
+            Change product data
+            </summary>
+            <param name="product"> Product data for changing </param>
+            <returns> Task containing a chenged product, <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name wasn't founded </exception>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Product with this name alredy exists </exception>
+        </member>
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.CheckProducts(Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid})">
+            <summary>
+            Check products data for relevance
+            </summary>
+            <param name="products"> List of product IDs coming from an external service </param>
+            <returns> List of actuality products, <see cref="T:Infrastructure.DTO.ProductListDTORabbitMQ`1"/> </returns>
+        </member>
+        <member name="T:CatalogAPI.Services.ProductService">
+            <summary>
+            Сlass providing the APIs for managing product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Services.ProductService._db">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Services.ProductService._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="mapper"> Object of class for models mapping </param>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.GetByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.GetByFilter(CatalogAPI.Models.DTO.ProductFilterDTO)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.Create(CatalogAPI.Models.DataBase.Product)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.Update(CatalogAPI.Models.DataBase.Product)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.CheckProducts(Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid})">
+            <inheritdoc/>
         </member>
     </members>
 </doc>

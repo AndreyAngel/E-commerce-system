@@ -3,19 +3,19 @@
 namespace IdentityAPI.Models.DTO;
 
 /// <summary>
-/// Login view model
+/// Login data transfer object
 /// </summary>
 public class LoginDTORequest
 {
     /// <summary>
-    /// Gets or sets a Email
+    /// Email
     /// </summary>
     [Required]
     [EmailAddress]
     public string? Email { get; set; }
 
     /// <summary>
-    /// Gets or sets a password
+    /// Password
     /// </summary>
     [Required]
     public string? Password { get; set; }

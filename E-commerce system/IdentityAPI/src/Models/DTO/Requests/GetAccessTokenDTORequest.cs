@@ -8,7 +8,7 @@ namespace IdentityAPI.Models.DTO;
 public class GetAccessTokenDTORequest
 {
     /// <summary>
-    /// Gets or sets a refresh token
+    /// Refresh token
     /// </summary>
     [Required]
     public string? RefreshToken { get; set; }

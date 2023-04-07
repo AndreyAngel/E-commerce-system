@@ -3,12 +3,12 @@
 namespace IdentityAPI.Models.DTO;
 
 /// <summary>
-/// The view model of the response containing the identity errors
+/// The data transfer object of the response containing the identity errors
 /// </summary>
 public class IdentityErrorsDTOResponse : IIdentityDTOResponse
 {
     /// <summary>
-    /// Gets or sets a identity errors list
+    /// Identity errors list
     /// </summary>
     public IEnumerable<IdentityError> Errors { get; set; }
 

@@ -57,7 +57,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var result = _service.Get();
+            var result = _service.GetAll();
             var res = _mapper.Map<List<ProductListDTOResponse>>(result);
 
             return Ok(res);
@@ -154,7 +154,7 @@ public class ProductController : ControllerBase
     /// <returns> The task object containing the action result of creating a new product </returns>
     /// <response code="201"> Successful completion </response>
     /// <response code="409"> Product with this name already exists </response>
-    /// <response code="404"> Brand or category with this id wasn't founded </response>
+    /// <response code="404"> category or category with this id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
@@ -196,7 +196,7 @@ public class ProductController : ControllerBase
     /// <returns> The task object containing the action result of changing product </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="409"> Product with this name already exists </response>
-    /// <response code="404"> Product, brand or category with this Id wasn't founded </response>
+    /// <response code="404"> Product, category or category with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]

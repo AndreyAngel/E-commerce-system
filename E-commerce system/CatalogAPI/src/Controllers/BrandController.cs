@@ -12,7 +12,7 @@ namespace CatalogAPI.Controllers;
 
 
 /// <summary>
-/// Provides the APIs for handling all the brand logic
+/// Provides the APIs for handling all the category logic
 /// </summary>
 [Route("api/v1/CatalogAPI/[controller]/[action]")]
 [ApiController]
@@ -24,7 +24,7 @@ public class BrandController : ControllerBase
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
-    /// Object of class <see cref="IBrandService"/> providing the APIs for managing brand in a persistence store.
+    /// Object of class <see cref="IBrandService"/> providing the APIs for managing category in a persistence store.
     /// </summary>
     private readonly IBrandService _service;
 
@@ -38,7 +38,7 @@ public class BrandController : ControllerBase
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
     /// <param name="service"> Object of class <see cref="IBrandService"/>
-    /// providing the APIs for managing brand in a persistence store </param>
+    /// providing the APIs for managing category in a persistence store </param>
     /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public BrandController(IUnitOfWork unitOfWork, IBrandService service, IMapper mapper)
     {
@@ -58,7 +58,7 @@ public class BrandController : ControllerBase
     {
         try
         {
-            var result = _service.Get();
+            var result = _service.GetAll();
             var res = _mapper.Map<List<BrandDTOResponse>>(result);
 
             return Ok(res);
@@ -70,10 +70,10 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Get the brand information by Id
+    /// Get the category information by Id
     /// </summary>
-    /// <param name="id"> Brand Id </param>
-    /// <returns> The action result of getting brand information </returns>
+    /// <param name="id"> category Id </param>
+    /// <returns> The action result of getting category information </returns>
     /// <response code="200"> Successful completion </response>
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
@@ -98,12 +98,12 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Get the brand information by name
+    /// Get the category information by name
     /// </summary>
-    /// <param name="name"> Brand name </param>
-    /// <returns> The action result of getting brand information </returns>
+    /// <param name="name"> category name </param>
+    /// <returns> The action result of getting category information </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="404"> Brand with this name wasn't founded </response>
+    /// <response code="404"> category with this name wasn't founded </response>
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -127,12 +127,12 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new brand
+    /// Create a new category
     /// </summary>
-    /// <param name="model"> Brand data transfer object </param>
-    /// <returns> The task object containing the action result of creating a new brand </returns>
+    /// <param name="model"> category data transfer object </param>
+    /// <returns> The task object containing the action result of creating a new category </returns>
     /// <response code="201"> Successful completion </response>
-    /// <response code="409"> Brand with this name already exists </response>
+    /// <response code="409"> category with this name already exists </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
@@ -142,14 +142,14 @@ public class BrandController : ControllerBase
     {
         try
         {
-            Brand brand = _mapper.Map<Brand>(model);
+            Brand category = _mapper.Map<Brand>(model);
 
-            var result = await _service.Create(brand);
+            var result = await _service.Create(category);
             await _unitOfWork.SaveChangesAsync();
 
             var res = _mapper.Map<BrandDTOResponse>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/Brand/GetById/{res.Id}"), res);
+            return Created(new Uri($"http://localhost:5192/api/v1/cat/category/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -162,14 +162,14 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Change brand data
+    /// Change category data
     /// </summary>
-    /// <param name="id"> Brand Id </param>
-    /// <param name="model"> Brand data transfer object </param>
-    /// <returns> The task object containing the action result of changing brand </returns>
+    /// <param name="id"> category Id </param>
+    /// <param name="model"> category data transfer object </param>
+    /// <returns> The task object containing the action result of changing category </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="409"> Brand with this name already exists </response>
-    /// <response code="404"> Brand with this Id wasn't founded </response>
+    /// <response code="409"> category with this name already exists </response>
+    /// <response code="404"> category with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
@@ -180,10 +180,10 @@ public class BrandController : ControllerBase
     {
         try
         {
-            Brand brand = _mapper.Map<Brand>(model);
-            brand.Id = id;
+            Brand category = _mapper.Map<Brand>(model);
+            category.Id = id;
 
-            var result = await _service.Update(brand);
+            var result = await _service.Update(category);
             await _unitOfWork.SaveChangesAsync();
 
             var res = _mapper.Map<BrandDTOResponse>(result);

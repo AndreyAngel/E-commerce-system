@@ -4,6 +4,7 @@ using IdentityAPI.Exceptions;
 using System.Security;
 using IdentityAPI.Models.Enums;
 using IdentityAPI.Models.DataBase;
+using Infrastructure.Exceptions;
 
 namespace IdentityAPI.Services;
 
@@ -59,7 +60,11 @@ public interface IUserService : IDisposable
     /// If false, token isn't active
     /// </summary>
     /// <param name="userId"></param>
-    /// <returns></returns>
+    /// <returns> 
+    /// True or false 
+    /// If true, token is active
+    /// If false, token isn't active
+    /// </returns>
     Task<bool> TokensIsActive(Guid userId);
 
     /// <summary>

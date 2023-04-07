@@ -1,27 +1,27 @@
 ﻿namespace IdentityAPI.Models.DTO;
 
 /// <summary>
-/// View model for update user data
+/// Data transfer object for changing user data
 /// </summary>
 public class UserDTORequest
 {
     /// <summary>
-    /// Gets or sets a name
+    /// Name
     /// </summary>
     public string? Name { get; set; }
 
     /// <summary>
-    /// Gets or sets a surname
+    /// Surname
     /// </summary>
     public string? Surname { get; set; }
 
     /// <summary>
-    /// Gets or sets a BirthDate
+    /// BirthDate
     /// </summary>
     public DateTime? BirthDate { get; set; }
 
     /// <summary>
-    /// Gets or sets a address
+    /// Address data transfer object
     /// </summary>
     public AddressDTO? Address { get; set; }
 }

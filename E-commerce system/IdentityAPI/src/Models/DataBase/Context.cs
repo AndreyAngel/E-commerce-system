@@ -1,7 +1,6 @@
 ﻿using IdentityAPI.Models.DataBase.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using IdentityAPI.Models.DataBase.Entities;
 
 namespace IdentityAPI.Models.DataBase;
 
@@ -52,13 +51,7 @@ public class Context : IdentityDbContext<User>
                 });
     }*/
 
-    /// <summary>
-    /// Addresses DataBase set
-    /// </summary>
     public DbSet<Address> Addresses { get; set; }
 
-    /// <summary>
-    /// Tokens DataBase set
-    /// </summary>
     public DbSet<Token> Tokens { get; set; }
 }

@@ -4,8 +4,12 @@ using System.Security.Claims;
 
 namespace CatalogAPI.Helpers;
 
+/// <summary>
+/// Class for authorization handlers that need to be called for a specific requirement type
+/// </summary>
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {
+    /// <inheritdoc/>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                     RolesAuthorizationRequirement requirement)
     {

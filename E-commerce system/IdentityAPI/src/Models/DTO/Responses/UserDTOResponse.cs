@@ -1,42 +1,42 @@
 ﻿namespace IdentityAPI.Models.DTO;
 
 /// <summary>
-/// The view model of the response containing the user data
+/// The data transfer object of the response containing the user data
 /// </summary>
 public class UserDTOResponse
 {
     /// <summary>
-    /// Gets or sets a Id
+    /// User Id
     /// </summary>
     public string Id { get; set; }
 
     /// <summary>
-    /// Gets or sets a Email
+    /// Email
     /// </summary>
     public string Email { get; set; }
 
     /// <summary>
-    /// Gets or sets a phone number
+    /// Phone number
     /// </summary>
     public string? PhoneNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets a name
+    /// Name
     /// </summary>
     public string? Name { get; set; }
 
     /// <summary>
-    /// Gets or sets a surname
+    /// Surname
     /// </summary>
     public string? Surname { get; set; }
 
     /// <summary>
-    /// Gets or sets a BirthDate
+    /// BirthDate
     /// </summary>
     public DateTime? BirthDate { get; set; }
 
     /// <summary>
-    /// Gets or sets a address
+    /// Address data transfer object
     /// </summary>
     public AddressDTO? Address { get; set; }
 }

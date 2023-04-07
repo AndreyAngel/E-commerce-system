@@ -8,46 +8,66 @@ using CatalogAPI.UnitOfWork.Interfaces;
 
 namespace CatalogAPI.Services;
 
+/// <summary>
+/// Сlass providing the APIs for managing product in a persistence store.
+/// </summary>
 public class ProductService: IProductService
 {
+    /// <summary>
+    /// Repository group interface showing data context
+    /// </summary>
     private readonly IUnitOfWork _db;
+
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Creates an instance of the <see cref="ProductService"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="mapper"> Object of class for models mapping </param>
     public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
-    public List<Product> Get()
+    /// <inheritdoc/>
+    public List<Product> GetAll()
     {
         return _db.Products.GetAll().Where(x => x.IsSale).ToList();
     }
 
+    /// <inheritdoc/>
     public Product GetById(Guid id)
     {
         var res = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(id), "Product with this Id was not founded!");
+            throw new NotFoundException("Product with this Id was not founded!", nameof(id));
         }
 
         return res;
     }
 
+    /// <inheritdoc/>
     public Product GetByName(string name)
     {
-        var res = _db.Products.Include(x => x.Name == name, x => x.Brand, y => y.Category)
+        var res = _db.Products.Include(x => x.Name == name, x => x.Category, y => y.Brand)
                                       .SingleOrDefault(x => x.Name == name);
 
         if (res == null)
         {
-            throw new NotFoundException(nameof(name), "Product with this name was not founded!");
+            throw new NotFoundException("Product with this name was not founded!", nameof(name));
         }
 
         return res;
     }
 
+    /// <inheritdoc/>
     public List<Product> GetByFilter(ProductFilterDTO model)
     {
         var products = _db.Products.GetAll();
@@ -65,23 +85,24 @@ public class ProductService: IProductService
         return products.ToList();
     }
 
+    /// <inheritdoc/>
     public async Task<Product> Create(Product product)
     {
         var res = _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name);
 
         if (res != null && res.IsSale)
         {
-            throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
+            throw new ObjectNotUniqueException("Product with this name already exists!", nameof(product.Name));
         }
 
         else if (_db.Brands.GetById(product.BrandId) == null)
         {
-            throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
+            throw new NotFoundException("category with this Id was not founded!", nameof(product.BrandId));
         }
 
         else if (_db.Categories.GetById(product.CategoryId) == null)
         {
-            throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
+            throw new NotFoundException("category with this Id was not founded!", nameof(product.CategoryId));
         }
 
         else if (res != null && !res.IsSale)
@@ -101,36 +122,38 @@ public class ProductService: IProductService
         return product;
     }
 
+    /// <inheritdoc/>
     public async Task<Product> Update(Product product)
     {
         var res = _db.Products.GetById(product.Id);
 
         if ((res.Name != product.Name) && _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name) != null)
         {
-            throw new ObjectNotUniqueException(nameof(product.Name), "Product with this name already exists!");
+            throw new ObjectNotUniqueException("Product with this name already exists!", nameof(product.Name));
         }
 
         else if (res == null || !res.IsSale)
         {
-            throw new NotFoundException(nameof(product.Id), "Product with this Id was not founded!");
+            throw new NotFoundException("Product with this Id was not founded!", nameof(product.Id));
         }
             
         else if (_db.Brands.GetById(product.BrandId) == null)
         {
-            throw new NotFoundException(nameof(product.BrandId), "Brand with this Id was not founded!");
+            throw new NotFoundException("category with this Id was not founded!", nameof(product.BrandId));
         }
 
         else if (_db.Categories.GetById(product.CategoryId) == null)
         {
-            throw new NotFoundException(nameof(product.CategoryId), "Category with this Id was not founded!");
+            throw new NotFoundException("category with this Id was not founded!", nameof(product.CategoryId));
         }
 
         await _db.Products.UpdateAsync(product);
 
-        return _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == product.Id);
+        return _db.Products.Include(x => x.Brand, x => x.Category).SingleOrDefault(x => x.Id == product.Id);
     }
 
     // Returns actuality products by ID
+    /// <inheritdoc/>
     public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> productList)
     {
         ProductListDTORabbitMQ<ProductDTORabbitMQ> products = new();

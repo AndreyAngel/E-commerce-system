@@ -5,71 +5,87 @@ using CatalogAPI.UnitOfWork.Interfaces;
 
 namespace CatalogAPI.Services;
 
+/// <summary>
+/// Сlass providing the APIs for managing brand in a persistence store.
+/// </summary>
 public class BrandService: IBrandService
 {
+    /// <summary>
+    /// Repository group interface showing data context
+    /// </summary>
     private readonly IUnitOfWork _db;
+
+    /// <summary>
+    /// Creates an instance of the <see cref="BrandService"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
     public BrandService(IUnitOfWork unitOfWork)
     {
         _db = unitOfWork;
     }
 
-    public List<Brand> Get()
+    /// <inheritdoc/>
+    public List<Brand> GetAll()
     {
         return _db.Brands.GetAll().ToList();
     }
 
+    /// <inheritdoc/>
     public Brand GetById(Guid id)
     {
         var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
         {
-            throw new NotFoundException("Brand with this Id was not founded!", nameof(id));
+            throw new NotFoundException("category with this Id was not founded!", nameof(id));
         }
 
         return res;
     }
 
+    /// <inheritdoc/>
     public Brand GetByName(string name)
     {
         var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
 
         if (res == null)
         {
-            throw new NotFoundException("Brand with this name was not founded!", nameof(name));
+            throw new NotFoundException("category with this name was not founded!", nameof(name));
         }
 
         return res;
     }
 
-    public async Task<Brand> Create(Brand brand)
+    /// <inheritdoc/>
+    public async Task<Brand> Create(Brand category)
     {
-        if (_db.Brands.GetAll().SingleOrDefault(x => x.Name == brand.Name) != null)
+        if (_db.Brands.GetAll().SingleOrDefault(x => x.Name == category.Name) != null)
         {
-            throw new ObjectNotUniqueException("Brand with this name alredy exists!", nameof(brand.Name));
+            throw new ObjectNotUniqueException("category with this name alredy exists!", nameof(category.Name));
         }
 
-        await _db.Brands.AddAsync(brand);
+        await _db.Brands.AddAsync(category);
 
-        return brand;
+        return category;
     }
 
-    public async Task<Brand> Update(Brand brand)
+    /// <inheritdoc/>
+    public async Task<Brand> Update(Brand category)
     {
-        var res = _db.Brands.GetById(brand.Id);
+        var res = _db.Brands.GetById(category.Id);
 
         if (res == null)
         {
-            throw new NotFoundException("Brand with this Id was not founded!", nameof(brand.Id));
+            throw new NotFoundException("category with this Id was not founded!", nameof(category.Id));
         }
 
-        else if ((res.Name != brand.Name) && _db.Brands.GetAll().SingleOrDefault(x => x.Name == brand.Name) != null)
+        else if ((res.Name != category.Name) && _db.Brands.GetAll().SingleOrDefault(x => x.Name == category.Name) != null)
         {
-            throw new ObjectNotUniqueException("Brand with this name already exists!", nameof(brand.Name));
+            throw new ObjectNotUniqueException("category with this name already exists!", nameof(category.Name));
         }
 
-        await _db.Brands.UpdateAsync(brand);
+        await _db.Brands.UpdateAsync(category);
 
-        return brand;
+        return category;
     }
 }

@@ -3,33 +3,33 @@
 namespace IdentityAPI.Models.DTO;
 
 /// <summary>
-/// Address
+/// Address data transfer object
 /// </summary>
 public class AddressDTO
 {
     /// <summary>
-    /// Gets or sets a city
+    /// City
     /// </summary>
     [Required]
     public string? City { get; set; }
 
     /// <summary>
-    /// Gets or sets a street
+    /// Street
     /// </summary>
     public string? Street { get; set; }
 
     /// <summary>
-    /// Gets or sets a number of home
+    /// Number of home
     /// </summary>
     public string? NumberOfHome { get; set; }
 
     /// <summary>
-    /// Gets or sets a apartment number
+    /// Apartment number
     /// </summary>
     public string? ApartmentNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets a postal code
+    /// Postal code
     /// </summary>
     public string? PostalCode { get; set; }
 }

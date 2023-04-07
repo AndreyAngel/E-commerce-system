@@ -20,7 +20,7 @@ namespace CatalogAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("CatalogAPI.Models.DataBase.Brand", b =>
+            modelBuilder.Entity("CatalogAPI.Models.DataBase.category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace CatalogAPI.Migrations
                     b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("CatalogAPI.Models.DataBase.Category", b =>
+            modelBuilder.Entity("CatalogAPI.Models.DataBase.category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -101,29 +101,29 @@ namespace CatalogAPI.Migrations
 
             modelBuilder.Entity("CatalogAPI.Models.DataBase.Product", b =>
                 {
-                    b.HasOne("CatalogAPI.Models.DataBase.Brand", "Brand")
+                    b.HasOne("CatalogAPI.Models.DataBase.category", "category")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CatalogAPI.Models.DataBase.Category", "Category")
+                    b.HasOne("CatalogAPI.Models.DataBase.category", "category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Brand");
+                    b.Navigation("category");
 
-                    b.Navigation("Category");
+                    b.Navigation("category");
                 });
 
-            modelBuilder.Entity("CatalogAPI.Models.DataBase.Brand", b =>
+            modelBuilder.Entity("CatalogAPI.Models.DataBase.category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("CatalogAPI.Models.DataBase.Category", b =>
+            modelBuilder.Entity("CatalogAPI.Models.DataBase.category", b =>
                 {
                     b.Navigation("Products");
                 });

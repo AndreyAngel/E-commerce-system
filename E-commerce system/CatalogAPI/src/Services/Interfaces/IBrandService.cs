@@ -6,7 +6,7 @@ namespace CatalogAPI.Services.Interfaces;
 /// <summary>
 /// Interface for class providing the APIs for managing category in a persistence store.
 /// </summary>
-public interface IBrandService
+public interface IBrandService : IDisposable
 {
     /// <summary>
     /// Get all brands

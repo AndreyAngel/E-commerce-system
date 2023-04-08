@@ -56,17 +56,10 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(List<CategoryDTOResponse>), (int)HttpStatusCode.OK)]
     public IActionResult GetAll()
     {
-        try
-        {
-            var result = _service.GetAll();
-            var res = _mapper.Map<List<CategoryDTOResponse>>(result);
+        var result = _service.GetAll();
+        var res = _mapper.Map<List<CategoryDTOResponse>>(result);
 
-            return Ok(res);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        return Ok(res);
     }
 
     /// <summary>
@@ -92,10 +85,6 @@ public class CategoryController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     /// <summary>
@@ -120,10 +109,6 @@ public class CategoryController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -155,10 +140,6 @@ public class CategoryController : ControllerBase
         catch(ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -198,10 +179,6 @@ public class CategoryController : ControllerBase
         catch (ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

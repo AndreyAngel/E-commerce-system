@@ -2,7 +2,7 @@
 
 namespace OrderAPI.UnitOfWork.Interfaces;
 
-public interface IGenericRepository<TEntity> where TEntity : class
+public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
 {
     IQueryable<TEntity> GetAll();
 

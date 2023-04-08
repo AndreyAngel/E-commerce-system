@@ -20,6 +20,12 @@ public class CartProductService: ICartProductService
 
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
+
     public CartProductService(IUnitOfWork unitOfWork,  IBusControl bus, IMapper mapper)
     {
         _db = unitOfWork;
@@ -27,8 +33,11 @@ public class CartProductService: ICartProductService
         _mapper = mapper;
     }
 
+    ~CartProductService() => Dispose(false);
+
     public async Task<CartProductDomainModel> Create(CartProductDomainModel cartProduct)
     {
+        ThrowIfDisposed();
         var response = await GetProductFromCatalog(cartProduct.ProductId);
 
         // Сheck if there is already such a product in the cart
@@ -68,6 +77,7 @@ public class CartProductService: ICartProductService
 
     public async Task Delete(Guid id)
     {
+        ThrowIfDisposed();
         var res = _db.CartProducts.GetById(id);
 
         if (res == null)
@@ -80,6 +90,7 @@ public class CartProductService: ICartProductService
 
     public async Task<CartProductDomainModel> Update(CartProductDomainModel cartProduct)
     {
+        ThrowIfDisposed();
 
         if (_db.CartProducts.GetById(cartProduct.Id) == null)
         {
@@ -100,6 +111,8 @@ public class CartProductService: ICartProductService
 
     private async Task<ProductDTORabbitMQ> GetProductFromCatalog(Guid productId)
     {
+        ThrowIfDisposed();
+
         ProductDTORabbitMQ productDTO = new() { Id = productId };
         Uri uri = new("rabbitmq://localhost/getProductQueue");
         var response = await RabbitMQClient.Request<ProductDTORabbitMQ, ProductDTORabbitMQ>(_bus, productDTO, uri);
@@ -110,5 +123,35 @@ public class CartProductService: ICartProductService
         }
 
         return response;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

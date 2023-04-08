@@ -1,6 +1,4 @@
 using IdentityAPI.Helpers;
-using IdentityAPI.Models.DataBase;
-using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Services;
 using IdentityAPI;
 using MassTransit;
@@ -14,6 +12,8 @@ using System.Reflection;
 using System.Text;
 using IdentityAPI.Models.Enums;
 using Infrastructure;
+using IdentityAPI.DataBase.Entities;
+using IdentityAPI.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 

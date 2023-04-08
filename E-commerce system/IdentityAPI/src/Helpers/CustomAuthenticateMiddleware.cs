@@ -1,5 +1,4 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
-using IdentityAPI.Services;
+﻿using IdentityAPI.Services;
 using System.Security.Claims;
 
 namespace IdentityAPI.Helpers;

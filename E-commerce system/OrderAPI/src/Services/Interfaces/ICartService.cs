@@ -2,7 +2,7 @@
 
 namespace OrderAPI.Services.Interfaces;
 
-public interface ICartService
+public interface ICartService : IDisposable
 {
     Task<CartDomainModel> GetById(Guid id);
 

@@ -55,17 +55,10 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(List<ProductListDTOResponse>), (int)HttpStatusCode.OK)]
     public IActionResult GetAll()
     {
-        try
-        {
-            var result = _service.GetAll();
-            var res = _mapper.Map<List<ProductListDTOResponse>>(result);
+        var result = _service.GetAll();
+        var res = _mapper.Map<List<ProductListDTOResponse>>(result);
 
-            return Ok(res);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        return Ok(res);
     }
 
     /// <summary>
@@ -90,10 +83,6 @@ public class ProductController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -120,10 +109,6 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     /// <summary>
@@ -136,15 +121,8 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
     public IActionResult GetByFilter(ProductFilterDTO filter)
     {
-        try
-        {
-            var result = _mapper.Map<List<ProductListDTOResponse>>(_service.GetByFilter(filter));
-            return Ok(result);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        var result = _mapper.Map<List<ProductListDTOResponse>>(_service.GetByFilter(filter));
+        return Ok(result);
     }
 
     /// <summary>
@@ -181,10 +159,6 @@ public class ProductController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -225,10 +199,6 @@ public class ProductController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     /// <summary>
@@ -258,10 +228,6 @@ public class ProductController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

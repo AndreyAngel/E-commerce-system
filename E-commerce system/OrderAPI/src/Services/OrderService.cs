@@ -15,19 +15,29 @@ public class OrderService : IOrderService
 
     private readonly IUnitOfWork _db;
 
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
+
     public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
+    ~OrderService() => Dispose(false);
+
     public List<Order> GetAll()
     {
+        ThrowIfDisposed();
         return _db.Orders.GetAll().ToList();
     }
 
     public Order GetById(Guid id)
     {
+        ThrowIfDisposed();
         var res = _db.Orders.Include(x => x.OrderProducts).AsNoTracking().SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -40,6 +50,7 @@ public class OrderService : IOrderService
 
     public List<Order> GetByFilter(OrderFilterDTORequest filter)
     {
+        ThrowIfDisposed();
         var orders = _db.Orders.GetAll();
 
         if (filter.UserId != null)
@@ -67,6 +78,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> Create(Order order)
     {
+        ThrowIfDisposed();
         if (order.OrderProducts.Count == 0)
         {
             throw new EmptyOrderException("Empty order", nameof(order));
@@ -98,6 +110,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> Update(Order order)
     {
+        ThrowIfDisposed();
         if (_db.Orders.GetById(order.Id) == null)
         {
             throw new NotFoundException("Order with this Id wasn't founded", nameof(order.Id));
@@ -114,6 +127,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> IsReady(Guid id)
     {
+        ThrowIfDisposed();
         var order = _db.Orders.GetById(id);
 
         if (order == null)
@@ -144,6 +158,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> IsReceived(Guid id)
     {
+        ThrowIfDisposed();
         var order = _db.Orders.GetById(id);
 
         if (order == null)
@@ -174,6 +189,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> Cancel(Guid id)
     {
+        ThrowIfDisposed();
         var order = _db.Orders.GetById(id);
 
         if (order == null)
@@ -199,6 +215,7 @@ public class OrderService : IOrderService
 
     public async Task<Order> IsPaymented(Guid id)
     {
+        ThrowIfDisposed();
         var order = _db.Orders.GetById(id);
 
         if (order == null)
@@ -220,5 +237,35 @@ public class OrderService : IOrderService
         await _db.Orders.UpdateAsync(order);
 
         return order;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

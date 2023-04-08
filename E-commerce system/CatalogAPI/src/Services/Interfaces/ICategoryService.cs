@@ -6,7 +6,7 @@ namespace CatalogAPI.Services.Interfaces;
 /// <summary>
 /// Interface for class providing the APIs for managing category in a persistence store.
 /// </summary>
-public interface ICategoryService
+public interface ICategoryService : IDisposable
 {
     /// <summary>
     /// Get all categories

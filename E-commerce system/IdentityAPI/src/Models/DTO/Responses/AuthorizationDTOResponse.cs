@@ -6,6 +6,11 @@
 public class AuthorizationDTOResponse : IIdentityDTOResponse
 {
     /// <summary>
+    /// User Id
+    /// </summary>
+    public Guid UserId { get; set; }
+
+    /// <summary>
     /// Access token lifetime in seconds
     /// </summary>
     public int ExpiresIn { get; set; }
@@ -26,17 +31,29 @@ public class AuthorizationDTOResponse : IIdentityDTOResponse
     public string RefreshToken { get; set; }
 
     /// <summary>
+    /// User cart Id
+    /// </summary>
+    public Guid CartId { get; }
+
+    /// <summary>
     /// Creates an instance of the <see cref="AuthorizationDTOResponse"/>.
     /// </summary>
     /// <param name="expiresIn"> Access token lifetime in seconds </param>
     /// <param name="accessToken"> Access token </param>
     /// <param name="refreshToken"> Refresh token </param>
     /// <param name="tokenType"> Access token type </param>
-    public AuthorizationDTOResponse(int expiresIn, string accessToken, string refreshToken, string tokenType)
+    /// <param name="userId"> userId </param>
+    public AuthorizationDTOResponse(int expiresIn,
+                                    string accessToken,
+                                    string refreshToken,
+                                    string tokenType,
+                                    Guid userId)
     {
         ExpiresIn = expiresIn;
         AccessToken = accessToken;
         RefreshToken = refreshToken;
         TokenType = tokenType;
+        UserId = userId;
+        CartId = userId;
     }
 }

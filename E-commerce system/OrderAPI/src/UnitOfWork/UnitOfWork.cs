@@ -3,11 +3,15 @@ using OrderAPI.UnitOfWork.Interfaces;
 
 namespace OrderAPI.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork, IDisposable
+public class UnitOfWork : IUnitOfWork
 {
     private readonly Context _context;
 
-    private bool _isDisposed = false;
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
 
     public ICartRepository Carts { get; private set; }
     public ICartProductRepository CartProducts { get; private set; }
@@ -21,13 +25,11 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         Orders = new OrderRepository(context);
     }
 
-    ~UnitOfWork()
-    {
-        Dispose(false);
-    }
+    ~UnitOfWork() => Dispose(false);
 
     public async Task SaveChangesAsync()
     {
+        ThrowIfDisposed();
         await _context.SaveChangesAsync();
     }
 
@@ -37,12 +39,30 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public virtual void Dispose(bool disposing)
+    protected void Dispose(bool disposing)
     {
-        if (!_isDisposed && disposing)
+        if (!_disposed)
         {
-            _context.Dispose();
-            _isDisposed = true;
+            if (disposing)
+            {
+                _context.Dispose();
+                Carts.Dispose();
+                CartProducts.Dispose();
+                Orders.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
         }
     }
 }

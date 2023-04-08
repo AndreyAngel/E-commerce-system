@@ -649,6 +649,12 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:CatalogAPI.Services.BrandService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
         <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.BrandService"/>.
@@ -670,6 +676,11 @@
         <member name="M:CatalogAPI.Services.BrandService.Update(CatalogAPI.Models.DataBase.Brand)">
             <inheritdoc/>
         </member>
+        <member name="M:CatalogAPI.Services.BrandService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
         <member name="T:CatalogAPI.Services.CategoryService">
             <summary>
             Class providing the APIs for managing category in a persistence store.
@@ -678,6 +689,12 @@
         <member name="F:CatalogAPI.Services.CategoryService._db">
             <summary>
             Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.Services.CategoryService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
             </summary>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
@@ -700,6 +717,11 @@
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.Update(CatalogAPI.Models.DataBase.Category)">
             <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
         </member>
         <member name="T:CatalogAPI.Services.Interfaces.IBrandService">
             <summary>
@@ -863,6 +885,12 @@
             Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
             </summary>
         </member>
+        <member name="F:CatalogAPI.Services.ProductService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
         <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
@@ -890,6 +918,33 @@
         </member>
         <member name="M:CatalogAPI.Services.ProductService.CheckProducts(Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid})">
             <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.UnitOfWork.UnitOfWork._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
         </member>
     </members>
 </doc>

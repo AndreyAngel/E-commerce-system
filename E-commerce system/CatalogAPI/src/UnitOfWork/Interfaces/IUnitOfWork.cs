@@ -1,6 +1,6 @@
 ﻿namespace CatalogAPI.UnitOfWork.Interfaces;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
     public IProductRepository Products { get; }
 
@@ -9,6 +9,4 @@ public interface IUnitOfWork
     public IBrandRepository Brands { get; }
 
     public Task SaveChangesAsync();
-
-    public void Dispose();
 }

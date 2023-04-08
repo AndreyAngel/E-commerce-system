@@ -8,7 +8,7 @@ namespace CatalogAPI.Services.Interfaces;
 /// <summary>
 /// Interface for class providing the APIs for managing product in a persistence store.
 /// </summary>
-public interface IProductService
+public interface IProductService : IDisposable
 {
     /// <summary>
     /// Get all products

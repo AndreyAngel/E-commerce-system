@@ -2,7 +2,7 @@
 
 namespace CatalogAPI.UnitOfWork.Interfaces;
 
-public interface IGenericRepository<TEntity> where TEntity : class
+public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
 {
     IEnumerable<TEntity> GetAll();
 

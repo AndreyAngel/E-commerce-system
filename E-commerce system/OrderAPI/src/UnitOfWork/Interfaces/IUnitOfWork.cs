@@ -1,6 +1,6 @@
 ﻿namespace OrderAPI.UnitOfWork.Interfaces;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
     public ICartRepository Carts { get; }
 
@@ -9,6 +9,4 @@ public interface IUnitOfWork
     public IOrderRepository Orders { get; }
 
     public Task SaveChangesAsync();
-
-    public void Dispose();
 }

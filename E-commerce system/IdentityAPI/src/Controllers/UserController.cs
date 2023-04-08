@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using IdentityAPI.Exceptions;
-using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.DTO;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +9,7 @@ using System.Net;
 using System.Security;
 using IdentityAPI.Helpers;
 using Infrastructure.Exceptions;
+using IdentityAPI.DataBase.Entities;
 
 namespace IdentityAPI.Controllers;
 
@@ -66,42 +66,6 @@ public class UserController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        finally
-        {
-            _userService.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Get your user information by access token from headers
-    /// </summary>
-    /// <returns> The task object containing the action result of getting user information </returns>
-    /// <response code="200"> Successful completion </response>
-    /// <response code="404"> User with this Id from the access token wasn't founded </response>
-    /// <response code="401"> Unauthorized </response>
-    [HttpGet]
-    [Authorize(Policy = "Public")]
-    [ProducesResponseType(typeof(UserDTOResponse), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetYourUserData()
-    {
-        try
-        {
-            var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split().Last();
-            var userId = new JwtSecurityToken(accessToken).Claims.First(x => x.Type == "UserId");
-            var user = await _userService.GetById(new Guid(userId.Value));
-            var response = _mapper.Map<UserDTOResponse>(user);
-
-            return Ok(response);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        finally
-        {
-            _userService.Dispose();
-        }
     }
 
     /// <summary>
@@ -126,10 +90,6 @@ public class UserController : ControllerBase
         {
             return Forbid(ex.Message);
         }
-        finally
-        {
-            _userService.Dispose();
-        }
     }
 
     /// <summary>
@@ -145,24 +105,17 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Register(RegisterDTORequest model)
     {
-        try
+        var user = _mapper.Map<User>(model);
+        var result = await _userService.Register(user, model.Password, model.Role);
+
+        if (result.GetType() == typeof(IdentityErrorsDTOResponse))
         {
-            var user = _mapper.Map<User>(model);
-            var result = await _userService.Register(user, model.Password, model.Role);
-
-            if (result.GetType() == typeof(IdentityErrorsDTOResponse))
-            {
-                return BadRequest(result);
-            }
-
-            await _userService.Store.Context.SaveChangesAsync();
-
-            return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
+            return BadRequest(result);
         }
-        finally
-        {
-            _userService.Dispose();
-        }
+
+        await _userService.Store.Context.SaveChangesAsync();
+
+        return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
     }
 
     /// <summary>
@@ -195,10 +148,6 @@ public class UserController : ControllerBase
         {
             return Unauthorized(ex.Message);
         }
-        finally
-        {
-            _userService.Dispose();
-        }
     }
 
     /// <summary>
@@ -212,16 +161,9 @@ public class UserController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public IActionResult Logout()
     {
-        try
-        {
-            var user = HttpContext.Items["User"] as User;
-            _userService.Logout(new Guid(user.Id));
-            return Ok();
-        }
-        finally
-        {
-            _userService.Dispose();
-        }
+        var user = HttpContext.Items["User"] as User;
+        _userService.Logout(new Guid(user.Id));
+        return Ok();
     }
 
     ///<summary>

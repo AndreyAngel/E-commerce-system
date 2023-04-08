@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.DataBase.Entities;
 using IdentityAPI.Models.DTO;
 
 namespace IdentityAPI.Helpers;

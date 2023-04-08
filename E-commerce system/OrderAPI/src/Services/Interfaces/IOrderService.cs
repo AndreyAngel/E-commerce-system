@@ -3,7 +3,7 @@ using OrderAPI.Models.DTO.Order;
 
 namespace OrderAPI.Services.Interfaces;
 
-public interface IOrderService
+public interface IOrderService : IDisposable
 {
     List<Order> GetAll();
 

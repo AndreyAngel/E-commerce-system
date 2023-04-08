@@ -1,6 +1,5 @@
 using IdentityAPI.Exceptions;
 using IdentityAPI.Helpers;
-using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.DTO;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Identity;
@@ -10,9 +9,10 @@ using System.Security;
 using System.Security.Claims;
 using MassTransit;
 using IdentityAPI.Models.Enums;
-using IdentityAPI.Models.DataBase;
 using Infrastructure.Exceptions;
 using Infrastructure;
+using IdentityAPI.DataBase.Entities;
+using IdentityAPI.DataBase;
 
 namespace IdentityAPI.Services;
 
@@ -33,6 +33,12 @@ public class UserService : UserManager<User>, IUserService
 
     /// <inheritdoc/>
     public new ICustomUserStore Store { get; init;  }
+
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
 
     /// <summary>
     /// Constructs a new instance of <see cref="UserManager{TUser}"/>.
@@ -76,6 +82,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public async Task<User> GetById(Guid id)
     {
+        ThrowIfDisposed();
         var user = await FindByIdAsync(id.ToString());
 
         if (user == null)
@@ -89,6 +96,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public async Task<AuthorizationDTOResponse> Login(LoginDTORequest model)
     {
+        ThrowIfDisposed();
         var user = await FindByEmailAsync(model.Email);
 
         if (user == null)
@@ -102,6 +110,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public async Task<IIdentityDTOResponse> Register(User user, string password, Role role)
     {
+        ThrowIfDisposed();
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
         var result = await CreateAsync(user, password);
 
@@ -131,6 +140,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public async Task<AuthorizationDTOResponse> GetAccessToken(string refreshToken)
     {
+        ThrowIfDisposed();
         var validatedToken = JwtTokenHelper.ValidateToken(_configuration, refreshToken);
         var userId = new JwtSecurityToken(validatedToken).Claims.ToList().FirstOrDefault(x => x.Type == "UserId");
         
@@ -160,12 +170,14 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public void Logout(Guid userId)
     {
+        ThrowIfDisposed();
         Store.BlockTokens(userId);
     }
 
     /// <inheritdoc/>
     public async Task<bool> TokensIsActive(Guid userId)
     {
+        ThrowIfDisposed();
         var tokens = await Store.GetTokensByUserId(userId);
 
         if (tokens.Count == 0)
@@ -179,6 +191,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     public async Task<IdentityErrorsDTOResponse?> Update(User user, Guid userId)
     {
+        ThrowIfDisposed();
         var res = await FindByIdAsync(userId.ToString());
 
         if (res == null)
@@ -204,12 +217,14 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     private async Task CreateCart(Guid userId)
     {
+        ThrowIfDisposed();
         await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
     }
 
     /// <inheritdoc/>
     private async Task<AuthorizationDTOResponse> Login(User user , string password)
     {
+        ThrowIfDisposed();
         if (!await CheckPasswordAsync(user, password))
         {
             throw new IncorrectPasswordException("Incorrect password", nameof(password));
@@ -223,6 +238,7 @@ public class UserService : UserManager<User>, IUserService
     /// <inheritdoc/>
     private async Task<AuthorizationDTOResponse> GenerateTokens(Guid userId, string roleName, List<Claim>? claims = null)
     {
+        ThrowIfDisposed();
         if (claims == null)
         {
             claims = new List<Claim>()
@@ -253,6 +269,22 @@ public class UserService : UserManager<User>, IUserService
             }
         });
 
-        return new AuthorizationDTOResponse(900, accessToken, refreshToken, "Bearer");
+        return new AuthorizationDTOResponse(900, accessToken, refreshToken, "Bearer", userId);
+    }
+
+    /// <inheritdoc/>
+    protected new void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // TODO: dispose managed state (managed objects).
+            }
+
+            _disposed = true;
+        }
+
+        base.Dispose(disposing);
     }
 }

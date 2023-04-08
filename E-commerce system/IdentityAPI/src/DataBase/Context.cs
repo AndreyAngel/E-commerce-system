@@ -1,8 +1,8 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
+﻿using IdentityAPI.DataBase.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityAPI.Models.DataBase;
+namespace IdentityAPI.DataBase;
 
 /// <summary>
 /// Class for the Entity Framework database context used for identity

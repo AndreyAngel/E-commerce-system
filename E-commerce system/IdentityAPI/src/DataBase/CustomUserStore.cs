@@ -1,22 +1,25 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using IdentityAPI.Models.DataBase;
-using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.Enums;
+using IdentityAPI.DataBase.Entities;
 
-namespace IdentityAPI.Models.DataBase;
+namespace IdentityAPI.DataBase;
 
 /// <summary>
 /// Represents a new instance of a persistence store for users, using the default implementation
 /// </summary>
-public class CustomUserStore : UserStore<User>, ICustomUserStore
+public class CustomUserStore : UserStore<User>, ICustomUserStore, IDisposable
 {
     /// <summary>
     /// Database context
     /// </summary>
     private readonly Context _context;
+
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
 
     /// <summary>
     /// Gets database context
@@ -33,9 +36,12 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
         _context = context;
     }
 
+    ~CustomUserStore() => Dispose(false);
+
     /// <inheritdoc/>
     public async Task AddRangeTokenAsync(IEnumerable<Token> tokens)
     {
+        ThrowIfDisposed();
         await _context.Tokens.AddRangeAsync(tokens);
         await _context.SaveChangesAsync();
     }
@@ -43,6 +49,8 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
     /// <inheritdoc/>
     public async Task BlockTokens(Guid userId)
     {
+        ThrowIfDisposed();
+
         var accessToken = _context.Tokens.FirstOrDefault(x => x.UserId == userId
                                                            && x.TokenType == TokenType.Access
                                                            && x.IsActive);
@@ -54,7 +62,7 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
         {
             accessToken.IsActive = false;
         }
-        
+
         if (refreshToken != null)
         {
             refreshToken.IsActive = false;
@@ -66,6 +74,7 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
     /// <inheritdoc/>
     public async Task<List<Token>> GetTokensByUserId(Guid userId)
     {
+        ThrowIfDisposed();
         return await _context.Tokens.Where(x => x.UserId == userId && x.IsActive).ToListAsync();
     }
 
@@ -82,6 +91,32 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore
     /// <inheritdoc/>
     protected override async Task<User?> FindUserAsync(string userId, CancellationToken cancellationToken)
     {
+        ThrowIfDisposed();
         return await Users.Include(x => x.Address).SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Protected implementation of Dispose pattern.
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        base.Dispose();
     }
 }

@@ -30,7 +30,7 @@ namespace OrderAPI.Controllers
         }
 
         [HttpGet("{cartId:Guid}")]
-        public async Task<ActionResult<CartDTOResponse>> GetById(Guid cartId)
+        public async Task<ActionResult<CartDTOResponse>> GetByUserId(Guid cartId)
         {
             try
             {
@@ -54,10 +54,6 @@ namespace OrderAPI.Controllers
             catch(EmptyOrderException ex)
             {
                 return BadRequest(ex.Message);
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
             }
         }
 
@@ -91,10 +87,6 @@ namespace OrderAPI.Controllers
             catch (EmptyOrderException ex)
             {
                 return BadRequest(ex.Message);
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
             }
         }
 
@@ -131,10 +123,6 @@ namespace OrderAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            finally
-            {
-                _unitOfWork.Dispose();
-            }
         }
 
         [HttpDelete("{cartId:Guid},{cartProductId:Guid}")]
@@ -162,10 +150,6 @@ namespace OrderAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
-            finally
-            {
-                _unitOfWork.Dispose();
-            }
         }
 
         [HttpDelete("{cartId:Guid}")]
@@ -191,10 +175,6 @@ namespace OrderAPI.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
-            }
-            finally
-            {
-                _unitOfWork.Dispose();
             }
         }
     }

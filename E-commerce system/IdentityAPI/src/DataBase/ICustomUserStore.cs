@@ -1,9 +1,7 @@
-﻿using IdentityAPI.Models.DataBase.Entities;
+﻿using IdentityAPI.DataBase.Entities;
 using Microsoft.AspNetCore.Identity;
-using IdentityAPI.Models.DataBase;
-using IdentityAPI.Models.DataBase.Entities;
 
-namespace IdentityAPI.Models.DataBase;
+namespace IdentityAPI.DataBase;
 
 /// <summary>
 /// Provides an abstraction for a store which manages user accounts

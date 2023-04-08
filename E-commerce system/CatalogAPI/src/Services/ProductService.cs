@@ -24,6 +24,12 @@ public class ProductService: IProductService
     private readonly IMapper _mapper;
 
     /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
+
+    /// <summary>
     /// Creates an instance of the <see cref="ProductService"/>.
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
@@ -34,15 +40,19 @@ public class ProductService: IProductService
         _mapper = mapper;
     }
 
+    ~ProductService() => Dispose(false);
+
     /// <inheritdoc/>
     public List<Product> GetAll()
     {
+        ThrowIfDisposed();
         return _db.Products.GetAll().Where(x => x.IsSale).ToList();
     }
 
     /// <inheritdoc/>
     public Product GetById(Guid id)
     {
+        ThrowIfDisposed();
         var res = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -56,6 +66,7 @@ public class ProductService: IProductService
     /// <inheritdoc/>
     public Product GetByName(string name)
     {
+        ThrowIfDisposed();
         var res = _db.Products.Include(x => x.Name == name, x => x.Category, y => y.Brand)
                                       .SingleOrDefault(x => x.Name == name);
 
@@ -70,6 +81,7 @@ public class ProductService: IProductService
     /// <inheritdoc/>
     public List<Product> GetByFilter(ProductFilterDTO model)
     {
+        ThrowIfDisposed();
         var products = _db.Products.GetAll();
 
         if (model.BrandId != null)
@@ -88,6 +100,7 @@ public class ProductService: IProductService
     /// <inheritdoc/>
     public async Task<Product> Create(Product product)
     {
+        ThrowIfDisposed();
         var res = _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name);
 
         if (res != null && res.IsSale)
@@ -125,6 +138,7 @@ public class ProductService: IProductService
     /// <inheritdoc/>
     public async Task<Product> Update(Product product)
     {
+        ThrowIfDisposed();
         var res = _db.Products.GetById(product.Id);
 
         if ((res.Name != product.Name) && _db.Products.GetAll().SingleOrDefault(x => x.Name == product.Name) != null)
@@ -156,7 +170,9 @@ public class ProductService: IProductService
     /// <inheritdoc/>
     public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> productList)
     {
+        ThrowIfDisposed();
         ProductListDTORabbitMQ<ProductDTORabbitMQ> products = new();
+
         foreach (var productId in productList.Products)
         {
             var product = _db.Products.GetById(productId);
@@ -168,5 +184,35 @@ public class ProductService: IProductService
         }
 
         return products;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

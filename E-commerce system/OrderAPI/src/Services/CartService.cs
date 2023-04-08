@@ -14,9 +14,18 @@ namespace OrderAPI.Services;
 public class CartService: ICartService
 {
     private readonly IUnitOfWork _db;
+
     private readonly IBusControl _bus;
+
     private readonly IMapper _mapper;
+
     private readonly ICartProductService _cartProductService;
+
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
 
     public CartService(IUnitOfWork unitOfWork, IBusControl bus, IMapper mapper, ICartProductService cartProductService)
     {
@@ -26,8 +35,12 @@ public class CartService: ICartService
         _cartProductService = cartProductService;
     }
 
+    ~CartService() => Dispose(false);
+
     public async Task<CartDomainModel> GetById(Guid id)
     {
+        ThrowIfDisposed();
+
         var cart = await _db.Carts.Include(x => x.CartProducts)
                                   .AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
 
@@ -48,6 +61,7 @@ public class CartService: ICartService
     // The cart is created after user registration 
     public async Task Create(Guid id)
     {
+        ThrowIfDisposed();
         Cart cart = new() { Id = id };
 
         await _db.Carts.AddAsync(cart);
@@ -56,6 +70,7 @@ public class CartService: ICartService
 
     public async Task<CartDomainModel> ComputeTotalValue(Guid id)
     {
+        ThrowIfDisposed();
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -75,6 +90,7 @@ public class CartService: ICartService
 
     public async Task<CartDomainModel> Clear(Guid id)
     {
+        ThrowIfDisposed();
         var cart = await _db.Carts.Include(x => x.CartProducts).SingleOrDefaultAsync(x => x.Id == id);
 
         if (cart == null)
@@ -94,6 +110,7 @@ public class CartService: ICartService
     // Checks the relevance of products and returns a new cart
     private async Task<CartDomainModel> Check(Cart cart)
     {
+        ThrowIfDisposed();
         ProductListDTORabbitMQ<Guid> productsId = new();
 
         foreach (CartProduct cartProduct in cart.CartProducts)
@@ -135,5 +152,36 @@ public class CartService: ICartService
         model.ComputeTotalValue();
         
         return model;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+                _cartProductService.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

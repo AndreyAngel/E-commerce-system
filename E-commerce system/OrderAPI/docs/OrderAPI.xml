@@ -63,5 +63,60 @@
             Courier
             </summary>
         </member>
+        <member name="F:OrderAPI.Services.CartProductService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.OrderService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.UnitOfWork.GenericRepository`1._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.UnitOfWork.UnitOfWork._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.UnitOfWork.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
     </members>
 </doc>

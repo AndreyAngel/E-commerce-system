@@ -16,6 +16,12 @@ public class BrandService: IBrandService
     private readonly IUnitOfWork _db;
 
     /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
+
+    /// <summary>
     /// Creates an instance of the <see cref="BrandService"/>.
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
@@ -24,15 +30,19 @@ public class BrandService: IBrandService
         _db = unitOfWork;
     }
 
+    ~BrandService() => Dispose(false);
+
     /// <inheritdoc/>
     public List<Brand> GetAll()
     {
+        ThrowIfDisposed();
         return _db.Brands.GetAll().ToList();
     }
 
     /// <inheritdoc/>
     public Brand GetById(Guid id)
     {
+        ThrowIfDisposed();
         var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -46,6 +56,7 @@ public class BrandService: IBrandService
     /// <inheritdoc/>
     public Brand GetByName(string name)
     {
+        ThrowIfDisposed();
         var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
 
         if (res == null)
@@ -59,6 +70,7 @@ public class BrandService: IBrandService
     /// <inheritdoc/>
     public async Task<Brand> Create(Brand category)
     {
+        ThrowIfDisposed();
         if (_db.Brands.GetAll().SingleOrDefault(x => x.Name == category.Name) != null)
         {
             throw new ObjectNotUniqueException("category with this name alredy exists!", nameof(category.Name));
@@ -72,6 +84,7 @@ public class BrandService: IBrandService
     /// <inheritdoc/>
     public async Task<Brand> Update(Brand category)
     {
+        ThrowIfDisposed();
         var res = _db.Brands.GetById(category.Id);
 
         if (res == null)
@@ -87,5 +100,35 @@ public class BrandService: IBrandService
         await _db.Brands.UpdateAsync(category);
 
         return category;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

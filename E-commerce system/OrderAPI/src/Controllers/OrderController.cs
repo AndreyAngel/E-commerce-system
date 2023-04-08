@@ -31,17 +31,10 @@ public class OrderController : ControllerBase
     [HttpGet]
     public ActionResult< List<OrderListDTOResponse> > GetAll()
     {
-        try
-        {
-            var order = _orderService.GetAll();
-            var response = _mapper.Map<OrderListDTOResponse>(order);
+        var order = _orderService.GetAll();
+        var response = _mapper.Map<OrderListDTOResponse>(order);
 
-            return Ok(response);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        return Ok(response);
     }
 
     [HttpGet("{id:Guid}")]
@@ -58,26 +51,15 @@ public class OrderController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     [HttpPost]
     public ActionResult<List<OrderListDTOResponse>> GetByFilter(OrderFilterDTORequest filter)
     {
-        try
-        {
-            var orders = _orderService.GetByFilter(filter);
-            var response = _mapper.Map<OrderListDTOResponse>(orders);
+        var orders = _orderService.GetByFilter(filter);
+        var response = _mapper.Map<OrderListDTOResponse>(orders);
 
-            return Ok(response);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        return Ok(response);
     }
 
     [HttpPost]
@@ -97,10 +79,6 @@ public class OrderController : ControllerBase
         catch (EmptyOrderException ex)
         {
             return BadRequest(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -125,10 +103,6 @@ public class OrderController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     [HttpPatch("{id:Guid}")]
@@ -151,10 +125,6 @@ public class OrderController : ControllerBase
         catch (OrderStatusException ex)
         {
             return BadRequest(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -179,10 +149,6 @@ public class OrderController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
     }
 
     [HttpPatch("{id:Guid}")]
@@ -204,10 +170,6 @@ public class OrderController : ControllerBase
         catch (OrderStatusException ex)
         {
             return BadRequest(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -231,10 +193,6 @@ public class OrderController : ControllerBase
         catch (OrderStatusException ex)
         {
             return BadRequest(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

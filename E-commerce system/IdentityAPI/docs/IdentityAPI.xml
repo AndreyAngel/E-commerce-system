@@ -36,15 +36,6 @@
             <response code="404"> User with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
-        <member name="M:IdentityAPI.Controllers.UserController.GetYourUserData">
-            <summary>
-            Get your user information by access token from headers
-            </summary>
-            <returns> The task object containing the action result of getting user information </returns>
-            <response code="200"> Successful completion </response>
-            <response code="404"> User with this Id from the access token wasn't founded </response>
-            <response code="401"> Unauthorized </response>
-        </member>
         <member name="M:IdentityAPI.Controllers.UserController.GetAccessToken(IdentityAPI.Models.DTO.GetAccessTokenDTORequest)">
             <summary>
             Get new access token with refresh token
@@ -92,6 +83,198 @@
              <response code="204"> Successful completion </response>
              <response code="400"> Bad request </response>
              <response code="401"> Unauthorized </response>
+        </member>
+        <member name="T:IdentityAPI.DataBase.Context">
+            <summary>
+            Class for the Entity Framework database context used for identity
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{IdentityAPI.DataBase.Context})">
+            <summary>
+            Creates an instance of the <see cref="T:IdentityAPI.DataBase.Context"/>.
+            </summary>
+            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:IdentityAPI.DataBase.CustomUserStore">
+            <summary>
+            Represents a new instance of a persistence store for users, using the default implementation
+            </summary>
+        </member>
+        <member name="F:IdentityAPI.DataBase.CustomUserStore._context">
+            <summary>
+            Database context
+            </summary>
+        </member>
+        <member name="F:IdentityAPI.DataBase.CustomUserStore._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.CustomUserStore.Context">
+            <summary>
+            Gets database context
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.#ctor(IdentityAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:IdentityAPI.DataBase.CustomUserStore"/>.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.AddRangeTokenAsync(System.Collections.Generic.IEnumerable{IdentityAPI.DataBase.Entities.Token})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.BlockTokens(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.GetTokensByUserId(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.FindByIdAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.FindUserAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.Dispose(System.Boolean)">
+            <summary>
+            Protected implementation of Dispose pattern.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="T:IdentityAPI.DataBase.Entities.Address">
+            <summary>
+            Entity storing address data
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.Id">
+            <summary>
+            Gets or sets a Id
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.City">
+            <summary>
+            Gets or set a city
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.Street">
+            <summary>
+            Gets or sets a street
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.NumberOfHome">
+            <summary>
+            Gets or sets a number of home
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.ApartmentNumber">
+            <summary>
+            Gets or sets a apartment number
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Address.PostalCode">
+            <summary>
+            Gets or sets a postal code
+            </summary>
+        </member>
+        <member name="T:IdentityAPI.DataBase.Entities.Token">
+            <summary>
+            Entity storing token information
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Token.Id">
+            <summary>
+            Gets or set a Id
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Token.UserId">
+            <summary>
+            Gets or set a Id of user using this token
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Token.TokenType">
+            <summary>
+            Gets or set a token type: Access token or Refresh token
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Token.Value">
+            <summary>
+            Gets or set a token value
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.Token.IsActive">
+            <summary>
+            Gets or set a token status:
+            true, if active
+            false, if not active
+            </summary>
+        </member>
+        <member name="T:IdentityAPI.DataBase.Entities.User">
+            <summary>
+            Entity storing user data
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.Name">
+            <summary>
+            Gets or sets a name
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.Surname">
+            <summary>
+            Gets or sets a surname
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.BirthDate">
+            <summary>
+            Gets or sets a birth date
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.AddressId">
+            <summary>
+            Gets or sets a address Id
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.Address">
+            <summary>
+            Gets or sets a address
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.Entities.User.RegistrationDate">
+            <summary>
+            Gets a registration date
+            </summary>
+        </member>
+        <member name="T:IdentityAPI.DataBase.ICustomUserStore">
+            <summary>
+            Provides an abstraction for a store which manages user accounts
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.DataBase.ICustomUserStore.Context">
+            <summary>
+            Gets database context
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.DataBase.ICustomUserStore.AddRangeTokenAsync(System.Collections.Generic.IEnumerable{IdentityAPI.DataBase.Entities.Token})">
+            <summary>
+            Adds tokens <see cref="T:System.Collections.Generic.IEnumerable`1"/> in database context
+            </summary>
+            <param name="tokens"> Tokens </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="M:IdentityAPI.DataBase.ICustomUserStore.BlockTokens(System.Guid)">
+            <summary>
+            Blocks tokens: Field "IsActive" = false
+            </summary>
+            <param name="userId"> User Id </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="M:IdentityAPI.DataBase.ICustomUserStore.GetTokensByUserId(System.Guid)">
+            <summary>
+            Gets access token and refresh token by user Id
+            </summary>
+            <param name="userId"> User Id </param>
+            <returns> Task object </returns>
         </member>
         <member name="T:IdentityAPI.Exceptions.IncorrectPasswordException">
             <summary>
@@ -211,186 +394,6 @@
         <member name="M:IdentityAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:IdentityAPI.Models.DataBase.Context">
-            <summary>
-            Class for the Entity Framework database context used for identity
-            </summary>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{IdentityAPI.Models.DataBase.Context})">
-            <summary>
-            Creates an instance of the <see cref="T:IdentityAPI.Models.DataBase.Context"/>.
-            </summary>
-            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
-        </member>
-        <member name="T:IdentityAPI.Models.DataBase.CustomUserStore">
-            <summary>
-            Represents a new instance of a persistence store for users, using the default implementation
-            </summary>
-        </member>
-        <member name="F:IdentityAPI.Models.DataBase.CustomUserStore._context">
-            <summary>
-            Database context
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.CustomUserStore.Context">
-            <summary>
-            Gets database context
-            </summary>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.#ctor(IdentityAPI.Models.DataBase.Context)">
-            <summary>
-            Creates an instance of the <see cref="T:IdentityAPI.Models.DataBase.CustomUserStore"/>.
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.AddRangeTokenAsync(System.Collections.Generic.IEnumerable{IdentityAPI.Models.DataBase.Entities.Token})">
-            <inheritdoc/>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.BlockTokens(System.Guid)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.GetTokensByUserId(System.Guid)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.FindByIdAsync(System.String,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.CustomUserStore.FindUserAsync(System.String,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
-        <member name="T:IdentityAPI.Models.DataBase.Entities.Address">
-            <summary>
-            Entity storing address data
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.Id">
-            <summary>
-            Gets or sets a Id
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.City">
-            <summary>
-            Gets or set a city
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.Street">
-            <summary>
-            Gets or sets a street
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.NumberOfHome">
-            <summary>
-            Gets or sets a number of home
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.ApartmentNumber">
-            <summary>
-            Gets or sets a apartment number
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Address.PostalCode">
-            <summary>
-            Gets or sets a postal code
-            </summary>
-        </member>
-        <member name="T:IdentityAPI.Models.DataBase.Entities.Token">
-            <summary>
-            Entity storing token information
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Token.Id">
-            <summary>
-            Gets or set a Id
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Token.UserId">
-            <summary>
-            Gets or set a Id of user using this token
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Token.TokenType">
-            <summary>
-            Gets or set a token type: Access token or Refresh token
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Token.Value">
-            <summary>
-            Gets or set a token value
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.Token.IsActive">
-            <summary>
-            Gets or set a token status:
-            true, if active
-            false, if not active
-            </summary>
-        </member>
-        <member name="T:IdentityAPI.Models.DataBase.Entities.User">
-            <summary>
-            Entity storing user data
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.Name">
-            <summary>
-            Gets or sets a name
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.Surname">
-            <summary>
-            Gets or sets a surname
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.BirthDate">
-            <summary>
-            Gets or sets a birth date
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.AddressId">
-            <summary>
-            Gets or sets a address Id
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.Address">
-            <summary>
-            Gets or sets a address
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.Entities.User.RegistrationDate">
-            <summary>
-            Gets a registration date
-            </summary>
-        </member>
-        <member name="T:IdentityAPI.Models.DataBase.ICustomUserStore">
-            <summary>
-            Provides an abstraction for a store which manages user accounts
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DataBase.ICustomUserStore.Context">
-            <summary>
-            Gets database context
-            </summary>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.ICustomUserStore.AddRangeTokenAsync(System.Collections.Generic.IEnumerable{IdentityAPI.Models.DataBase.Entities.Token})">
-            <summary>
-            Adds tokens <see cref="T:System.Collections.Generic.IEnumerable`1"/> in database context
-            </summary>
-            <param name="tokens"> Tokens </param>
-            <returns> Task object </returns>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.ICustomUserStore.BlockTokens(System.Guid)">
-            <summary>
-            Blocks tokens: Field "IsActive" = false
-            </summary>
-            <param name="userId"> User Id </param>
-            <returns> Task object </returns>
-        </member>
-        <member name="M:IdentityAPI.Models.DataBase.ICustomUserStore.GetTokensByUserId(System.Guid)">
-            <summary>
-            Gets access token and refresh token by user Id
-            </summary>
-            <param name="userId"> User Id </param>
-            <returns> Task object </returns>
-        </member>
         <member name="T:IdentityAPI.Models.DTO.AddressDTO">
             <summary>
             Address data transfer object
@@ -506,6 +509,11 @@
             The data transfer object of the response containing the access token and refresh token
             </summary>
         </member>
+        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.UserId">
+            <summary>
+            User Id
+            </summary>
+        </member>
         <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.ExpiresIn">
             <summary>
             Access token lifetime in seconds
@@ -526,7 +534,12 @@
             Refresh token
             </summary>
         </member>
-        <member name="M:IdentityAPI.Models.DTO.AuthorizationDTOResponse.#ctor(System.Int32,System.String,System.String,System.String)">
+        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.CartId">
+            <summary>
+            User cart Id
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.Models.DTO.AuthorizationDTOResponse.#ctor(System.Int32,System.String,System.String,System.String,System.Guid)">
             <summary>
             Creates an instance of the <see cref="T:IdentityAPI.Models.DTO.AuthorizationDTOResponse"/>.
             </summary>
@@ -534,6 +547,7 @@
             <param name="accessToken"> Access token </param>
             <param name="refreshToken"> Refresh token </param>
             <param name="tokenType"> Access token type </param>
+            <param name="userId"> userId </param>
         </member>
         <member name="T:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse">
             <summary>
@@ -641,6 +655,11 @@
             Interface for class providing the APIs for managing user in a persistence store.
             </summary>
         </member>
+        <member name="P:IdentityAPI.Services.IUserService.Store">
+            <summary>
+            Represents a new instance of a persistence store for users, using the default implementation
+            </summary>
+        </member>
         <member name="M:IdentityAPI.Services.IUserService.GetById(System.Guid)">
             <summary>
             Gets the user by Id
@@ -657,7 +676,7 @@
             <returns> The task object containing the action result of get access token </returns>
             <exception cref="T:System.Security.SecurityException"> Incorrect refreshToken </exception>
         </member>
-        <member name="M:IdentityAPI.Services.IUserService.Register(IdentityAPI.Models.DataBase.Entities.User,System.String,IdentityAPI.Models.Enums.Role)">
+        <member name="M:IdentityAPI.Services.IUserService.Register(IdentityAPI.DataBase.Entities.User,System.String,IdentityAPI.Models.Enums.Role)">
             <summary>
             Registration of the new user
             </summary>
@@ -693,7 +712,7 @@
             If false, token isn't active
             </returns>
         </member>
-        <member name="M:IdentityAPI.Services.IUserService.Update(IdentityAPI.Models.DataBase.Entities.User,System.Guid)">
+        <member name="M:IdentityAPI.Services.IUserService.Update(IdentityAPI.DataBase.Entities.User,System.Guid)">
             <summary>
             Update of user date
             </summary>
@@ -720,7 +739,13 @@
         <member name="P:IdentityAPI.Services.UserService.Store">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl,IdentityAPI.Models.DataBase.ICustomUserStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{IdentityAPI.Models.DataBase.Entities.User},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{IdentityAPI.Models.DataBase.Entities.User}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{IdentityAPI.Models.DataBase.Entities.User}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{IdentityAPI.Models.DataBase.Entities.User}})">
+        <member name="F:IdentityAPI.Services.UserService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.Services.UserService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl,IdentityAPI.DataBase.ICustomUserStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{IdentityAPI.DataBase.Entities.User},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{IdentityAPI.DataBase.Entities.User}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{IdentityAPI.DataBase.Entities.User}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{IdentityAPI.DataBase.Entities.User}})">
             <summary>
             Constructs a new instance of <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/>.
             </summary>
@@ -742,7 +767,7 @@
         <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.Models.DTO.LoginDTORequest)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.Register(IdentityAPI.Models.DataBase.Entities.User,System.String,IdentityAPI.Models.Enums.Role)">
+        <member name="M:IdentityAPI.Services.UserService.Register(IdentityAPI.DataBase.Entities.User,System.String,IdentityAPI.Models.Enums.Role)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.GetAccessToken(System.String)">
@@ -754,16 +779,19 @@
         <member name="M:IdentityAPI.Services.UserService.TokensIsActive(System.Guid)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.Update(IdentityAPI.Models.DataBase.Entities.User,System.Guid)">
+        <member name="M:IdentityAPI.Services.UserService.Update(IdentityAPI.DataBase.Entities.User,System.Guid)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.CreateCart(System.Guid)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.Models.DataBase.Entities.User,System.String)">
+        <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.DataBase.Entities.User,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.GenerateTokens(System.Guid,System.String,System.Collections.Generic.List{System.Security.Claims.Claim})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.Services.UserService.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
     </members>

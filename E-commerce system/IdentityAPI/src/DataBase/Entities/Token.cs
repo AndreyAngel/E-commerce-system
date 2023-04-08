@@ -1,6 +1,6 @@
 ﻿using IdentityAPI.Models.Enums;
 
-namespace IdentityAPI.Models.DataBase.Entities;
+namespace IdentityAPI.DataBase.Entities;
 
 /// <summary>
 /// Entity storing token information

@@ -1,18 +1,21 @@
-using IdentityAPI.Models.DataBase.Entities;
 using IdentityAPI.Models.DTO;
 using IdentityAPI.Exceptions;
 using System.Security;
 using IdentityAPI.Models.Enums;
-using IdentityAPI.Models.DataBase;
 using Infrastructure.Exceptions;
+using IdentityAPI.DataBase.Entities;
+using IdentityAPI.DataBase;
 
 namespace IdentityAPI.Services;
 
 /// <summary>
 /// Interface for class providing the APIs for managing user in a persistence store.
 /// </summary>
-public interface IUserService : IDisposable
+public interface IUserService
 {
+    /// <summary>
+    /// Represents a new instance of a persistence store for users, using the default implementation
+    /// </summary>
     public ICustomUserStore Store { get; }
 
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using IdentityAPI.Models.DataBase.Entities;
+using IdentityAPI.DataBase.Entities;
 
 namespace IdentityAPI.Helpers;
 

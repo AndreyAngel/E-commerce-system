@@ -56,17 +56,10 @@ public class BrandController : ControllerBase
     [ProducesResponseType(typeof(List<BrandDTOResponse>), (int)HttpStatusCode.OK)]
     public IActionResult GetAll()
     {
-        try
-        {
-            var result = _service.GetAll();
-            var res = _mapper.Map<List<BrandDTOResponse>>(result);
+        var result = _service.GetAll();
+        var res = _mapper.Map<List<BrandDTOResponse>>(result);
 
-            return Ok(res);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
-        }
+        return Ok(res);
     }
 
     /// <summary>
@@ -90,10 +83,6 @@ public class BrandController : ControllerBase
         catch(NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -119,10 +108,6 @@ public class BrandController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -154,10 +139,6 @@ public class BrandController : ControllerBase
         catch (ObjectNotUniqueException ex)
         {
             return Conflict(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 
@@ -197,10 +178,6 @@ public class BrandController : ControllerBase
         catch (NotFoundException ex)
         {
             return NotFound(ex.Message);
-        }
-        finally
-        {
-            _unitOfWork.Dispose();
         }
     }
 }

@@ -16,6 +16,12 @@ public class CategoryService: ICategoryService
     private readonly IUnitOfWork _db;
 
     /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
+
+    /// <summary>
     /// Creates an instance of the <see cref="ProductService"/>.
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
@@ -24,15 +30,20 @@ public class CategoryService: ICategoryService
         _db = unitOfWork;
     }
 
+    ~CategoryService() => Dispose(false);
+
     /// <inheritdoc/>
     public List<Category> GetAll()
     {
+        ThrowIfDisposed();
         return _db.Categories.GetAll().ToList();
     }
 
     /// <inheritdoc/>
     public Category GetById(Guid id)
     {
+        ThrowIfDisposed();
+
         var res = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
         if (res == null)
@@ -46,6 +57,8 @@ public class CategoryService: ICategoryService
     /// <inheritdoc/>
     public Category GetByName(string name)
     {
+        ThrowIfDisposed();
+
         var res = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
 
         if (res == null)
@@ -59,6 +72,8 @@ public class CategoryService: ICategoryService
     /// <inheritdoc/>
     public async Task<Category> Create(Category category)
     {
+        ThrowIfDisposed();
+
         if (_db.Categories.GetAll().SingleOrDefault(x => x.Name == category.Name) != null)
         {
             throw new ObjectNotUniqueException("category with this name alredy exists!", nameof(category.Name));
@@ -72,6 +87,8 @@ public class CategoryService: ICategoryService
     /// <inheritdoc/>
     public async Task<Category> Update(Category category)
     {
+        ThrowIfDisposed();
+
         var res = _db.Categories.GetById(category.Id);
 
         if (res == null)
@@ -88,5 +105,35 @@ public class CategoryService: ICategoryService
         await _db.Categories.UpdateAsync(category);
 
         return category;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

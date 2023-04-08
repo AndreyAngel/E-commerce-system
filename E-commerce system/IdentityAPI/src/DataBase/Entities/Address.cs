@@ -1,4 +1,4 @@
-﻿namespace IdentityAPI.Models.DataBase.Entities;
+﻿namespace IdentityAPI.DataBase.Entities;
 
 /// <summary>
 /// Entity storing address data

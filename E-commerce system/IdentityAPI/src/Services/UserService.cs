@@ -218,7 +218,8 @@ public class UserService : UserManager<User>, IUserService
     private async Task CreateCart(Guid userId)
     {
         ThrowIfDisposed();
-        await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId), new("rabbitmq://localhost/createCartQueue"));
+        await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId),
+            new($"{_configuration["RabbitMQ:Host"]}/createCartQueue"));
     }
 
     /// <inheritdoc/>

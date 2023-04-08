@@ -1,6 +1,5 @@
 using IdentityAPI.Helpers;
 using IdentityAPI.Services;
-using IdentityAPI;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +13,11 @@ using IdentityAPI.Models.Enums;
 using Infrastructure;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
+var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
+builder.Services.AddDbContext<Context>(options => options.UseSqlite(dataBaseConnection));
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -69,15 +68,16 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
 builder.Services.AddMassTransit(x =>
 {
     x.AddRequestClient<RabbitMQClient>();
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
-        cfg.Host("rabbitmq://localhost", settings =>
+        cfg.Host(rabbitMQSettings["Host"], settings =>
         {
-            settings.Username("guest");
-            settings.Password("guest");
+            settings.Username(rabbitMQSettings["Username"]);
+            settings.Password(rabbitMQSettings["Password"]);
         });
     }));
 });
@@ -129,13 +129,34 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+var kestrelSettings = builder.Configuration.GetSection("Kestrel");
+var kestrelLimits = kestrelSettings.GetSection("Limits");
+var kestrelEndPoints = kestrelSettings.GetSection("EndPoints");
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxConcurrentConnections = int.Parse(kestrelLimits["MaxConcurrentConnections"]);
+
+    options.Limits.MaxRequestBodySize = int.Parse(kestrelLimits["MaxRequestBodySizeInBytes"]);
+
+    options.Limits.MinRequestBodyDataRate = new MinDataRate(
+                                    
+        bytesPerSecond: double.Parse(kestrelLimits["MinRequestBodyDataRate:BytesPerSecond"]),
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(
+            kestrelLimits["MinRequestBodyDataRate:GracePeriodInSeconds"])));
+
+    options.Limits.MinResponseDataRate = new MinDataRate(
+                                    
+        bytesPerSecond: double.Parse(kestrelLimits["MinResponseDataRate:BytesPerSecond"]),                     
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(kestrelLimits["MinResponseDataRate:GracePeriodInSeconds"])));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-
     app.UseSwaggerUI();
 }
 

@@ -119,7 +119,7 @@ public class CartProductService: ICartProductService
 
         if (response.ErrorMessage != null)
         {
-            throw new EmptyOrderException(response.ErrorMessage, nameof(productId));
+            throw new CatalogApiException(response.ErrorMessage, nameof(productId));
         }
 
         return response;

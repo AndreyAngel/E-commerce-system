@@ -81,41 +81,41 @@
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.GetById(System.Guid)">
             <summary>
-            Get the category information by Id
+            Get the brand information by Id
             </summary>
-            <param name="id"> category Id </param>
-            <returns> The action result of getting category information </returns>
+            <param name="id"> Brand Id </param>
+            <returns> The action result of getting brand information </returns>
             <response code="200"> Successful completion </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.GetByName(System.String)">
             <summary>
-            Get the category information by name
+            Get the brand information by name
             </summary>
-            <param name="name"> category name </param>
-            <returns> The action result of getting category information </returns>
+            <param name="name"> Brand name </param>
+            <returns> The action result of getting brand information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> category with this name wasn't founded </response>
+            <response code="404"> Brand with this name wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.Create(CatalogAPI.Models.DTO.BrandDTORequest)">
             <summary>
-            Create a new category
+            Create a new brand
             </summary>
-            <param name="model"> category data transfer object </param>
-            <returns> The task object containing the action result of creating a new category </returns>
+            <param name="model"> Brand data transfer object </param>
+            <returns> The task object containing the action result of creating a new brand </returns>
             <response code="201"> Successful completion </response>
-            <response code="409"> category with this name already exists </response>
+            <response code="409"> Brand with this name already exists </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.BrandController.Update(System.Guid,CatalogAPI.Models.DTO.BrandDTORequest)">
             <summary>
-            Change category data
+            Change brand data
             </summary>
-            <param name="id"> category Id </param>
-            <param name="model"> category data transfer object </param>
-            <returns> The task object containing the action result of changing category </returns>
+            <param name="id"> Brand Id </param>
+            <param name="model"> Brand data transfer object </param>
+            <returns> The task object containing the action result of changing brand </returns>
             <response code="200"> Successful completion </response>
-            <response code="409"> category with this name already exists </response>
-            <response code="404"> category with this Id wasn't founded </response>
+            <response code="409"> Brand with this name already exists </response>
+            <response code="404"> Brand with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="T:CatalogAPI.Controllers.CategoryController">
@@ -158,40 +158,40 @@
             <summary>
             Get the category information by Id
             </summary>
-            <param name="id"> category Id </param>
+            <param name="id"> Category Id </param>
             <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> category with this Id wasn't founded </response>
+            <response code="404"> Category with this Id wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.GetByName(System.String)">
             <summary>
             Get the category information by name
             </summary>
-            <param name="name"> category name </param>
+            <param name="name"> Category name </param>
             <returns> The action result of getting category information </returns>
             <response code="200"> Successful completion </response>
-            <response code="404"> category with this name wasn't founded </response>
+            <response code="404"> Category with this name wasn't founded </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.Create(CatalogAPI.Models.DTO.CategoryDTORequest)">
             <summary>
             Create a new category
             </summary>
-            <param name="model"> category data transfer object </param>
+            <param name="model"> Category data transfer object </param>
             <returns> The task object containing the action result of creating a new category </returns>
             <response code="201"> Successful completion </response>
-            <response code="409"> category with this name already exists </response>
+            <response code="409"> Category with this name already exists </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.CategoryController.Update(System.Guid,CatalogAPI.Models.DTO.CategoryDTORequest)">
             <summary>
             Change category data
             </summary>
-            <param name="id"> category Id </param>
-            <param name="model"> category data transfer object </param>
+            <param name="id"> Category Id </param>
+            <param name="model"> Category data transfer object </param>
             <returns> The task object containing the action result of changing category </returns>
             <response code="200"> Successful completion </response>
-            <response code="409"> category with this name already exists </response>
-            <response code="404"> category with this Id wasn't founded </response>
+            <response code="409"> Category with this name already exists </response>
+            <response code="404"> Category with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="T:CatalogAPI.Controllers.ProductController">
@@ -276,7 +276,7 @@
             <returns> The task object containing the action result of changing product </returns>
             <response code="200"> Successful completion </response>
             <response code="409"> Product with this name already exists </response>
-            <response code="404"> Product, category or category with this Id wasn't founded </response>
+            <response code="404"> Product, category or brand with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:CatalogAPI.Controllers.ProductController.Delete(System.Guid)">

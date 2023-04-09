@@ -170,7 +170,7 @@ public class ProductController : ControllerBase
     /// <returns> The task object containing the action result of changing product </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="409"> Product with this name already exists </response>
-    /// <response code="404"> Product, category or category with this Id wasn't founded </response>
+    /// <response code="404"> Product, category or brand with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]

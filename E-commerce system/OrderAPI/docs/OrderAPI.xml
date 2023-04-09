@@ -4,6 +4,179 @@
         <name>OrderAPI</name>
     </assembly>
     <members>
+        <member name="T:OrderAPI.Controllers.CartController">
+            <summary>
+            Provides the APIs for handling all the cart logic
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Controllers.CartController._unitOfWork">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,OrderAPI.Services.Interfaces.ICartService,OrderAPI.Services.Interfaces.ICartProductService,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Controllers.CartController"/>.
+            </summary>
+            <param name="unitOfWork"></param>
+            <param name="cartService"></param>
+            <param name="productService"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.GetByCartId(System.Guid)">
+            <summary>
+            Get cart by cart Id
+            </summary>
+            <param name="cartId"> Cart Id </param>
+            <returns> Task object containig the action result of getting cart </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Incorrect cart Id </response>
+            <response code="404"> Cart with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.AddProduct(OrderAPI.Models.DTO.Cart.CartProductDTORequest)">
+            <summary>
+            Add new product to cart. If product has already existed to cart, increase the number.
+            </summary>
+            <param name="model"> Cart product data transfer object as request </param>
+            <returns> Task object containig the action result of adding product </returns>
+            <response code="201"> Product added </response>
+            <response code="401"> Bad request data </response>
+            <response code="404"> Cart or product with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.QuantityChange(System.Guid,OrderAPI.Models.DTO.Cart.CartProductDTORequest)">
+            <summary>
+            Change of the product quantity in cart
+            </summary>
+            <param name="cartProductId"> Cart product Id </param>
+            <param name="model"> Cart product data transfer object as request </param>
+            <returns> Task object containig the action result of changing quantity of product in cart </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request data </response>
+            <response code="404"> Cart or product with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.DeleteProduct(System.Guid,System.Guid)">
+            <summary>
+            Delete product from cart
+            </summary>
+            <param name="cartId"> Cart Id </param>
+            <param name="cartProductId"> Cart product Id </param>
+            <returns> Task object containig the action result of removing product from cart </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request data </response>
+            <response code="404"> Cart or product with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.CartController.Clear(System.Guid)">
+            <summary>
+            Clear of the cart
+            </summary>
+            <param name="cartId"> Cart Id </param>
+            <returns> Task object containing the action result of clearing of the cart </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Incorrect cart Id </response>
+            <response code="404"> Cart with this Id wasn't founded </response>
+        </member>
+        <member name="T:OrderAPI.Controllers.OrderController">
+            <summary>
+            Provides the APIs for handling all the order logic
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Controllers.OrderController._unitOfWork">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.#ctor(OrderAPI.Services.Interfaces.IOrderService,OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Controllers.OrderController"/>.
+            </summary>
+            <param name="unitOfWork"></param>
+            <param name="orderService"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.GetAll">
+            <summary>
+            Get all orders
+            </summary>
+            <returns> Action result of getting all orders </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.GetById(System.Guid)">
+            <summary>
+            Get order by Id
+            </summary>
+            <param name="id"> Order Id </param>
+            <returns> Action result of getting order by Id </returns>
+            <response code="200"> Successful completion </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.GetByFilter(OrderAPI.Models.DTO.Order.OrderFilterDTORequest)">
+            <summary>
+            Get orders by filters
+            </summary>
+            <param name="filter"> Orders filters </param>
+            <returns> Action result of getting order by filters </returns>
+            <response code="200"> Successful completion </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.Create(OrderAPI.Models.DTO.Order.OrderDTORequest)">
+            <summary>
+            Create order
+            </summary>
+            <param name="model"> The order data transfer object as request </param>
+            <returns> Task object containing the action result of creating order </returns>
+            <response code="201"> Order created </response>
+            <response code="401"> Order is empty </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.Update(System.Guid,OrderAPI.Models.DTO.Order.OrderDTORequest)">
+            <summary>
+            Update order data
+            </summary>
+            <param name="id"> Order Id </param>
+            <param name="model"> The order data transfer object as request </param>
+            <returns> Task object containing the action result of updating order data </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Order is empty </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.IsReady(System.Guid)">
+            <summary>
+            Order is ready
+            </summary>
+            <param name="id"> Order Id </param>
+            <returns> Task object containing the action result </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.IsReceived(System.Guid)">
+            <summary>
+            Order is recieved
+            </summary>
+            <param name="id"> Order Id </param>
+            <returns> Task object containing the action result </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.Cancel(System.Guid)">
+            <summary>
+            Cansel order
+            </summary>
+            <param name="id"> Order Id </param>
+            <returns> Task object containing the action result of canseling order </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
+        <member name="M:OrderAPI.Controllers.OrderController.IsPaymented(System.Guid)">
+            <summary>
+            Payment order
+            </summary>
+            <param name="id"> Order Id </param>
+            <returns> Task object containing the action result of paymenting order </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Bad request </response>
+            <response code="404"> Order with this Id wasn't founded </response>
+        </member>
         <member name="T:OrderAPI.Helpers.CustomAuthenticateMiddleware">
             <summary>
             Middleware adding user in context items
@@ -37,6 +210,246 @@
         </member>
         <member name="M:OrderAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Cart.CartDTOResponse">
+            <summary>
+            Cart data transfer object as response
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartDTOResponse.Id">
+            <summary>
+            Cart Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartDTOResponse.CartProducts">
+            <summary>
+            Cart products
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartDTOResponse.TotalValue">
+            <summary>
+            Total value products in cart
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Cart.CartProductDTORequest">
+            <summary>
+            Cart product data transfer object as request
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTORequest.ProductId">
+            <summary>
+            Product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTORequest.Quantity">
+            <summary>
+            The quantity products in the cart that match a product from the catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTORequest.CartId">
+            <summary>
+            Cart Id
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Cart.CartProductDTOResponse">
+            <summary>
+            Cart product data transfer object as response
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTOResponse.Id">
+            <summary>
+            Cart product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTOResponse.ProductId">
+            <summary>
+            Product Id from catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTOResponse.Product">
+            <summary>
+            Product from catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTOResponse.Quantity">
+            <summary>
+            The quantity products in the cart that match a product from the catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.CartProductDTOResponse.TotalValue">
+            <summary>
+            The total value products in the cart that match a product from the catalog
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Cart.ProductDTO">
+            <summary>
+            Product data transfer object
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.ProductDTO.Name">
+            <summary>
+            Product name
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Cart.ProductDTO.Price">
+            <summary>
+            Product price
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderCartProductDTORequest">
+            <summary>
+            Stores the product Id from the cart for the order creation request
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderCartProductDTORequest.Id">
+            <summary>
+            Cart product id
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderDTORequest">
+            <summary>
+            The order data transfer object as request
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTORequest.UserId">
+            <summary>
+            Customer Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTORequest.CartProducts">
+            <summary>
+            Cart product IDs for creation the order
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderDTOResponse">
+            <summary>
+            Data transfer object of order as response
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.Id">
+            <summary>
+            Order Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.UserId">
+            <summary>
+            Customer Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.OrderProducts">
+            <summary>
+            Order products list
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.IsReady">
+            <summary>
+            Order is ready?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.IsReceived">
+            <summary>
+            Order is received?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.IsCanceled">
+            <summary>
+            Order is canceled?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTOResponse.IsPaymented">
+            <summary>
+            Order is paymented?
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderFilterDTORequest">
+            <summary>
+            Orders filters
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderFilterDTORequest.UserId">
+            <summary>
+            Customer Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderFilterDTORequest.IsReady">
+            <summary>
+            Order is ready?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderFilterDTORequest.IsReceived">
+            <summary>
+            Order is received?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderFilterDTORequest.IsCanceled">
+            <summary>
+            Order is canseled?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderFilterDTORequest.IsPaymented">
+            <summary>
+            Order is paymented?
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderListDTOResponse">
+            <summary>
+            Orders list as response
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.Id">
+            <summary>
+            Oredr Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.UserId">
+            <summary>
+            Customer Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.IsReady">
+            <summary>
+            Order is ready?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.IsReceived">
+            <summary>
+            Order is received?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.IsCanceled">
+            <summary>
+            Oredr is canceled?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderListDTOResponse.IsPaymented">
+            <summary>
+            Order is paymented?
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.DTO.Order.OrderProductDTO">
+            <summary>
+            The order product data transfer object
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderProductDTO.Id">
+            <summary>
+            Order Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderProductDTO.ProductId">
+            <summary>
+            Product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderProductDTO.Quantity">
+            <summary>
+            Quantity of order products that match a product from the catalog 
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderProductDTO.TotalValue">
+            <summary>
+            Total value of order products that match a product from the catalog
+            </summary>
         </member>
         <member name="T:OrderAPI.Models.Enums.Role">
             <summary>

@@ -63,10 +63,10 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Get the category information by Id
+    /// Get the brand information by Id
     /// </summary>
-    /// <param name="id"> category Id </param>
-    /// <returns> The action result of getting category information </returns>
+    /// <param name="id"> Brand Id </param>
+    /// <returns> The action result of getting brand information </returns>
     /// <response code="200"> Successful completion </response>
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
@@ -87,12 +87,12 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Get the category information by name
+    /// Get the brand information by name
     /// </summary>
-    /// <param name="name"> category name </param>
-    /// <returns> The action result of getting category information </returns>
+    /// <param name="name"> Brand name </param>
+    /// <returns> The action result of getting brand information </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="404"> category with this name wasn't founded </response>
+    /// <response code="404"> Brand with this name wasn't founded </response>
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -112,12 +112,12 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new category
+    /// Create a new brand
     /// </summary>
-    /// <param name="model"> category data transfer object </param>
-    /// <returns> The task object containing the action result of creating a new category </returns>
+    /// <param name="model"> Brand data transfer object </param>
+    /// <returns> The task object containing the action result of creating a new brand </returns>
     /// <response code="201"> Successful completion </response>
-    /// <response code="409"> category with this name already exists </response>
+    /// <response code="409"> Brand with this name already exists </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
@@ -143,14 +143,14 @@ public class BrandController : ControllerBase
     }
 
     /// <summary>
-    /// Change category data
+    /// Change brand data
     /// </summary>
-    /// <param name="id"> category Id </param>
-    /// <param name="model"> category data transfer object </param>
-    /// <returns> The task object containing the action result of changing category </returns>
+    /// <param name="id"> Brand Id </param>
+    /// <param name="model"> Brand data transfer object </param>
+    /// <returns> The task object containing the action result of changing brand </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="409"> category with this name already exists </response>
-    /// <response code="404"> category with this Id wasn't founded </response>
+    /// <response code="409"> Brand with this name already exists </response>
+    /// <response code="404"> Brand with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]

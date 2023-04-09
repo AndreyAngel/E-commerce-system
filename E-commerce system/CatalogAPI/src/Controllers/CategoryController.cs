@@ -65,10 +65,10 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Get the category information by Id
     /// </summary>
-    /// <param name="id"> category Id </param>
+    /// <param name="id"> Category Id </param>
     /// <returns> The action result of getting category information </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="404"> category with this Id wasn't founded </response>
+    /// <response code="404"> Category with this Id wasn't founded </response>
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -90,10 +90,10 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Get the category information by name
     /// </summary>
-    /// <param name="name"> category name </param>
+    /// <param name="name"> Category name </param>
     /// <returns> The action result of getting category information </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="404"> category with this name wasn't founded </response>
+    /// <response code="404"> Category with this name wasn't founded </response>
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -115,10 +115,10 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Create a new category
     /// </summary>
-    /// <param name="model"> category data transfer object </param>
+    /// <param name="model"> Category data transfer object </param>
     /// <returns> The task object containing the action result of creating a new category </returns>
     /// <response code="201"> Successful completion </response>
-    /// <response code="409"> category with this name already exists </response>
+    /// <response code="409"> Category with this name already exists </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [Authorize(Policy = "ChangingOfCatalog")]
@@ -146,12 +146,12 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Change category data
     /// </summary>
-    /// <param name="id"> category Id </param>
-    /// <param name="model"> category data transfer object </param>
+    /// <param name="id"> Category Id </param>
+    /// <param name="model"> Category data transfer object </param>
     /// <returns> The task object containing the action result of changing category </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="409"> category with this name already exists </response>
-    /// <response code="404"> category with this Id wasn't founded </response>
+    /// <response code="409"> Category with this name already exists </response>
+    /// <response code="404"> Category with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]

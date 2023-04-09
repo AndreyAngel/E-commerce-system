@@ -29,12 +29,14 @@ public class RegisterDTORequest
     /// <summary>
     /// Password confirm
     /// </summary>
+    [Required]
     [Compare("Password")]
     public string? PasswordConfirm { get; set; }
 
     /// <summary>
     /// User role
     /// </summary>
+    [Required]
     [Range(0, 3, ErrorMessage = "Incorrect role")]
     public Role Role { get; set; }
 }

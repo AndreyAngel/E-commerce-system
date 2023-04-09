@@ -42,11 +42,11 @@ public static class JwtTokenHelper
     public static string ValidateToken(IConfiguration configuration, string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(configuration["Secret"]);
+        var key = Encoding.ASCII.GetBytes(configuration["Authentication:Secret"]);
 
         tokenHandler.ValidateToken(token, new TokenValidationParameters
         {
-            ValidIssuer = configuration["Issuer"],
+            ValidIssuer = configuration["Authentication:Issuer"],
             ValidateAudience = false,
             ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(key)
@@ -64,7 +64,7 @@ public static class JwtTokenHelper
     /// <returns> JWT token </returns>
     private static string GenerateJwtToken(IConfiguration configuration, List<Claim> claims, TokenType tokenType)
     {
-        var key = Encoding.UTF8.GetBytes(configuration["Secret"]);
+        var key = Encoding.UTF8.GetBytes(configuration["Authentication:Secret"]);
 
         DateTime expirationTime;
 
@@ -79,7 +79,7 @@ public static class JwtTokenHelper
         }
 
         var token = new JwtSecurityToken(
-            configuration["Issuer"],
+            configuration["Authentication:Issuer"],
             null,
             claims,
             DateTime.UtcNow,

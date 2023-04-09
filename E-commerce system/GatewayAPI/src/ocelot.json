@@ -6,7 +6,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5045
+          "Port": 44384
         }
       ],
       "UpstreamPathTemplate": "/api/v1/CatalogAPI/{everything}",
@@ -20,7 +20,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7045
+          "Port": 44361
         }
       ],
       "UpstreamPathTemplate": "/api/v1/OrderAPI/{everything}",
@@ -34,7 +34,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7281
+          "Port": 44383
         }
       ],
       "UpstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
@@ -49,7 +49,7 @@
         {
           "Name": "CatalogAPI",
           "Version": "v1",
-          "Url": "https://localhost:5045/swagger/v1/swagger.json"
+          "Url": "https://localhost:44384/swagger/v1/swagger.json"
         }
       ]
     },
@@ -60,7 +60,7 @@
         {
           "Name": "OrderAPI",
           "Version": "v1",
-          "Url": "https://localhost:7045/swagger/v1/swagger.json"
+          "Url": "https://localhost:44361/swagger/v1/swagger.json"
         }
       ]
     },
@@ -71,7 +71,7 @@
         {
           "Name": "IdentityAPI",
           "Version": "v1",
-          "Url": "https://localhost:7281/swagger/v1/swagger.json"
+          "Url": "https://localhost:44383/swagger/v1/swagger.json"
         }
       ]
     }

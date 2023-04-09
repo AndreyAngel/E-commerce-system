@@ -2,9 +2,7 @@
 using IdentityAPI.Exceptions;
 using IdentityAPI.Models.DTO;
 using IdentityAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security;
 using IdentityAPI.Helpers;
@@ -50,7 +48,7 @@ public class UserController : ControllerBase
     /// <response code="404"> User with this Id wasn't founded </response>
     /// <response code="401"> Unauthorized </response>
     [HttpGet("{userId:Guid}")]
-    [Authorize(Policy = "Public")]
+    [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType(typeof(UserDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetById(Guid userId)
@@ -75,9 +73,10 @@ public class UserController : ControllerBase
     /// <returns> The task object containing the action result of get access token </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="403"> Insecure request </response>
+    /// <response code="403"> Insecure request </response>
     [HttpPost]
-    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> GetAccessToken(GetAccessTokenDTORequest model)
     {
@@ -90,6 +89,10 @@ public class UserController : ControllerBase
         {
             return Forbid(ex.Message);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ex.Message);
+        }
     }
 
     /// <summary>
@@ -99,8 +102,8 @@ public class UserController : ControllerBase
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="201"> User registrated </response>
     /// <response code="400"> Incorrect data was sent during registration </response>
+    [Login]
     [HttpPost]
-    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Register(RegisterDTORequest model)
@@ -129,7 +132,6 @@ public class UserController : ControllerBase
     /// <response code="403"> Already authorized </response>
     [Login]
     [HttpPost]
-    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Forbidden)]
@@ -157,7 +159,7 @@ public class UserController : ControllerBase
     /// <response code="200"> Successful completion </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
-    [Authorize(Policy = "Public")]
+    [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public IActionResult Logout()
     {
@@ -176,7 +178,7 @@ public class UserController : ControllerBase
     /// <response code="400"> Bad request </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPatch("{userId:Guid}")]
-    [Authorize(Policy = "Public")]
+    [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Update(UserDTORequest model, Guid userId)

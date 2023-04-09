@@ -38,8 +38,9 @@ public class CustomAuthenticateMiddleware
         {
             var claims = context.User.Identity as ClaimsIdentity;
             var userId = claims.Claims.FirstOrDefault(x => x.Type == "UserId");
+            var accessToken = context.Request.Headers["Authorization"].ToString().Split().Last();
 
-            if (userId != null && await userService.TokensIsActive(new Guid(userId.Value)))
+            if (userId != null && await userService.TokenIsActive(accessToken))
             {
                 var user = await userService.GetById(new Guid(userId.Value));
                 context.Items["User"] = user;

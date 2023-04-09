@@ -33,4 +33,11 @@ public interface ICustomUserStore : IUserStore<User>
     /// <param name="userId"> User Id </param>
     /// <returns> Task object </returns>
     public Task<List<Token>> GetTokensByUserId(Guid userId);
+
+    /// <summary>
+    /// Gets token by value
+    /// </summary>
+    /// <param name="value"> Token value </param>
+    /// <returns></returns>
+    Task<Token> GetToken(string value);
 }

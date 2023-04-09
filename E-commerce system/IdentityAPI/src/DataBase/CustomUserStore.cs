@@ -79,6 +79,13 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore, IDisposable
     }
 
     /// <inheritdoc/>
+    public async Task<Token> GetToken(string value)
+    {
+        ThrowIfDisposed();
+        return _context.Tokens.FirstOrDefault(token => token.Value == value);
+    }
+
+    /// <inheritdoc/>
     public override async Task<User?> FindByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

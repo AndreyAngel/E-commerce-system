@@ -44,6 +44,7 @@
             <returns> The task object containing the action result of get access token </returns>
             <response code="200"> Successful completion </response>
             <response code="403"> Insecure request </response>
+            <response code="403"> Insecure request </response>
         </member>
         <member name="M:IdentityAPI.Controllers.UserController.Register(IdentityAPI.Models.DTO.RegisterDTORequest)">
             <summary>
@@ -129,6 +130,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.DataBase.CustomUserStore.GetTokensByUserId(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.DataBase.CustomUserStore.GetToken(System.String)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.DataBase.CustomUserStore.FindByIdAsync(System.String,System.Threading.CancellationToken)">
@@ -276,6 +280,13 @@
             <param name="userId"> User Id </param>
             <returns> Task object </returns>
         </member>
+        <member name="M:IdentityAPI.DataBase.ICustomUserStore.GetToken(System.String)">
+            <summary>
+            Gets token by value
+            </summary>
+            <param name="value"> Token value </param>
+            <returns></returns>
+        </member>
         <member name="T:IdentityAPI.Exceptions.IncorrectPasswordException">
             <summary>
             The exception that is throw when a incorrect password error is detected
@@ -311,6 +322,14 @@
             </summary>
             <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
             <param name="userService">The <see cref="T:IdentityAPI.Services.IUserService"/>.</param>
+        </member>
+        <member name="T:IdentityAPI.Helpers.CustomAuthorizeAttribute">
+            <summary>
+            Specifies that the class or method that this attribute is applied to requires the specified authorization.
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.Helpers.CustomAuthorizeAttribute.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <inheritdoc/>
         </member>
         <member name="T:IdentityAPI.Helpers.EnumTypesSchemaFilter">
             <summary>
@@ -699,18 +718,14 @@
             Logout from account
             </summary>
         </member>
-        <member name="M:IdentityAPI.Services.IUserService.TokensIsActive(System.Guid)">
+        <member name="M:IdentityAPI.Services.IUserService.TokenIsActive(System.String)">
             <summary>
-            Checks tokens
+            Checks token
             If true, token is active
             If false, token isn't active
             </summary>
-            <param name="userId"></param>
-            <returns> 
-            True or false 
-            If true, token is active
-            If false, token isn't active
-            </returns>
+            <param name="token"></param>
+            <returns> true if token is active, false if token isn't active </returns>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.Update(IdentityAPI.DataBase.Entities.User,System.Guid)">
             <summary>
@@ -777,6 +792,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.TokensIsActive(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.Services.UserService.TokenIsActive(System.String)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.Update(IdentityAPI.DataBase.Entities.User,System.Guid)">

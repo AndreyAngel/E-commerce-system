@@ -142,12 +142,18 @@ public class UserService : UserManager<User>, IUserService
     {
         ThrowIfDisposed();
         var validatedToken = JwtTokenHelper.ValidateToken(_configuration, refreshToken);
+
         var userId = new JwtSecurityToken(validatedToken).Claims.ToList().FirstOrDefault(x => x.Type == "UserId");
         
 
         if (userId == null)
         {
             throw new SecurityException("Incorrect refreshToken");
+        }
+
+        if (!await TokenIsActive(refreshToken))
+        {
+            throw new UnauthorizedAccessException("Unauthorization");
         }
 
         var user = await FindByIdAsync(userId.Value);
@@ -186,6 +192,14 @@ public class UserService : UserManager<User>, IUserService
         }
 
         return (tokens[0].IsActive && tokens[1].IsActive);
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> TokenIsActive(string token)
+    {
+        ThrowIfDisposed();
+
+        return (await Store.GetToken(token)).IsActive;
     }
 
     /// <inheritdoc/>

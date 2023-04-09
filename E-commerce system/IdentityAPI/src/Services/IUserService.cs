@@ -58,17 +58,13 @@ public interface IUserService
     void Logout(Guid userId);
 
     /// <summary>
-    /// Checks tokens
+    /// Checks token
     /// If true, token is active
     /// If false, token isn't active
     /// </summary>
-    /// <param name="userId"></param>
-    /// <returns> 
-    /// True or false 
-    /// If true, token is active
-    /// If false, token isn't active
-    /// </returns>
-    Task<bool> TokensIsActive(Guid userId);
+    /// <param name="token"></param>
+    /// <returns> true if token is active, false if token isn't active </returns>
+    Task<bool> TokenIsActive(string token);
 
     /// <summary>
     /// Update of user date

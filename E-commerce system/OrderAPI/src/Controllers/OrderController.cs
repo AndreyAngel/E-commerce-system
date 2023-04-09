@@ -32,7 +32,7 @@ public class OrderController : ControllerBase
     public ActionResult< List<OrderListDTOResponse> > GetAll()
     {
         var order = _orderService.GetAll();
-        var response = _mapper.Map<OrderListDTOResponse>(order);
+        var response = _mapper.Map<List<OrderListDTOResponse>>(order);
 
         return Ok(response);
     }

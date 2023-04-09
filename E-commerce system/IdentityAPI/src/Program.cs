@@ -16,6 +16,7 @@ using IdentityAPI.DataBase;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
 builder.Services.AddDbContext<Context>(options => options.UseSqlite(dataBaseConnection));
 //builder.Services.AddDbContext<Context>(options => options.UseNpgsql(dataBaseConnection));

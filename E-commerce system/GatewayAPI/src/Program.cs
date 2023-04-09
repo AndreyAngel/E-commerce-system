@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -14,6 +15,28 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var kestrelSettings = builder.Configuration.GetSection("Kestrel");
+var kestrelLimits = kestrelSettings.GetSection("Limits");
+var kestrelEndPoints = kestrelSettings.GetSection("EndPoints");
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxConcurrentConnections = int.Parse(kestrelLimits["MaxConcurrentConnections"]);
+
+    options.Limits.MaxRequestBodySize = int.Parse(kestrelLimits["MaxRequestBodySizeInBytes"]);
+
+    options.Limits.MinRequestBodyDataRate = new MinDataRate(
+
+        bytesPerSecond: double.Parse(kestrelLimits["MinRequestBodyDataRate:BytesPerSecond"]),
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(
+            kestrelLimits["MinRequestBodyDataRate:GracePeriodInSeconds"])));
+
+    options.Limits.MinResponseDataRate = new MinDataRate(
+
+        bytesPerSecond: double.Parse(kestrelLimits["MinResponseDataRate:BytesPerSecond"]),
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(kestrelLimits["MinResponseDataRate:GracePeriodInSeconds"])));
+});
 
 var app = builder.Build();
 

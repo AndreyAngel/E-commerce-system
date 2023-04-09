@@ -14,16 +14,18 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using OrderAPI.DataBase;
 using OrderAPI.Models.Enums;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = builder.Configuration["Issuer"],
+                    ValidIssuer = builder.Configuration["Authentication:Issuer"],
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Secret"])),
                 });
 
 builder.Services.AddAuthorization(options =>
@@ -44,15 +46,16 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateCartConsumer>();
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
-        cfg.Host("rabbitmq://localhost", settings =>
+        cfg.Host(rabbitMQSettings["Host"], settings =>
         {
-            settings.Username("guest");
-            settings.Password("guest");
+            settings.Username(rabbitMQSettings["Username"]);
+            settings.Password(rabbitMQSettings["Password"]);
         });
 
         cfg.ReceiveEndpoint("createCartQueue", ep =>
@@ -70,7 +73,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(x =>
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddDbContext<Context>(option => option.UseSqlite("Data Source = Order.db"));
+var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
+builder.Services.AddDbContext<Context>(option => option.UseSqlite(dataBaseConnection));
 
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
 builder.Services.AddScoped<ICartService, CartService>();
@@ -112,6 +116,28 @@ builder.Services.AddSwaggerGen(options =>
           new List<string>()
         }
     });
+});
+
+var kestrelSettings = builder.Configuration.GetSection("Kestrel");
+var kestrelLimits = kestrelSettings.GetSection("Limits");
+var kestrelEndPoints = kestrelSettings.GetSection("EndPoints");
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxConcurrentConnections = int.Parse(kestrelLimits["MaxConcurrentConnections"]);
+
+    options.Limits.MaxRequestBodySize = int.Parse(kestrelLimits["MaxRequestBodySizeInBytes"]);
+
+    options.Limits.MinRequestBodyDataRate = new MinDataRate(
+
+        bytesPerSecond: double.Parse(kestrelLimits["MinRequestBodyDataRate:BytesPerSecond"]),
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(
+            kestrelLimits["MinRequestBodyDataRate:GracePeriodInSeconds"])));
+
+    options.Limits.MinResponseDataRate = new MinDataRate(
+
+        bytesPerSecond: double.Parse(kestrelLimits["MinResponseDataRate:BytesPerSecond"]),
+        gracePeriod: TimeSpan.FromSeconds(double.Parse(kestrelLimits["MinResponseDataRate:GracePeriodInSeconds"])));
 });
 
 var app = builder.Build();

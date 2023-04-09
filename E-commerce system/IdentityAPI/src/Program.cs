@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 var builder = WebApplication.CreateBuilder(args);
 var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
 builder.Services.AddDbContext<Context>(options => options.UseSqlite(dataBaseConnection));
+//builder.Services.AddDbContext<Context>(options => options.UseNpgsql(dataBaseConnection));
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()

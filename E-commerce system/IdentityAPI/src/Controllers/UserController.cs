@@ -8,6 +8,7 @@ using System.Security;
 using IdentityAPI.Helpers;
 using Infrastructure.Exceptions;
 using IdentityAPI.DataBase.Entities;
+using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Controllers;
 
@@ -156,16 +157,16 @@ public class UserController : ControllerBase
     /// Logout from account
     /// </summary>
     /// <returns> The task object </returns>
-    /// <response code="200"> Successful completion </response>
+    /// <response code="204"> Successful completion </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [CustomAuthorize(Policy = "Public")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public IActionResult Logout()
     {
         var user = HttpContext.Items["User"] as User;
         _userService.Logout(new Guid(user.Id));
-        return Ok();
+        return NoContent();
     }
 
     ///<summary>
@@ -174,17 +175,44 @@ public class UserController : ControllerBase
     /// <param name="model"> User data DTO </param>
     /// <param name="userId"> User Id </param>
     /// <returns> Task object contaning request result </returns>
-    /// <response code="204"> Successful completion </response>
+    /// <response code="200"> Successful completion </response>
     /// <response code="400"> Bad request </response>
     /// <response code="401"> Unauthorized </response>
     [HttpPatch("{userId:Guid}")]
     [CustomAuthorize(Policy = "Public")]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Update(UserDTORequest model, Guid userId)
     {
         var user = _mapper.Map<User>(model);
         var result = await _userService.Update(user, userId);
+
+        if (result != null)
+        {
+            return BadRequest(result);
+        }
+
+        var respoonse = _mapper.Map<UserDTOResponse>(model);
+        respoonse.Id = userId.ToString();
+
+        return Ok(respoonse);
+    }
+
+    ///<summary>
+    /// Change password
+    /// </summary>
+    /// <param name="model"> Stores data for changing password </param>
+    /// <returns> Task object contaning action result of changing password </returns>
+    /// <response code="204"> Successful completion </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
+    [HttpPatch]
+    [CustomAuthorize(Policy = "Public")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> ChangePassword(ChangePasswordDTORequest model)
+    {
+        var result = await _userService.ChangePassword(model.Email, model.OldPassword, model.NewPassword);
 
         if (result != null)
         {

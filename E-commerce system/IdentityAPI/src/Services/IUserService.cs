@@ -5,6 +5,7 @@ using IdentityAPI.Models.Enums;
 using Infrastructure.Exceptions;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
+using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 
@@ -73,5 +74,14 @@ public interface IUserService
     /// <param name="userId"> User Id </param>
     /// <returns> Task object </returns>
     /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
-    Task<IdentityErrorsDTOResponse?> Update(User user, Guid userId);
+    Task<IIdentityDTOResponse?> Update(User user, Guid userId);
+
+    /// <summary>
+    /// Change password
+    /// </summary>
+    /// <param name="email"> User Email </param>
+    /// <param name="oldPassword"> Old password </param>
+    /// <param name="newPassword"> New password </param>
+    /// <returns> Task object containing result of changing password </returns>
+    Task<IIdentityDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword);
 }

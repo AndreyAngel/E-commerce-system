@@ -13,6 +13,7 @@ using Infrastructure.Exceptions;
 using Infrastructure;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
+using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 
@@ -203,7 +204,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IdentityErrorsDTOResponse?> Update(User user, Guid userId)
+    public async Task<IIdentityDTOResponse> Update(User user, Guid userId)
     {
         ThrowIfDisposed();
         var res = await FindByIdAsync(userId.ToString());
@@ -219,6 +220,27 @@ public class UserService : UserManager<User>, IUserService
         res.Address = user.Address ?? res.Address;
 
         var result = await UpdateAsync(res);
+
+        if (!result.Succeeded)
+        {
+            return new IdentityErrorsDTOResponse(result.Errors);
+        }
+
+        return null;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IIdentityDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword)
+    {
+        ThrowIfDisposed();
+        var user = await FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            throw new NotFoundException("User with this Email wasn't founded", nameof(email));
+        }
+
+        var result = await ChangePasswordAsync(user, oldPassword, newPassword);
 
         if (!result.Succeeded)
         {

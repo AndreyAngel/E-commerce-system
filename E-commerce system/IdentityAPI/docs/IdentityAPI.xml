@@ -71,7 +71,7 @@
             Logout from account
             </summary>
             <returns> The task object </returns>
-            <response code="200"> Successful completion </response>
+            <response code="204"> Successful completion </response>
             <response code="401"> Unauthorized </response>
         </member>
         <member name="M:IdentityAPI.Controllers.UserController.Update(IdentityAPI.Models.DTO.UserDTORequest,System.Guid)">
@@ -81,6 +81,16 @@
              <param name="model"> User data DTO </param>
              <param name="userId"> User Id </param>
              <returns> Task object contaning request result </returns>
+             <response code="200"> Successful completion </response>
+             <response code="400"> Bad request </response>
+             <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:IdentityAPI.Controllers.UserController.ChangePassword(IdentityAPI.Models.DTO.Requests.ChangePasswordDTORequest)">
+            <summary>
+             Change password
+             </summary>
+             <param name="model"> Stores data for changing password </param>
+             <returns> Task object contaning action result of changing password </returns>
              <response code="204"> Successful completion </response>
              <response code="400"> Bad request </response>
              <response code="401"> Unauthorized </response>
@@ -443,6 +453,26 @@
             Postal code
             </summary>
         </member>
+        <member name="T:IdentityAPI.Models.DTO.Requests.ChangePasswordDTORequest">
+            <summary>
+            Stores data for changing password
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.ChangePasswordDTORequest.Email">
+            <summary>
+            User Email
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.ChangePasswordDTORequest.OldPassword">
+            <summary>
+            Old password
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.ChangePasswordDTORequest.NewPassword">
+            <summary>
+            New password
+            </summary>
+        </member>
         <member name="T:IdentityAPI.Models.DTO.GetAccessTokenDTORequest">
             <summary>
             Model of request for get access token
@@ -736,6 +766,15 @@
             <returns> Task object </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> User with this Id wasn't founded </exception>
         </member>
+        <member name="M:IdentityAPI.Services.IUserService.ChangePassword(System.String,System.String,System.String)">
+            <summary>
+            Change password
+            </summary>
+            <param name="email"> User Email </param>
+            <param name="oldPassword"> Old password </param>
+            <param name="newPassword"> New password </param>
+            <returns> Task object containing result of changing password </returns>
+        </member>
         <member name="T:IdentityAPI.Services.UserService">
             <summary>
             Provides the APIs for managing user in a persistence store.
@@ -798,6 +837,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.Update(IdentityAPI.DataBase.Entities.User,System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IdentityAPI.Services.UserService.ChangePassword(System.String,System.String,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.CreateCart(System.Guid)">

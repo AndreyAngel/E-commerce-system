@@ -12,12 +12,24 @@ using OrderAPI.Models;
 
 namespace OrderAPI.Services;
 
+/// <summary>
+/// Сlass providing the APIs for managing cart product in a persistence store.
+/// </summary>
 public class CartProductService: ICartProductService
 {
+    /// <summary>
+    /// Repository group interface showing data context
+    /// </summary>
     private readonly IUnitOfWork _db;
 
+    /// <summary>
+    /// <see cref="IBusControl"/>.
+    /// </summary>
     private readonly IBusControl _bus;
 
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -26,6 +38,12 @@ public class CartProductService: ICartProductService
     /// </summary>
     private bool _disposed = false;
 
+    /// <summary>
+    /// Creates an instance of the <see cref="CartProductService"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="bus"> <see cref="IBusControl"/> </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public CartProductService(IUnitOfWork unitOfWork,  IBusControl bus, IMapper mapper)
     {
         _db = unitOfWork;
@@ -35,6 +53,7 @@ public class CartProductService: ICartProductService
 
     ~CartProductService() => Dispose(false);
 
+    /// <inheritdoc/>
     public async Task<CartProductDomainModel> Create(CartProductDomainModel cartProduct)
     {
         ThrowIfDisposed();
@@ -73,8 +92,7 @@ public class CartProductService: ICartProductService
         return model;
     }
 
-
-
+    /// <inheritdoc/>
     public async Task Delete(Guid id)
     {
         ThrowIfDisposed();
@@ -88,6 +106,7 @@ public class CartProductService: ICartProductService
         await _db.CartProducts.RemoveAsync(res);
     }
 
+    /// <inheritdoc/>
     public async Task<CartProductDomainModel> Update(CartProductDomainModel cartProduct)
     {
         ThrowIfDisposed();
@@ -109,28 +128,14 @@ public class CartProductService: ICartProductService
         return cartProduct;
     }
 
-    private async Task<ProductDTORabbitMQ> GetProductFromCatalog(Guid productId)
-    {
-        ThrowIfDisposed();
-
-        ProductDTORabbitMQ productDTO = new() { Id = productId };
-        Uri uri = new("rabbitmq://localhost/getProductQueue");
-        var response = await RabbitMQClient.Request<ProductDTORabbitMQ, ProductDTORabbitMQ>(_bus, productDTO, uri);
-
-        if (response.ErrorMessage != null)
-        {
-            throw new CatalogApiException(response.ErrorMessage, nameof(productId));
-        }
-
-        return response;
-    }
-
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
+    /// <inheritdoc/>
     protected void Dispose(bool disposing)
     {
         if (!_disposed)
@@ -153,5 +158,22 @@ public class CartProductService: ICartProductService
         {
             throw new ObjectDisposedException(GetType().Name);
         }
+    }
+
+    /// <inheritdoc/>
+    private async Task<ProductDTORabbitMQ> GetProductFromCatalog(Guid productId)
+    {
+        ThrowIfDisposed();
+
+        ProductDTORabbitMQ productDTO = new() { Id = productId };
+        Uri uri = new("rabbitmq://localhost/getProductQueue");
+        var response = await RabbitMQClient.Request<ProductDTORabbitMQ, ProductDTORabbitMQ>(_bus, productDTO, uri);
+
+        if (response.ErrorMessage != null)
+        {
+            throw new CatalogApiException(response.ErrorMessage, nameof(productId));
+        }
+
+        return response;
     }
 }

@@ -9,10 +9,19 @@ using AutoMapper;
 
 namespace OrderAPI.Services;
 
+/// <summary>
+/// Сlass providing the APIs for managing cart product in a persistence store.
+/// </summary>
 public class OrderService : IOrderService
 {
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Repository group interface showing data context
+    /// </summary>
     private readonly IUnitOfWork _db;
 
     /// <summary>
@@ -21,6 +30,11 @@ public class OrderService : IOrderService
     /// </summary>
     private bool _disposed = false;
 
+    /// <summary>
+    /// Creates an instance of the <see cref="OrderService"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _db = unitOfWork;
@@ -29,12 +43,14 @@ public class OrderService : IOrderService
 
     ~OrderService() => Dispose(false);
 
+    /// <inheritdoc/>
     public List<Order> GetAll()
     {
         ThrowIfDisposed();
         return _db.Orders.GetAll().ToList();
     }
 
+    /// <inheritdoc/>
     public Order GetById(Guid id)
     {
         ThrowIfDisposed();
@@ -48,6 +64,7 @@ public class OrderService : IOrderService
         return res;
     }
 
+    /// <inheritdoc/>
     public List<Order> GetByFilter(OrderFilterDTORequest filter)
     {
         ThrowIfDisposed();
@@ -76,6 +93,7 @@ public class OrderService : IOrderService
         return orders.ToList();
     }
 
+    /// <inheritdoc/>
     public async Task<Order> Create(Order order)
     {
         ThrowIfDisposed();
@@ -108,6 +126,7 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public async Task<Order> Update(Order order)
     {
         ThrowIfDisposed();
@@ -125,6 +144,7 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public async Task<Order> IsReady(Guid id)
     {
         ThrowIfDisposed();
@@ -156,6 +176,7 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public async Task<Order> IsReceived(Guid id)
     {
         ThrowIfDisposed();
@@ -187,6 +208,7 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public async Task<Order> Cancel(Guid id)
     {
         ThrowIfDisposed();
@@ -213,6 +235,7 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public async Task<Order> IsPaymented(Guid id)
     {
         ThrowIfDisposed();
@@ -239,12 +262,14 @@ public class OrderService : IOrderService
         return order;
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
+    /// <inheritdoc/>
     protected void Dispose(bool disposing)
     {
         if (!_disposed)

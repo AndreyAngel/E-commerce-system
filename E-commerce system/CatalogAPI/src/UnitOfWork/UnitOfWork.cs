@@ -30,7 +30,7 @@ public class UnitOfWork : IUnitOfWork
     public IBrandRepository Brands { get; private set; }
 
     /// <summary>
-    /// Creates an instance of the <see cref="UnitOfWork}"/>.
+    /// Creates an instance of the <see cref="UnitOfWork"/>.
     /// </summary>
     /// <param name="context"> Database context </param>
     public UnitOfWork(Context context)

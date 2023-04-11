@@ -13,7 +13,6 @@ using Infrastructure.Exceptions;
 using Infrastructure;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
-using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 
@@ -32,14 +31,14 @@ public class UserService : UserManager<User>, IUserService
     /// </summary>
     private readonly IBusControl _bus;
 
-    /// <inheritdoc/>
-    public new ICustomUserStore Store { get; init;  }
-
     /// <summary>
     /// True, if object is disposed
     /// False, if object isn't disposed
     /// </summary>
     private bool _disposed = false;
+
+    /// <inheritdoc/>
+    public new ICustomUserStore Store { get; init;  }
 
     /// <summary>
     /// Constructs a new instance of <see cref="UserManager{TUser}"/>.
@@ -251,6 +250,22 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
+    protected new void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // TODO: dispose managed state (managed objects).
+            }
+
+            _disposed = true;
+        }
+
+        base.Dispose(disposing);
+    }
+
+    /// <inheritdoc/>
     private async Task CreateCart(Guid userId)
     {
         ThrowIfDisposed();
@@ -259,7 +274,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    private async Task<AuthorizationDTOResponse> Login(User user , string password)
+    private async Task<AuthorizationDTOResponse> Login(User user, string password)
     {
         ThrowIfDisposed();
         if (!await CheckPasswordAsync(user, password))
@@ -307,21 +322,5 @@ public class UserService : UserManager<User>, IUserService
         });
 
         return new AuthorizationDTOResponse(900, accessToken, refreshToken, "Bearer", userId);
-    }
-
-    /// <inheritdoc/>
-    protected new void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects).
-            }
-
-            _disposed = true;
-        }
-
-        base.Dispose(disposing);
     }
 }

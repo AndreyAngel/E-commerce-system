@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace CatalogAPI.Helpers;
 
 /// <summary>
-/// Class for authorization handlers that need to be called for a specific requirement type
+/// User authorization handler
 /// </summary>
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {

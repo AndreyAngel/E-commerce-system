@@ -4,8 +4,12 @@ using System.Security.Claims;
 
 namespace OrderAPI.Helpers;
 
+/// <summary>
+/// User authorization handler
+/// </summary>
 public class AuthorizeHandler : AuthorizationHandler<RolesAuthorizationRequirement>
 {
+    /// <inheritdoc/>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
                                                    RolesAuthorizationRequirement requirement)
     {

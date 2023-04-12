@@ -5,11 +5,22 @@
 /// </summary>
 public class IncorrectPasswordException : ArgumentException
 {
+    /// <summary>
+    /// Creates an instance of the <see cref="IncorrectPasswordException"/>.
+    /// </summary>
     public IncorrectPasswordException() : base() { }
 
+    /// <summary>
+    /// Creates an instance of the <see cref="IncorrectPasswordException"/>.
+    /// </summary>
+    /// <param name="paramName"> Param name </param>
     public IncorrectPasswordException(string paramName) : base(paramName) { }
 
-    public IncorrectPasswordException(string message, string paramName) :
-        base(message, paramName)
+    /// <summary>
+    /// Creates an instance of the <see cref="IncorrectPasswordException"/>.
+    /// </summary>
+    /// <param name="message"> Message </param>
+    /// <param name="paramName"> Param name </param>
+    public IncorrectPasswordException(string message, string paramName) : base(message, paramName)
     { }
 }

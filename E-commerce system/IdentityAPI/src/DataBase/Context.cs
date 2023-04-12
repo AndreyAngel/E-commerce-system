@@ -18,39 +18,6 @@ public class Context : IdentityDbContext<User>
         Database.EnsureCreated();
     }
 
-    /*protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<IdentityRole>().HasData(
-
-                new IdentityRole()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Role.Admin.ToString(),
-                    NormalizedName = Role.Admin.ToString().ToUpper()
-                },
-
-                new IdentityRole()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Role.Salesman.ToString(),
-                    NormalizedName = Role.Salesman.ToString().ToUpper()
-                },
-
-                new IdentityRole()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Role.Buyer.ToString(),
-                    NormalizedName = Role.Buyer.ToString().ToUpper()
-                },
-
-                new IdentityRole()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = Role.Courier.ToString(),
-                    NormalizedName = Role.Courier.ToString().ToUpper()
-                });
-    }*/
-
     public DbSet<Address> Addresses { get; set; }
 
     public DbSet<Token> Tokens { get; set; }

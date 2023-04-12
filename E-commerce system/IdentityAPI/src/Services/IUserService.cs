@@ -5,7 +5,6 @@ using IdentityAPI.Models.Enums;
 using Infrastructure.Exceptions;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
-using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 
@@ -72,7 +71,7 @@ public interface IUserService
     /// </summary>
     /// <param name="user"> User </param>
     /// <param name="userId"> User Id </param>
-    /// <returns> Task object </returns>
+    /// <returns> Task object containing result of updating user data </returns>
     /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
     Task<IIdentityDTOResponse?> Update(User user, Guid userId);
 

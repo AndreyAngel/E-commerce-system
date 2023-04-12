@@ -181,20 +181,6 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<bool> TokensIsActive(Guid userId)
-    {
-        ThrowIfDisposed();
-        var tokens = await Store.GetTokensByUserId(userId);
-
-        if (tokens.Count == 0)
-        {
-            return false;
-        }
-
-        return (tokens[0].IsActive && tokens[1].IsActive);
-    }
-
-    /// <inheritdoc/>
     public async Task<bool> TokenIsActive(string token)
     {
         ThrowIfDisposed();
@@ -203,7 +189,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IIdentityDTOResponse> Update(User user, Guid userId)
+    public async Task<IIdentityDTOResponse?> Update(User user, Guid userId)
     {
         ThrowIfDisposed();
         var res = await FindByIdAsync(userId.ToString());

@@ -184,18 +184,25 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Update(UserDTORequest model, Guid userId)
     {
-        var user = _mapper.Map<User>(model);
-        var result = await _userService.Update(user, userId);
-
-        if (result != null)
+        try
         {
-            return BadRequest(result);
+            var user = _mapper.Map<User>(model);
+            var result = await _userService.Update(user, userId);
+
+            if (result != null)
+            {
+                return BadRequest(result);
+            }
+
+            var updatedUser = await _userService.GetById(userId);
+            var response = _mapper.Map<UserDTOResponse>(updatedUser);
+
+            return Ok(response);
         }
-
-        var respoonse = _mapper.Map<UserDTOResponse>(model);
-        respoonse.Id = userId.ToString();
-
-        return Ok(respoonse);
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     ///<summary>
@@ -212,13 +219,20 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ChangePassword(ChangePasswordDTORequest model)
     {
-        var result = await _userService.ChangePassword(model.Email, model.OldPassword, model.NewPassword);
-
-        if (result != null)
+        try
         {
-            return BadRequest(result);
-        }
+            var result = await _userService.ChangePassword(model.Email, model.OldPassword, model.NewPassword);
 
-        return NoContent();
+            if (result != null)
+            {
+                return BadRequest(result);
+            }
+
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

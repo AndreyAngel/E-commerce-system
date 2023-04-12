@@ -291,7 +291,7 @@
         </member>
         <member name="T:CatalogAPI.Helpers.AuthorizeHandler">
             <summary>
-            Class for authorization handlers that need to be called for a specific requirement type
+            User authorization handler
             </summary>
         </member>
         <member name="M:CatalogAPI.Helpers.AuthorizeHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,Microsoft.AspNetCore.Authorization.Infrastructure.RolesAuthorizationRequirement)">
@@ -924,15 +924,189 @@
             Throws if this class has been disposed.
             </summary>
         </member>
+        <member name="T:CatalogAPI.UnitOfWork.BrandRepository">
+            <summary>
+            The brand repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.BrandRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.BrandRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.CategoryRepository">
+            <summary>
+            The category repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.CategoryRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.CategoryRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.GenericRepository`1">
+            <summary>
+            The generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._context">
+            <summary>
+            Database context
+            </summary>
+        </member>
         <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.#ctor(CatalogAPI.Models.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.GenericRepository`1"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.AddAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.UpdateAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.RemoveAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.Interfaces.IBrandRepository">
+            <summary>
+            Interface for the brand repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.Interfaces.ICategoryRepository">
+            <summary>
+            Interface for the category repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1">
+            <summary>
+            Interface for the generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.GetAll">
+            <summary>
+            Get all entity objects
+            </summary>
+            <returns> List of entity objects </returns>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.GetById(System.Guid)">
+            <summary>
+            Get entity by Id
+            </summary>
+            <param name="Id"> Object Id </param>
+            <returns> One entity object </returns>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Include data from another database table
+            </summary>
+            <param name="includeProperties"> Include properties </param>
+            <returns> A new query with the released data included </returns>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.AddAsync(`0)">
+            <summary>
+            Create a new entity object
+            </summary>
+            <param name="entity"> New entity object </param>
+            <returns> New entity object </returns>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.UpdateAsync(`0)">
+            <summary>
+            Update a entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object containing updated entity object </returns>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IGenericRepository`1.RemoveAsync(`0)">
+            <summary>
+            Remove entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.Interfaces.IProductRepository">
+            <summary>
+            Interface for the product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork">
+            <summary>
+            An interface for class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork.Products">
+            <summary>
+            Interface for the product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork.Categories">
+            <summary>
+            Interface for the category repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork.Brands">
+            <summary>
+            Interface for the brand repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            Save changes
+            </summary>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.ProductRepository">
+            <summary>
+            The product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.ProductRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.ProductRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:CatalogAPI.UnitOfWork.UnitOfWork">
+            <summary>
+            The class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="F:CatalogAPI.UnitOfWork.UnitOfWork._context">
+            <summary>
+            Database context
             </summary>
         </member>
         <member name="F:CatalogAPI.UnitOfWork.UnitOfWork._disposed">
@@ -940,6 +1114,30 @@
             True, if object is disposed
             False, if object isn't disposed
             </summary>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.UnitOfWork.Products">
+            <inheritdoc/>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.UnitOfWork.Categories">
+            <inheritdoc/>
+        </member>
+        <member name="P:CatalogAPI.UnitOfWork.UnitOfWork.Brands">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.#ctor(CatalogAPI.Models.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.UnitOfWork"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.SaveChangesAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.Dispose(System.Boolean)">
+            <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.ThrowIfDisposed">
             <summary>

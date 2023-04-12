@@ -65,50 +65,28 @@ public class UserControllerGetByIdTests
         Assert.IsType<NotFoundObjectResult>(result);
     }
 
-    private async static Task<List<User>> GetTestUsers()
-    {
-        var users = new List<User>
-            {
-                new()
-                {
-                    Id = "cec7fee8-f13d-4274-b4e5-fb11074fce9d",
-                    Name = "Andrey",
-                    Surname = "Zakharov",
-                    AddressId = Guid.Parse("6AAAF302-EE45-4C96-B425-1A729EDDBA9B"),
-                    Address = new Address()
-                    {
-                        City = "Tomsk",
-                        Street = "Litkina",
-                        NumberOfHome = "8",
-                        ApartmentNumber = "811"
-                    },
-                    BirthDate = new DateTime(2004-03-31),
-                    RegistrationDate = new DateTime(2023-04-06),
-                    UserName = "admin@admin.ru",
-                    NormalizedUserName = "ADMIN@ADMIN.RU",
-                    Email = "admin@admin.ru",
-                    NormalizedEmail = "ADMIN@ADMIN.RU",
-                    PasswordHash = "AQAAAAIAAYagAAAAEAzbqUZj3x1wjLyTjnNhRixSExXvFrbfXZpNDBxHHuYWEBsm/JMJeBQieB0Ml5Q+aQ=="
-                },
-
-                new()
-                {
-                    Id = "53e44bc2-98b2-452d-9d0a-44a2ce807d80",
-                    BirthDate = new DateTime(2004-03-31),
-                    RegistrationDate = new DateTime(2023-04-06),
-                    UserName = "salesman@salesman.ru",
-                    NormalizedUserName = "SALESMAN@SALESMAN.RU",
-                    Email = "salesman@salesman.ru",
-                    NormalizedEmail = "SALESMAN@SALESMAN.RU",
-                    PasswordHash = "AQAAAAIAAYagAAAAEJFAGJk00h7/sJjPn6PVcc4KOYU/srVju+iAQQOkFmx9hUyAda8CPWzPZz54dr70cg=="
-                }
-            };
-
-        return users;
-    }
-
     private static async Task<User> GetTestUserById(string id)
     {
-        return (await GetTestUsers()).FirstOrDefault(x => x.Id == id);
+        return new User()
+        {
+            Id = "cec7fee8-f13d-4274-b4e5-fb11074fce9d",
+            Name = "Andrey",
+            Surname = "Zakharov",
+            AddressId = Guid.Parse("6AAAF302-EE45-4C96-B425-1A729EDDBA9B"),
+            Address = new Address()
+            {
+                City = "Tomsk",
+                Street = "Litkina",
+                NumberOfHome = "8",
+                ApartmentNumber = "811"
+            },
+            BirthDate = new DateTime(2004 - 03 - 31),
+            RegistrationDate = new DateTime(2023 - 04 - 06),
+            UserName = "admin@admin.ru",
+            NormalizedUserName = "ADMIN@ADMIN.RU",
+            Email = "admin@admin.ru",
+            NormalizedEmail = "ADMIN@ADMIN.RU",
+            PasswordHash = "AQAAAAIAAYagAAAAEAzbqUZj3x1wjLyTjnNhRixSExXvFrbfXZpNDBxHHuYWEBsm/JMJeBQieB0Ml5Q+aQ=="
+        };
     }
 }

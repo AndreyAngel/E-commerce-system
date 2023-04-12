@@ -302,6 +302,24 @@
             The exception that is throw when a incorrect password error is detected
             </summary>
         </member>
+        <member name="M:IdentityAPI.Exceptions.IncorrectPasswordException.#ctor">
+            <summary>
+            Creates an instance of the <see cref="T:IdentityAPI.Exceptions.IncorrectPasswordException"/>.
+            </summary>
+        </member>
+        <member name="M:IdentityAPI.Exceptions.IncorrectPasswordException.#ctor(System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:IdentityAPI.Exceptions.IncorrectPasswordException"/>.
+            </summary>
+            <param name="paramName"> Param name </param>
+        </member>
+        <member name="M:IdentityAPI.Exceptions.IncorrectPasswordException.#ctor(System.String,System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:IdentityAPI.Exceptions.IncorrectPasswordException"/>.
+            </summary>
+            <param name="message"> Message </param>
+            <param name="paramName"> Param name </param>
+        </member>
         <member name="T:IdentityAPI.Helpers.AuthorizeHandler">
             <summary>
             Class for authorization handlers that need to be called for a specific requirement type
@@ -763,7 +781,7 @@
             </summary>
             <param name="user"> User </param>
             <param name="userId"> User Id </param>
-            <returns> Task object </returns>
+            <returns> Task object containing result of updating user data </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> User with this Id wasn't founded </exception>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.ChangePassword(System.String,System.String,System.String)">
@@ -790,14 +808,14 @@
             <see cref="T:MassTransit.IBusControl"/>.
             </summary>
         </member>
-        <member name="P:IdentityAPI.Services.UserService.Store">
-            <inheritdoc/>
-        </member>
         <member name="F:IdentityAPI.Services.UserService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
+        </member>
+        <member name="P:IdentityAPI.Services.UserService.Store">
+            <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl,IdentityAPI.DataBase.ICustomUserStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{IdentityAPI.DataBase.Entities.User},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{IdentityAPI.DataBase.Entities.User}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{IdentityAPI.DataBase.Entities.User}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{IdentityAPI.DataBase.Entities.User}})">
             <summary>
@@ -830,9 +848,6 @@
         <member name="M:IdentityAPI.Services.UserService.Logout(System.Guid)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.TokensIsActive(System.Guid)">
-            <inheritdoc/>
-        </member>
         <member name="M:IdentityAPI.Services.UserService.TokenIsActive(System.String)">
             <inheritdoc/>
         </member>
@@ -842,6 +857,9 @@
         <member name="M:IdentityAPI.Services.UserService.ChangePassword(System.String,System.String,System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:IdentityAPI.Services.UserService.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:IdentityAPI.Services.UserService.CreateCart(System.Guid)">
             <inheritdoc/>
         </member>
@@ -849,9 +867,6 @@
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.GenerateTokens(System.Guid,System.String,System.Collections.Generic.List{System.Security.Claims.Claim})">
-            <inheritdoc/>
-        </member>
-        <member name="M:IdentityAPI.Services.UserService.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
     </members>

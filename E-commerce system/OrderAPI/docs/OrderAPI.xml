@@ -4,6 +4,25 @@
         <name>OrderAPI</name>
     </assembly>
     <members>
+        <member name="T:OrderAPI.Consumers.CreateCartConsumer">
+            <summary>
+            Consumer of the message for create cart
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Consumers.CreateCartConsumer._cartService">
+            <summary>
+            Interface for class providing the APIs for managing cart in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Consumers.CreateCartConsumer.#ctor(OrderAPI.Services.Interfaces.ICartService)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Consumers.CreateCartConsumer"/>.
+            </summary>
+            <param name="cartService"> Interface for class providing the APIs for managing cart in a persistence store. </param>
+        </member>
+        <member name="M:OrderAPI.Consumers.CreateCartConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.CartDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:OrderAPI.Controllers.CartController">
             <summary>
             Provides the APIs for handling all the cart logic
@@ -177,6 +196,208 @@
             <response code="401"> Bad request </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
+        <member name="T:OrderAPI.DataBase.Context">
+            <summary>
+            Class for the Entity Framework database context
+            </summary>
+        </member>
+        <member name="M:OrderAPI.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{OrderAPI.DataBase.Context})">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.DataBase.Context"/>.
+            </summary>
+            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:OrderAPI.DataBase.Entities.BaseEntity">
+            <summary>
+            Base database entity
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.BaseEntity.Id">
+            <summary>
+            Entity object Id
+            </summary>
+        </member>
+        <member name="T:OrderAPI.DataBase.Entities.Cart">
+            <summary>
+            Cart
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Cart.Id">
+            <summary>
+            Cart Id
+            Generated during user registration (UserId == CartId)
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Cart.CartProducts">
+            <summary>
+            Cart products list
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Cart.TotalValue">
+            <summary>
+            Total value of all cart products
+            </summary>
+        </member>
+        <member name="T:OrderAPI.DataBase.Entities.CartProduct">
+            <summary>
+            Cart product
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.CartProduct.ProductId">
+            <summary>
+            Product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.CartProduct.Quantity">
+            <summary>
+            Quantity
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.CartProduct.TotalValue">
+            <summary>
+            Total value of all cart products of single type
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.CartProduct.CartId">
+            <summary>
+            Cart Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.CartProduct.Cart">
+            <summary>
+            Cart
+            </summary>
+        </member>
+        <member name="T:OrderAPI.DataBase.Entities.Order">
+            <summary>
+            Order
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.UserId">
+            <summary>
+            User Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.OrderProducts">
+            <summary>
+            The order products list
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.IsReady">
+            <summary>
+            Order is ready?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.IsReceived">
+            <summary>
+            Order is received?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.IsCanceled">
+            <summary>
+            Order is canceled?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.IsPaymented">
+            <summary>
+            Order is paymented?
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.DateTime">
+            <summary>
+            Date time of creation of the order
+            </summary>
+        </member>
+        <member name="T:OrderAPI.DataBase.Entities.OrderProduct">
+            <summary>
+            The order product
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.Id">
+            <summary>
+            The order product Id
+            Cart product Id = the order product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.ProductId">
+            <summary>
+            Id of the product corresponding ofvthe product from catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.Quantity">
+            <summary>
+            Quantity of the order products
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.TotalValue">
+            <summary>
+            Total value of all order products
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.OrderId">
+            <summary>
+            The order Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.DataBase.Entities.OrderProduct.Order">
+            <summary>
+            The order
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Exceptions.EmptyOrderException">
+            <summary>
+            The exception that is throw when a empty order error is detected
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.EmptyOrderException.#ctor">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.EmptyOrderException"/>.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.EmptyOrderException.#ctor(System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.EmptyOrderException"/>.
+            </summary>
+            <param name="message"> Message </param>
+        </member>
+        <member name="M:OrderAPI.Exceptions.EmptyOrderException.#ctor(System.String,System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.EmptyOrderException"/>.
+            </summary>
+            <param name="message"> Message </param>
+            <param name="paramName"> Param name </param>
+        </member>
+        <member name="T:OrderAPI.Exceptions.OrderStatusException">
+            <summary>
+            The exception that is throw when a order status error is detected
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.OrderStatusException.#ctor">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.OrderStatusException"/>.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.OrderStatusException.#ctor(System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.OrderStatusException"/>.
+            </summary>
+            <param name="message"> Message </param>
+        </member>
+        <member name="M:OrderAPI.Exceptions.OrderStatusException.#ctor(System.String,System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.OrderStatusException"/>.
+            </summary>
+            <param name="message"> Message </param>
+            <param name="paramName"> Param name </param>
+        </member>
+        <member name="T:OrderAPI.Helpers.AuthorizeHandler">
+            <summary>
+            User authorization handler
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Helpers.AuthorizeHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,Microsoft.AspNetCore.Authorization.Infrastructure.RolesAuthorizationRequirement)">
+            <inheritdoc/>
+        </member>
         <member name="T:OrderAPI.Helpers.CustomAuthenticateMiddleware">
             <summary>
             Middleware adding user in context items
@@ -199,6 +420,16 @@
             </summary>
             <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
         </member>
+        <member name="T:OrderAPI.Helpers.MappingProfile">
+            <summary>
+            Class for models mapping
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Helpers.MappingProfile.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:OrderAPI.Helpers.MappingProfile"/>.
+            </summary>
+        </member>
         <member name="T:OrderAPI.Migrations.Initial">
             <inheritdoc />
         </member>
@@ -210,6 +441,87 @@
         </member>
         <member name="M:OrderAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
+        </member>
+        <member name="T:OrderAPI.Models.CartDomainModel">
+            <summary>
+            Cart domain model
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartDomainModel.Id">
+            <summary>
+            Cart Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartDomainModel.CartProducts">
+            <summary>
+            Cart products list
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartDomainModel.TotalValue">
+            <summary>
+            Total value of all cart products
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Models.CartDomainModel.ComputeTotalValue">
+            <summary>
+            Compute total value of all cart products
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Models.CartDomainModel.Clear">
+            <summary>
+            Clear cart
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Models.CartProductDomainModel">
+            <summary>
+            Cart product domain model
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.Id">
+            <summary>
+            Cart product Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.ProductId">
+            <summary>
+            Id of product from catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.Product">
+            <summary>
+            Product domain model corresponding to the product with catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.Quantity">
+            <summary>
+            Quantity of all cart products of single type
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.TotalValue">
+            <summary>
+            Total value of all cart product of single type
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.CartId">
+            <summary>
+            Cart Id
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.CartProductDomainModel.Cart">
+            <summary>
+            Cart
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Models.CartProductDomainModel.ComputeTotalValue">
+            <summary>
+            Compute total value of all cart porducts of single type
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Models.CartProductDomainModel.ComputeTotalValue(System.Double)">
+            <summary>
+            Compute total value of all cart porducts of single type
+            </summary>
+            <param name="price"> Price of the single cart product </param>
         </member>
         <member name="T:OrderAPI.Models.DTO.Cart.CartDTOResponse">
             <summary>
@@ -476,15 +788,101 @@
             Courier
             </summary>
         </member>
+        <member name="T:OrderAPI.Models.ProductDomainModel">
+            <summary>
+            Product domain model corresponding of the product from catalog
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.ProductDomainModel.Name">
+            <summary>
+            Name
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.ProductDomainModel.Price">
+            <summary>
+            Price
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Services.CartProductService">
+            <summary>
+            Сlass providing the APIs for managing cart product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartProductService._db">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartProductService._bus">
+            <summary>
+            <see cref="T:MassTransit.IBusControl"/>.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartProductService._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
         <member name="F:OrderAPI.Services.CartProductService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:OrderAPI.Services.CartProductService.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,MassTransit.IBusControl,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Services.CartProductService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="bus"> <see cref="T:MassTransit.IBusControl"/> </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.Create(OrderAPI.Models.CartProductDomainModel)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.Delete(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.Update(OrderAPI.Models.CartProductDomainModel)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:OrderAPI.Services.CartProductService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.CartProductService.GetProductFromCatalog(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="T:OrderAPI.Services.CartService">
+            <summary>
+            Сlass providing the APIs for managing cart product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartService._db">
+            <summary>
+            Repository group interface showing data context
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartService._bus">
+            <summary>
+            <see cref="T:MassTransit.IBusControl"/>.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartService._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.CartService._cartProductService">
+            <summary>
+            Interface for class providing the APIs for managing cart product in a persistence store.
             </summary>
         </member>
         <member name="F:OrderAPI.Services.CartService._disposed">
@@ -493,9 +891,184 @@
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:OrderAPI.Services.CartService.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,MassTransit.IBusControl,AutoMapper.IMapper,OrderAPI.Services.Interfaces.ICartProductService)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Services.CartProductService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="bus"> <see cref="T:MassTransit.IBusControl"/> </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+            <param name="cartProductService"> Interface for class providing the APIs for managing cart product in a persistence store </param>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.Create(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.ComputeTotalValue(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.Clear(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:OrderAPI.Services.CartService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.CartService.Check(OrderAPI.DataBase.Entities.Cart)">
+            <summary>
+            Checks the relevance of products and returns a new cart
+            </summary>
+            <param name="cart"> Cart objcet </param>
+            <returns> Task containing cart object with actualy product </returns>
+        </member>
+        <member name="T:OrderAPI.Services.Interfaces.ICartProductService">
+            <summary>
+            Interface for class providing the APIs for managing cart product in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartProductService.Create(OrderAPI.Models.CartProductDomainModel)">
+            <summary>
+            Create a new cart product
+            </summary>
+            <param name="cartProduct"> New cart product </param>
+            <returns> Task object containing of created cart product </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartProductService.Update(OrderAPI.Models.CartProductDomainModel)">
+            <summary>
+            Update cart product
+            </summary>
+            <param name="cartProduct"> Cart product </param>
+            <returns> Task object containing of updated cart product </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartProductService.Delete(System.Guid)">
+            <summary>
+            Delete cart product
+            </summary>
+            <param name="id"></param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:OrderAPI.Services.Interfaces.ICartService">
+            <summary>
+            Interface for class providing the APIs for managing cart in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartService.GetById(System.Guid)">
+            <summary>
+            Get cart by Id
+            </summary>
+            <param name="id"> Cart id </param>
+            <returns> Task object containing of the cart </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartService.Create(System.Guid)">
+            <summary>
+            Create a new cart
+            </summary>
+            <param name="id"> New cart Id </param>
+            <returns> Task object containing of created cart </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartService.ComputeTotalValue(System.Guid)">
+            <summary>
+            Compute total value of cart products
+            </summary>
+            <param name="id"> Cart Id </param>
+            <returns> Task object containing of the cart </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.ICartService.Clear(System.Guid)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns> Task object containing of the empty cart </returns>
+        </member>
+        <member name="T:OrderAPI.Services.Interfaces.IOrderService">
+            <summary>
+            Interface for class providing the APIs for managing cart in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.GetAll">
+            <summary>
+            Get all orders
+            </summary>
+            <returns> Orders list </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.GetById(System.Guid)">
+            <summary>
+            Get order by Id
+            </summary>
+            <param name="id"> The order Id </param>
+            <returns> Order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.GetByFilter(OrderAPI.Models.DTO.Order.OrderFilterDTORequest)">
+            <summary>
+            Get order by filters
+            </summary>
+            <param name="filter"> Filters </param>
+            <returns> Orders list </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.Create(OrderAPI.DataBase.Entities.Order)">
+            <summary>
+            Create a new order
+            </summary>
+            <param name="order"> The new order </param>
+            <returns> Task object contaning of created order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.Update(OrderAPI.DataBase.Entities.Order)">
+            <summary>
+            Update order
+            </summary>
+            <param name="order"> The order </param>
+            <returns> Task object containing of updated order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.IsReady(System.Guid)">
+            <summary>
+            The order is ready 
+            </summary>
+            <param name="id"> The order Id </param>
+            <returns> Task object containing order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.IsReceived(System.Guid)">
+            <summary>
+            The order is received
+            </summary>
+            <param name="id"> The order Id </param>
+            <returns> Task object containing order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.Cancel(System.Guid)">
+            <summary>
+            Cansel the order
+            </summary>
+            <param name="id"> The order Id </param>
+            <returns> Task object containing order </returns>
+        </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.IsPaymented(System.Guid)">
+            <summary>
+            Pay the order
+            </summary>
+            <param name="id"> The order Id </param>
+            <returns> Task object containing order </returns>
+        </member>
+        <member name="T:OrderAPI.Services.OrderService">
+            <summary>
+            Сlass providing the APIs for managing cart product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.OrderService._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.OrderService._db">
+            <summary>
+            Repository group interface showing data context
             </summary>
         </member>
         <member name="F:OrderAPI.Services.OrderService._disposed">
@@ -504,9 +1077,82 @@
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:OrderAPI.Services.OrderService.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Services.OrderService"/>.
+            </summary>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.GetByFilter(OrderAPI.Models.DTO.Order.OrderFilterDTORequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.Create(OrderAPI.DataBase.Entities.Order)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.Update(OrderAPI.DataBase.Entities.Order)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.IsReady(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.IsReceived(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.Cancel(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.IsPaymented(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:OrderAPI.Services.OrderService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.CartProductRepository">
+            <summary>
+            The cart product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.CartProductRepository.#ctor(OrderAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.CartProductRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.CartRepository">
+            <summary>
+            The cart cart repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.CartRepository.#ctor(OrderAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.CartProductRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.GenericRepository`1">
+            <summary>
+            The generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="F:OrderAPI.UnitOfWork.GenericRepository`1._context">
+            <summary>
+            Database context
             </summary>
         </member>
         <member name="F:OrderAPI.UnitOfWork.GenericRepository`1._disposed">
@@ -515,9 +1161,150 @@
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.#ctor(OrderAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.GenericRepository`1"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.AddAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.UpdateAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.RemoveAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:OrderAPI.UnitOfWork.GenericRepository`1.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.Interfaces.ICartProductRepository">
+            <summary>
+            Interface for the cart product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.Interfaces.ICartRepository">
+            <summary>
+            Interface for the cart repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1">
+            <summary>
+            Interface for the generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.GetAll">
+            <summary>
+            Get all entity objects
+            </summary>
+            <returns> Query of entity objects </returns>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.GetById(System.Guid)">
+            <summary>
+            Get entity by Id
+            </summary>
+            <param name="Id"> Object Id </param>
+            <returns> One entity object </returns>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Include data from another database table
+            </summary>
+            <param name="includeProperties"> Include properties </param>
+            <returns> A new query with the released data included </returns>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.AddAsync(`0)">
+            <summary>
+            Create a new entity object
+            </summary>
+            <param name="entity"> New entity object </param>
+            <returns> New entity object </returns>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.UpdateAsync(`0)">
+            <summary>
+            Update a entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object containing updated entity object </returns>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IGenericRepository`1.RemoveAsync(`0)">
+            <summary>
+            Remove entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.Interfaces.IOrderRepository">
+            <summary>
+            Interface for the order repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.Interfaces.IUnitOfWork">
+            <summary>
+            An interface for class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.Interfaces.IUnitOfWork.Carts">
+            <summary>
+            Interface for the cart repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.Interfaces.IUnitOfWork.CartProducts">
+            <summary>
+            Interface for the cart product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.Interfaces.IUnitOfWork.Orders">
+            <summary>
+            Interface for the order repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.Interfaces.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            Save changes
+            </summary>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.OrderRepository">
+            <summary>
+            The cart order repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.OrderRepository.#ctor(OrderAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.OrderRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:OrderAPI.UnitOfWork.UnitOfWork">
+            <summary>
+            The class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.UnitOfWork.UnitOfWork._context">
+            <summary>
+            Database context
             </summary>
         </member>
         <member name="F:OrderAPI.UnitOfWork.UnitOfWork._disposed">
@@ -525,6 +1312,36 @@
             True, if object is disposed
             False, if object isn't disposed
             </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.UnitOfWork.Carts">
+            <summary>
+            Interface for the cart repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.UnitOfWork.CartProducts">
+            <summary>
+            Interface for the cart product repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:OrderAPI.UnitOfWork.UnitOfWork.Orders">
+            <summary>
+            Interface for the order repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.UnitOfWork.#ctor(OrderAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.UnitOfWork"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.UnitOfWork.SaveChangesAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.UnitOfWork.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.UnitOfWork.UnitOfWork.Dispose(System.Boolean)">
+            <inheritdoc/>
         </member>
         <member name="M:OrderAPI.UnitOfWork.UnitOfWork.ThrowIfDisposed">
             <summary>

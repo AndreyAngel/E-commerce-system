@@ -30,37 +30,39 @@ public class UserControllerRegisterTests
     public async void Register_Returns_AuthorizationDTOResponse()
     {
         // Arrange
-        var request = CreateRegisterDTORequest();
-        var user = _mapper.Map<User>(request);
+        var model = CreateRegisterDTORequest();
+        var user = _mapper.Map<User>(model);
 
         var mockService = new Mock<IUserService>();
-        mockService.Setup(x => x.Register(user, request.Password, request.Role))
-           .ReturnsAsync(Register);
+        mockService.Setup( x => x.Register(user, model.Password, model.Role))
+           .Returns(Register());
 
         var controller = new UserController(mockService.Object, _mapper);
 
         // Act
-        var result = await controller.Register(request);
+        var result = await controller.Register(model);
 
         // Assert
         var actionResult = Assert.IsType<CreatedResult>(result);
-        var model = Assert.IsType<AuthorizationDTOResponse>(actionResult.Value);
-        Assert.Same(Register(), model);
+        var response = Assert.IsType<IIdentityDTOResponse>(actionResult.Value);
+        Assert.Same(Register(), response);
     }
 
-    private RegisterDTORequest CreateRegisterDTORequest()
+    private static RegisterDTORequest CreateRegisterDTORequest()
     {
-        return new RegisterDTORequest()
+        var request = new RegisterDTORequest()
         {
             Email = "admin@admin.ru",
             BirthDate = DateTime.Now,
-            Password = "password",
-            PasswordConfirm = "password",
+            Password = "string",
+            PasswordConfirm = "string",
             Role = 0
         };
+
+        return request;
     }
 
-    private AuthorizationDTOResponse Register()
+    private static async Task<IIdentityDTOResponse> Register()
     {
         return new AuthorizationDTOResponse(accessToken: "fsadadadsa",
                                             refreshToken: "fsadsdasdwefg",

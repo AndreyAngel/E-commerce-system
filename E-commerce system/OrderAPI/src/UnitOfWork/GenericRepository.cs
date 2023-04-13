@@ -104,7 +104,6 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
             if (disposing)
             {
                 _context.Dispose();
-                Console.WriteLine("Desposed");
             }
 
             _disposed = true;

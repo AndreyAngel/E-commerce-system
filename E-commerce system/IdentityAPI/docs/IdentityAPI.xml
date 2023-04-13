@@ -44,7 +44,6 @@
             <returns> The task object containing the action result of get access token </returns>
             <response code="200"> Successful completion </response>
             <response code="403"> Insecure request </response>
-            <response code="403"> Insecure request </response>
         </member>
         <member name="M:IdentityAPI.Controllers.UserController.Register(IdentityAPI.Models.DTO.RegisterDTORequest)">
             <summary>
@@ -281,7 +280,7 @@
             Blocks tokens: Field "IsActive" = false
             </summary>
             <param name="userId"> User Id </param>
-            <returns> Task object </returns>
+            <returns> Task object containing of list of blocked tokens </returns>
         </member>
         <member name="M:IdentityAPI.DataBase.ICustomUserStore.GetTokensByUserId(System.Guid)">
             <summary>
@@ -632,7 +631,7 @@
             </summary>
             <param name="errors"> Identity errors list </param>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.IIdentityDTOResponse">
+        <member name="T:IdentityAPI.Models.DTO.IDTOResponse">
             <summary>
             Identity response interface
             </summary>
@@ -765,6 +764,7 @@
             <summary>
             Logout from account
             </summary>
+            <returns> Task object </returns>
         </member>
         <member name="M:IdentityAPI.Services.IUserService.TokenIsActive(System.String)">
             <summary>
@@ -808,6 +808,11 @@
             <see cref="T:MassTransit.IBusControl"/>.
             </summary>
         </member>
+        <member name="F:IdentityAPI.Services.UserService._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
         <member name="F:IdentityAPI.Services.UserService._disposed">
             <summary>
             True, if object is disposed
@@ -817,7 +822,7 @@
         <member name="P:IdentityAPI.Services.UserService.Store">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl,IdentityAPI.DataBase.ICustomUserStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{IdentityAPI.DataBase.Entities.User},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{IdentityAPI.DataBase.Entities.User}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{IdentityAPI.DataBase.Entities.User}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{IdentityAPI.DataBase.Entities.User}})">
+        <member name="M:IdentityAPI.Services.UserService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl,IdentityAPI.DataBase.ICustomUserStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{IdentityAPI.DataBase.Entities.User},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{IdentityAPI.DataBase.Entities.User}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{IdentityAPI.DataBase.Entities.User}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{IdentityAPI.DataBase.Entities.User}})">
             <summary>
             Constructs a new instance of <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/>.
             </summary>
@@ -831,6 +836,7 @@
             <param name="keyNormalizer">The <see cref="T:Microsoft.AspNetCore.Identity.ILookupNormalizer"/> to use when generating index keys for users.</param>
             <param name="errors">The <see cref="T:Microsoft.AspNetCore.Identity.IdentityErrorDescriber"/> used to provider error messages.</param>
             <param name="services">The <see cref="T:System.IServiceProvider"/> used to resolve services.</param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
             <param name="logger">The logger used to log messages, warnings and errors.</param>
         </member>
         <member name="M:IdentityAPI.Services.UserService.GetById(System.Guid)">
@@ -861,7 +867,11 @@
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.CreateCart(System.Guid)">
-            <inheritdoc/>
+            <summary>
+            Request to the Order API to create a user cart
+            </summary>
+            <param name="userId"> User Id </param>
+            <returns> Task object </returns>
         </member>
         <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.DataBase.Entities.User,System.String)">
             <inheritdoc/>

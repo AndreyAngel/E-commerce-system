@@ -74,7 +74,6 @@ public class UserController : ControllerBase
     /// <returns> The task object containing the action result of get access token </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="403"> Insecure request </response>
-    /// <response code="403"> Insecure request </response>
     [HttpPost]
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
@@ -136,6 +135,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(JsonResult), (int)HttpStatusCode.Forbidden)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Login(LoginDTORequest model)
     {
         try
@@ -162,10 +162,10 @@ public class UserController : ControllerBase
     [HttpPost]
     [CustomAuthorize(Policy = "Public")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
         var user = HttpContext.Items["User"] as User;
-        _userService.Logout(new Guid(user.Id));
+        await _userService.Logout(new Guid(user.Id));
         return NoContent();
     }
 
@@ -189,15 +189,12 @@ public class UserController : ControllerBase
             var user = _mapper.Map<User>(model);
             var result = await _userService.Update(user, userId);
 
-            if (result != null)
+            if (result.GetType() == typeof(IdentityErrorsDTOResponse))
             {
                 return BadRequest(result);
             }
 
-            var updatedUser = await _userService.GetById(userId);
-            var response = _mapper.Map<UserDTOResponse>(updatedUser);
-
-            return Ok(response);
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {

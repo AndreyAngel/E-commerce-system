@@ -94,7 +94,7 @@ public class UserControllerChangePasswordTests
         };
     }
 
-    private static async Task<IIdentityDTOResponse> ChangePasswordErrors()
+    private static async Task<IDTOResponse> ChangePasswordErrors()
     {
         return new IdentityErrorsDTOResponse(errors: new List<IdentityError>()
         {

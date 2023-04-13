@@ -13,6 +13,7 @@ using Infrastructure.Exceptions;
 using Infrastructure;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
+using AutoMapper;
 
 namespace IdentityAPI.Services;
 
@@ -30,6 +31,11 @@ public class UserService : UserManager<User>, IUserService
     /// <see cref="IBusControl"/>.
     /// </summary>
     private readonly IBusControl _bus;
+
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// True, if object is disposed
@@ -53,6 +59,7 @@ public class UserService : UserManager<User>, IUserService
     /// <param name="keyNormalizer">The <see cref="ILookupNormalizer"/> to use when generating index keys for users.</param>
     /// <param name="errors">The <see cref="IdentityErrorDescriber"/> used to provider error messages.</param>
     /// <param name="services">The <see cref="IServiceProvider"/> used to resolve services.</param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     /// <param name="logger">The logger used to log messages, warnings and errors.</param>
     public UserService( IConfiguration configuration,
                         IBusControl bus,
@@ -64,6 +71,7 @@ public class UserService : UserManager<User>, IUserService
                         ILookupNormalizer keyNormalizer,
                         IdentityErrorDescriber errors,
                         IServiceProvider services,
+                        IMapper mapper,
                         ILogger<UserManager<User>> logger) : base(store,
                                                                   optionsAccessor,
                                                                   passwordHasher,
@@ -77,6 +85,7 @@ public class UserService : UserManager<User>, IUserService
         _configuration = configuration;
         _bus = bus;
         Store = store;
+        _mapper = mapper;
     }
 
     /// <inheritdoc/>
@@ -108,7 +117,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IIdentityDTOResponse> Register(User user, string password, Role role)
+    public async Task<IDTOResponse> Register(User user, string password, Role role)
     {
         ThrowIfDisposed();
         var userRole = new IdentityRole { Name = Enum.GetName(typeof(Role), role) };
@@ -174,10 +183,15 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public void Logout(Guid userId)
+    public async Task Logout(Guid userId)
     {
         ThrowIfDisposed();
-        Store.BlockTokens(userId);
+        var blockedTokens = await Store.BlockTokens(userId);
+
+        if (blockedTokens.Count > 0 && blockedTokens[0] != null)
+        {
+            await SendMessageAboutDeletingToken(blockedTokens[0].Value);
+        }
     }
 
     /// <inheritdoc/>
@@ -189,7 +203,7 @@ public class UserService : UserManager<User>, IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<IIdentityDTOResponse?> Update(User user, Guid userId)
+    public async Task<IDTOResponse?> Update(User user, Guid userId)
     {
         ThrowIfDisposed();
         var res = await FindByIdAsync(userId.ToString());
@@ -211,11 +225,13 @@ public class UserService : UserManager<User>, IUserService
             return new IdentityErrorsDTOResponse(result.Errors);
         }
 
-        return null;
+        var userDTO = _mapper.Map<UserDTOResponse>(res);
+
+        return userDTO;
     }
 
     /// <inheritdoc/>
-    public async Task<IIdentityDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword)
+    public async Task<IDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword)
     {
         ThrowIfDisposed();
         var user = await FindByEmailAsync(email);
@@ -251,12 +267,30 @@ public class UserService : UserManager<User>, IUserService
         base.Dispose(disposing);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Request to the Order API to create a user cart
+    /// </summary>
+    /// <param name="userId"> User Id </param>
+    /// <returns> Task object </returns>
     private async Task CreateCart(Guid userId)
     {
         ThrowIfDisposed();
         await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId),
             new($"{_configuration["RabbitMQ:Host"]}/createCartQueue"));
+    }
+
+    private async Task SendMessageAboutAddingToken(string token)
+    {
+        ThrowIfDisposed();
+        await RabbitMQClient.Request<TokenDTO>(_bus, new() { Value = token},
+            new($"{_configuration["RabbitMQ:Host"]}/addTokenQueue"));
+    }
+
+    private async Task SendMessageAboutDeletingToken(string tokenValue)
+    {
+        ThrowIfDisposed();
+        await RabbitMQClient.Request<TokenDTO>(_bus, new() { Value = tokenValue },
+            new($"{_configuration["RabbitMQ:Host"]}/deleteTokenQueue"));
     }
 
     /// <inheritdoc/>
@@ -288,8 +322,15 @@ public class UserService : UserManager<User>, IUserService
 
         var refreshToken = JwtTokenHelper.GenerateJwtRefreshToken(_configuration, new List<Claim>() { claims[0] });
         var accessToken = JwtTokenHelper.GenerateJwtAccessToken(_configuration, claims);
+        await SendMessageAboutAddingToken(accessToken);
 
-        await Store.BlockTokens(userId);
+        var blockedTokens = await Store.BlockTokens(userId);
+
+        if (blockedTokens.Count > 0 && blockedTokens[0] != null)
+        {
+            await SendMessageAboutDeletingToken(blockedTokens[0].Value);
+        }
+
         await Store.AddRangeTokenAsync(new List<Token>()
         {
             new Token()

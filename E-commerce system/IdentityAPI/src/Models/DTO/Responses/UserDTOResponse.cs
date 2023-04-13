@@ -3,7 +3,7 @@
 /// <summary>
 /// The data transfer object of the response containing the user data
 /// </summary>
-public class UserDTOResponse
+public class UserDTOResponse : IDTOResponse
 {
     /// <summary>
     /// User Id

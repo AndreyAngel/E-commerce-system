@@ -186,12 +186,14 @@ public class ProductService: IProductService
         return products;
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
+    /// <inheritdoc/>
     protected void Dispose(bool disposing)
     {
         if (!_disposed)

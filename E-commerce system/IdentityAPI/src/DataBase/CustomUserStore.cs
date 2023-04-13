@@ -47,7 +47,7 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task BlockTokens(Guid userId)
+    public async Task<List<Token>> BlockTokens(Guid userId)
     {
         ThrowIfDisposed();
 
@@ -69,6 +69,8 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore, IDisposable
         }
 
         await _context.SaveChangesAsync();
+
+        return new List<Token> { accessToken, refreshToken };
     }
 
     /// <inheritdoc/>

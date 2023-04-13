@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infastruc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderAPI", "OrderAPI\src\OrderAPI.csproj", "{AF158E0F-AF14-4EAB-B0D7-D39979624CD0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{93CCC988-3FEF-4959-A269-27F7210CA433}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{93CCC988-3FEF-4959-A269-27F7210CA433}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityAPI.Test", "IdentityAPI\tests\IdentityAPI.Test\IdentityAPI.Test.csproj", "{98491D0F-20FE-470F-B0FF-7640237BD990}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityAPI.Test", "IdentityAPI\tests\IdentityAPI.Test\IdentityAPI.Test.csproj", "{98491D0F-20FE-470F-B0FF-7640237BD990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

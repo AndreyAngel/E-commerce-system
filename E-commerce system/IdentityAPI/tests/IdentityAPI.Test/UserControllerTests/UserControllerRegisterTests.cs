@@ -44,7 +44,7 @@ public class UserControllerRegisterTests
 
         // Assert
         var actionResult = Assert.IsType<CreatedResult>(result);
-        var response = Assert.IsType<IIdentityDTOResponse>(actionResult.Value);
+        var response = Assert.IsType<IDTOResponse>(actionResult.Value);
         Assert.Same(Register(), response);
     }
 
@@ -62,7 +62,7 @@ public class UserControllerRegisterTests
         return request;
     }
 
-    private static async Task<IIdentityDTOResponse> Register()
+    private static async Task<IDTOResponse> Register()
     {
         return new AuthorizationDTOResponse(accessToken: "fsadadadsa",
                                             refreshToken: "fsadsdasdwefg",

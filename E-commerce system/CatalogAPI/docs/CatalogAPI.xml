@@ -676,6 +676,12 @@
         <member name="M:CatalogAPI.Services.BrandService.Update(CatalogAPI.Models.DataBase.Brand)">
             <inheritdoc/>
         </member>
+        <member name="M:CatalogAPI.Services.BrandService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.BrandService.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="M:CatalogAPI.Services.BrandService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
@@ -716,6 +722,12 @@
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.Update(CatalogAPI.Models.DataBase.Category)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.CategoryService.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.ThrowIfDisposed">
@@ -917,6 +929,12 @@
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.ProductService.CheckProducts(Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid})">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:CatalogAPI.Services.ProductService.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.ProductService.ThrowIfDisposed">

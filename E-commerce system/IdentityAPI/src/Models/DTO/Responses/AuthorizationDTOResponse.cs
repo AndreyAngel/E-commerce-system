@@ -3,7 +3,7 @@
 /// <summary>
 /// The data transfer object of the response containing the access token and refresh token
 /// </summary>
-public class AuthorizationDTOResponse : IIdentityDTOResponse
+public class AuthorizationDTOResponse : IDTOResponse
 {
     /// <summary>
     /// User Id
@@ -31,11 +31,6 @@ public class AuthorizationDTOResponse : IIdentityDTOResponse
     public string RefreshToken { get; set; }
 
     /// <summary>
-    /// User cart Id
-    /// </summary>
-    public Guid CartId { get; }
-
-    /// <summary>
     /// Creates an instance of the <see cref="AuthorizationDTOResponse"/>.
     /// </summary>
     /// <param name="expiresIn"> Access token lifetime in seconds </param>
@@ -54,6 +49,5 @@ public class AuthorizationDTOResponse : IIdentityDTOResponse
         RefreshToken = refreshToken;
         TokenType = tokenType;
         UserId = userId;
-        CartId = userId;
     }
 }

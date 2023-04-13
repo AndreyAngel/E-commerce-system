@@ -5,7 +5,7 @@ namespace IdentityAPI.Models.DTO;
 /// <summary>
 /// The data transfer object of the response containing the identity errors
 /// </summary>
-public class IdentityErrorsDTOResponse : IIdentityDTOResponse
+public class IdentityErrorsDTOResponse : IDTOResponse
 {
     /// <summary>
     /// Identity errors list

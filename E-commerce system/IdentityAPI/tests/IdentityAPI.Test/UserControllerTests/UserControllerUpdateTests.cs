@@ -37,8 +37,7 @@ public class UserControllerUpdateTests
         var userId = Guid.NewGuid();
 
         var mockService = new Mock<IUserService>();
-        mockService.Setup(x => x.Update(user, userId));
-        mockService.Setup(x => x.GetById(userId)).Returns(GetTestUserById());
+        mockService.Setup(x => x.Update(user, userId)).ReturnsAsync(await Update());
 
         var controller = new UserController(mockService.Object, _mapper);
 
@@ -98,7 +97,7 @@ public class UserControllerUpdateTests
         };
     }
 
-    private static async Task<IIdentityDTOResponse> UpdateWithErrors()
+    private static async Task<IDTOResponse?> UpdateWithErrors()
     {
         return new IdentityErrorsDTOResponse(errors: new List<IdentityError>()
         {
@@ -110,15 +109,14 @@ public class UserControllerUpdateTests
         });
     }
 
-    private static async Task<User> GetTestUserById()
+    private static async Task<IDTOResponse?> Update()
     {
-        return new User()
+        return new UserDTOResponse()
         {
             Id = "cec7fee8-f13d-4274-b4e5-fb11074fce9d",
             Name = "Andrey",
             Surname = "Zakharov",
-            AddressId = Guid.Parse("6AAAF302-EE45-4C96-B425-1A729EDDBA9B"),
-            Address = new Address()
+            Address = new AddressDTO()
             {
                 City = "Tomsk",
                 Street = "Litkina",
@@ -126,12 +124,7 @@ public class UserControllerUpdateTests
                 ApartmentNumber = "811"
             },
             BirthDate = new DateTime(2004 - 03 - 31),
-            RegistrationDate = new DateTime(2023 - 04 - 06),
-            UserName = "admin@admin.ru",
-            NormalizedUserName = "ADMIN@ADMIN.RU",
             Email = "admin@admin.ru",
-            NormalizedEmail = "ADMIN@ADMIN.RU",
-            PasswordHash = "AQAAAAIAAYagAAAAEAzbqUZj3x1wjLyTjnNhRixSExXvFrbfXZpNDBxHHuYWEBsm/JMJeBQieB0Ml5Q+aQ=="
         };
     }
 }

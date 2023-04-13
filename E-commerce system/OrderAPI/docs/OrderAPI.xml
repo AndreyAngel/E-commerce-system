@@ -49,7 +49,8 @@
             <param name="cartId"> Cart Id </param>
             <returns> Task object containig the action result of getting cart </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Incorrect cart Id </response>
+            <response code="400"> Incorrect cart Id </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Cart with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.CartController.AddProduct(OrderAPI.Models.DTO.Cart.CartProductDTORequest)">
@@ -59,7 +60,8 @@
             <param name="model"> Cart product data transfer object as request </param>
             <returns> Task object containig the action result of adding product </returns>
             <response code="201"> Product added </response>
-            <response code="401"> Bad request data </response>
+            <response code="400"> Bad request data </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Cart or product with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.CartController.QuantityChange(System.Guid,OrderAPI.Models.DTO.Cart.CartProductDTORequest)">
@@ -70,7 +72,8 @@
             <param name="model"> Cart product data transfer object as request </param>
             <returns> Task object containig the action result of changing quantity of product in cart </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request data </response>
+            <response code="400"> Bad request data </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Cart or product with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.CartController.DeleteProduct(System.Guid,System.Guid)">
@@ -81,7 +84,8 @@
             <param name="cartProductId"> Cart product Id </param>
             <returns> Task object containig the action result of removing product from cart </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request data </response>
+            <response code="400"> Bad request data </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Cart or product with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.CartController.Clear(System.Guid)">
@@ -91,7 +95,8 @@
             <param name="cartId"> Cart Id </param>
             <returns> Task object containing the action result of clearing of the cart </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Incorrect cart Id </response>
+            <response code="400"> Incorrect cart Id </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Cart with this Id wasn't founded </response>
         </member>
         <member name="T:OrderAPI.Controllers.OrderController">
@@ -118,6 +123,7 @@
             </summary>
             <returns> Action result of getting all orders </returns>
             <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.GetById(System.Guid)">
             <summary>
@@ -126,6 +132,7 @@
             <param name="id"> Order Id </param>
             <returns> Action result of getting order by Id </returns>
             <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.GetByFilter(OrderAPI.Models.DTO.Order.OrderFilterDTORequest)">
@@ -135,6 +142,7 @@
             <param name="filter"> Orders filters </param>
             <returns> Action result of getting order by filters </returns>
             <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.Create(OrderAPI.Models.DTO.Order.OrderDTORequest)">
             <summary>
@@ -143,7 +151,8 @@
             <param name="model"> The order data transfer object as request </param>
             <returns> Task object containing the action result of creating order </returns>
             <response code="201"> Order created </response>
-            <response code="401"> Order is empty </response>
+            <response code="400"> Order is empty </response>
+            <response code="401"> Unauthorized </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.Update(System.Guid,OrderAPI.Models.DTO.Order.OrderDTORequest)">
             <summary>
@@ -153,7 +162,8 @@
             <param name="model"> The order data transfer object as request </param>
             <returns> Task object containing the action result of updating order data </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Order is empty </response>
+            <response code="400"> Order is empty </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.IsReady(System.Guid)">
@@ -163,7 +173,8 @@
             <param name="id"> Order Id </param>
             <returns> Task object containing the action result </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request </response>
+            <response code="400"> Bad request </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.IsReceived(System.Guid)">
@@ -173,7 +184,8 @@
             <param name="id"> Order Id </param>
             <returns> Task object containing the action result </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request </response>
+            <response code="400"> Bad request </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.Cancel(System.Guid)">
@@ -183,7 +195,8 @@
             <param name="id"> Order Id </param>
             <returns> Task object containing the action result of canseling order </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request </response>
+            <response code="400"> Bad request </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.IsPaymented(System.Guid)">
@@ -193,7 +206,8 @@
             <param name="id"> Order Id </param>
             <returns> Task object containing the action result of paymenting order </returns>
             <response code="200"> Successful completion </response>
-            <response code="401"> Bad request </response>
+            <response code="400"> Bad request </response>
+            <response code="401"> Unauthorized </response>
             <response code="404"> Order with this Id wasn't founded </response>
         </member>
         <member name="T:OrderAPI.DataBase.Context">

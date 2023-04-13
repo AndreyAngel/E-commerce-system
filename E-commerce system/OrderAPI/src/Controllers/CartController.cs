@@ -46,30 +46,31 @@ public class CartController : ControllerBase
     }
 
     /// <summary>
-    /// Get cart by cart Id
+    /// Get cart by user Id
     /// </summary>
-    /// <param name="cartId"> Cart Id </param>
+    /// <param name="userId"> User Id </param>
     /// <returns> Task object containig the action result of getting cart </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Incorrect cart Id </response>
+    /// <response code="400"> Incorrect user Id </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart with this Id wasn't founded </response>
     [HttpGet("{cartId:Guid}")]
     [ProducesResponseType(typeof(CartDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetByCartId(Guid cartId)
+    public async Task<IActionResult> GetByUserId(Guid userId)
     {
         try
         {
-            var userId = new Guid((string?)HttpContext.Items.First(x => x.Key == "UserId").Value);
+            var currentUserId = new Guid((string)HttpContext.Items.First(x => x.Key == "UserId").Value);
 
             // The user id must match the cart id
-            if (userId != cartId)
+            if (currentUserId != userId)
             {
                 return BadRequest("Incorrect cart Id");
             }
 
-            CartDomainModel cart = await _cartService.GetById(cartId);
+            CartDomainModel cart = await _cartService.GetById(userId);
             var response = _mapper.Map<CartDTOResponse>(cart);
 
             return Ok(response);
@@ -86,7 +87,8 @@ public class CartController : ControllerBase
     /// <param name="model"> Cart product data transfer object as request </param>
     /// <returns> Task object containig the action result of adding product </returns>
     /// <response code="201"> Product added </response>
-    /// <response code="401"> Bad request data </response>
+    /// <response code="400"> Bad request data </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart or product with this Id wasn't founded </response>
     [HttpPost]
     [ProducesResponseType(typeof(CartProductDTOResponse), (int)HttpStatusCode.Created)]
@@ -131,7 +133,8 @@ public class CartController : ControllerBase
     /// <param name="model"> Cart product data transfer object as request </param>
     /// <returns> Task object containig the action result of changing quantity of product in cart </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request data </response>
+    /// <response code="400"> Bad request data </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart or product with this Id wasn't founded </response>
     [HttpPatch("{cartProductId:Guid}")]
     [ProducesResponseType(typeof(CartDTOResponse), (int)HttpStatusCode.OK)]
@@ -177,7 +180,8 @@ public class CartController : ControllerBase
     /// <param name="cartProductId"> Cart product Id </param>
     /// <returns> Task object containig the action result of removing product from cart </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request data </response>
+    /// <response code="400"> Bad request data </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart or product with this Id wasn't founded </response>
     [HttpDelete("{cartId:Guid},{cartProductId:Guid}")]
     [ProducesResponseType(typeof(CartDTOResponse), (int)HttpStatusCode.OK)]
@@ -215,7 +219,8 @@ public class CartController : ControllerBase
     /// <param name="cartId"> Cart Id </param>
     /// <returns> Task object containing the action result of clearing of the cart </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Incorrect cart Id </response>
+    /// <response code="400"> Incorrect cart Id </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart with this Id wasn't founded </response>
     [HttpDelete("{cartId:Guid}")]
     [ProducesResponseType(typeof(CartDTOResponse), (int)HttpStatusCode.OK)]

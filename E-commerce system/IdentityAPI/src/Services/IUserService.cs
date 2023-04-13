@@ -41,7 +41,7 @@ public interface IUserService
     /// <param name="Password"> User password </param>
     /// <param name="role"> User role </param>
     /// <returns> The task object containing the authorization result </returns>
-    Task<IIdentityDTOResponse> Register(User user, string Password, Role role);
+    Task<IDTOResponse> Register(User user, string Password, Role role);
 
     /// <summary>
     /// Authorization of the user
@@ -55,7 +55,8 @@ public interface IUserService
     /// <summary>
     /// Logout from account
     /// </summary>
-    void Logout(Guid userId);
+    /// <returns> Task object </returns>
+    Task Logout(Guid userId);
 
     /// <summary>
     /// Checks token
@@ -73,7 +74,7 @@ public interface IUserService
     /// <param name="userId"> User Id </param>
     /// <returns> Task object containing result of updating user data </returns>
     /// <exception cref="NotFoundException"> User with this Id wasn't founded </exception>
-    Task<IIdentityDTOResponse?> Update(User user, Guid userId);
+    Task<IDTOResponse?> Update(User user, Guid userId);
 
     /// <summary>
     /// Change password
@@ -82,5 +83,5 @@ public interface IUserService
     /// <param name="oldPassword"> Old password </param>
     /// <param name="newPassword"> New password </param>
     /// <returns> Task object containing result of changing password </returns>
-    Task<IIdentityDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword);
+    Task<IDTOResponse?> ChangePassword(string email, string oldPassword, string newPassword);
 }

@@ -3,6 +3,6 @@
 /// <summary>
 /// Identity response interface
 /// </summary>
-public interface IIdentityDTOResponse
+public interface IDTOResponse
 {
 }

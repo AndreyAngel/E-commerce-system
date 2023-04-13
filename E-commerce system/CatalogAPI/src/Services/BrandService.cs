@@ -102,12 +102,14 @@ public class BrandService: IBrandService
         return category;
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
+    /// <inheritdoc/>
     protected void Dispose(bool disposing)
     {
         if (!_disposed)

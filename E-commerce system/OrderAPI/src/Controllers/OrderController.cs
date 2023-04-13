@@ -7,7 +7,6 @@ using OrderAPI.Services.Interfaces;
 using OrderAPI.UnitOfWork.Interfaces;
 using Infrastructure.Exceptions;
 using OrderAPI.DataBase.Entities;
-using OrderAPI.Models.DTO.Cart;
 using System.Net;
 
 namespace OrderAPI.Controllers;
@@ -47,6 +46,7 @@ public class OrderController : ControllerBase
     /// </summary>
     /// <returns> Action result of getting all orders </returns>
     /// <response code="200"> Successful completion </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpGet]
     [ProducesResponseType(typeof(List<OrderListDTOResponse>), (int)HttpStatusCode.OK)]
     public IActionResult GetAll()
@@ -63,6 +63,7 @@ public class OrderController : ControllerBase
     /// <param name="id"> Order Id </param>
     /// <returns> Action result of getting order by Id </returns>
     /// <response code="200"> Successful completion </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(OrderDTOResponse), (int)HttpStatusCode.OK)]
@@ -88,6 +89,7 @@ public class OrderController : ControllerBase
     /// <param name="filter"> Orders filters </param>
     /// <returns> Action result of getting order by filters </returns>
     /// <response code="200"> Successful completion </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [ProducesResponseType(typeof(List<OrderListDTOResponse>), (int)HttpStatusCode.OK)]
     public IActionResult GetByFilter(OrderFilterDTORequest filter)
@@ -104,7 +106,8 @@ public class OrderController : ControllerBase
     /// <param name="model"> The order data transfer object as request </param>
     /// <returns> Task object containing the action result of creating order </returns>
     /// <response code="201"> Order created </response>
-    /// <response code="401"> Order is empty </response>
+    /// <response code="400"> Order is empty </response>
+    /// <response code="401"> Unauthorized </response>
     [HttpPost]
     [ProducesResponseType(typeof(OrderDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
@@ -134,7 +137,8 @@ public class OrderController : ControllerBase
     /// <param name="model"> The order data transfer object as request </param>
     /// <returns> Task object containing the action result of updating order data </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Order is empty </response>
+    /// <response code="400"> Order is empty </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(OrderDTOResponse), (int)HttpStatusCode.OK)]
@@ -168,7 +172,8 @@ public class OrderController : ControllerBase
     /// <param name="id"> Order Id </param>
     /// <returns> Task object containing the action result </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
@@ -202,7 +207,8 @@ public class OrderController : ControllerBase
     /// <param name="id"> Order Id </param>
     /// <returns> Task object containing the action result </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]
@@ -236,7 +242,8 @@ public class OrderController : ControllerBase
     /// <param name="id"> Order Id </param>
     /// <returns> Task object containing the action result of canseling order </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpPatch("{id:Guid}")]
     [ProducesResponseType(typeof(OrderDTOResponse), (int)HttpStatusCode.OK)]
@@ -269,7 +276,8 @@ public class OrderController : ControllerBase
     /// <param name="id"> Order Id </param>
     /// <returns> Task object containing the action result of paymenting order </returns>
     /// <response code="200"> Successful completion </response>
-    /// <response code="401"> Bad request </response>
+    /// <response code="400"> Bad request </response>
+    /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Order with this Id wasn't founded </response>
     [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "FullAccessToOrders")]

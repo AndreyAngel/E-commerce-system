@@ -1,8 +1,10 @@
+using DeliveryAPI.Consumers;
 using DeliveryAPI.DataBase;
 using DeliveryAPI.Helpers;
 using DeliveryAPI.Services;
 using DeliveryAPI.UnitOfWork;
 using DeliveryAPI.UnitOfWork.Interfaces;
+using MassTransit;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -56,6 +58,34 @@ builder.Services.AddSwaggerGen(options =>
           new List<string>()
         }
     });
+});
+
+var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<CreateCourierConsumer>();
+    x.AddConsumer<CreateDeliveryConsumer>();
+
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+    {
+        cfg.Host(rabbitMQSettings["Host"], settings =>
+        {
+            settings.Username(rabbitMQSettings["Username"]);
+            settings.Password(rabbitMQSettings["Password"]);
+        });
+        cfg.ReceiveEndpoint("createCourierQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<CreateCourierConsumer>(provider);
+        });
+        cfg.ReceiveEndpoint("createDeliveryQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<CreateDeliveryConsumer>(provider);
+        });
+    }));
 });
 
 var kestrelSettings = builder.Configuration.GetSection("Kestrel");

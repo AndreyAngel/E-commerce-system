@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using CatalogAPI.Models.DTO;
-using CatalogAPI.Models.DataBase;
 using CatalogAPI.Services.Interfaces;
 using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using CatalogAPI.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using CatalogAPI.DataBase.Entities;
 
 namespace CatalogAPI.Controllers;
 

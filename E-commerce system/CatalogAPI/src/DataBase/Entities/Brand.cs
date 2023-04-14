@@ -1,9 +1,11 @@
-﻿namespace CatalogAPI.Models.DataBase;
+﻿using CatalogAPI.DataBase.Entities;
+
+namespace CatalogAPI.DataBase;
 
 /// <summary>
 /// Stores category data
 /// </summary>
-public class Category : BaseEntity
+public class Brand : BaseEntity
 {
     /// <summary>
     /// Gets or sets a product list in this category

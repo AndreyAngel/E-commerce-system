@@ -3,7 +3,6 @@ using CatalogAPI.Consumers;
 using Microsoft.EntityFrameworkCore;
 using CatalogAPI.Services.Interfaces;
 using CatalogAPI.Services;
-using CatalogAPI.Models.DataBase;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.UnitOfWork;
 using CatalogAPI.Helpers;
@@ -15,10 +14,12 @@ using CatalogAPI.Models;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using CatalogAPI.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers().AddNewtonsoftJson(x =>
             x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 

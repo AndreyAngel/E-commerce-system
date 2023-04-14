@@ -1,16 +1,15 @@
-﻿using CatalogAPI.DataBase;
-using CatalogAPI.DataBase.Entities;
-using CatalogAPI.UnitOfWork.Interfaces;
+﻿using DeliveryAPI.DataBase;
+using DeliveryAPI.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace CatalogAPI.UnitOfWork;
+namespace DeliveryAPI.UnitOfWork;
 
 /// <summary>
 /// The generic repository class containing methods for interaction with the database
 /// </summary>
 /// <typeparam name="TEntity"> Entity type </typeparam>
-public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
+public class GenericRepository<TEntity> : IGenericRepositoty<TEntity> where TEntity : class
 {
     /// <summary>
     /// Database context

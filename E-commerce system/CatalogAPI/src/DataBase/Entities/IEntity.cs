@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Models.DataBase;
+﻿namespace CatalogAPI.DataBase.Entities;
 
 /// <summary>
 /// Base entity interface
@@ -14,7 +14,7 @@ public interface IEntity
     /// Gets or sets a name
     /// </summary>
     string Name { get; set; }
-    
+
     /// <summary>
     /// Gets or sets description
     /// </summary>

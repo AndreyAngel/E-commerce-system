@@ -1,4 +1,4 @@
-﻿namespace CatalogAPI.Models.DataBase;
+﻿namespace CatalogAPI.DataBase.Entities;
 
 /// <summary>
 /// Stores base entity data

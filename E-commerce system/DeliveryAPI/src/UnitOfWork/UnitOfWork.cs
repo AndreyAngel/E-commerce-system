@@ -1,7 +1,7 @@
-﻿using CatalogAPI.DataBase;
-using CatalogAPI.UnitOfWork.Interfaces;
+﻿using DeliveryAPI.DataBase;
+using DeliveryAPI.UnitOfWork.Interfaces;
 
-namespace CatalogAPI.UnitOfWork;
+namespace DeliveryAPI.UnitOfWork;
 
 /// <summary>
 /// The class that implements the unit of work pattern
@@ -21,13 +21,10 @@ public class UnitOfWork : IUnitOfWork
     private bool _disposed = false;
 
     /// <inheritdoc/>
-    public IProductRepository Products { get; private set; }
+    public IDeliveryRepository Deliveries { get; private set; }
 
     /// <inheritdoc/>
-    public ICategoryRepository Categories { get; private set; }
-
-    /// <inheritdoc/>
-    public IBrandRepository Brands { get; private set; }
+    public ICourierRepository Couriers { get; private set; }
 
     /// <summary>
     /// Creates an instance of the <see cref="UnitOfWork"/>.
@@ -36,9 +33,8 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(Context context)
     {
         _context = context;
-        Products = new ProductRepository(context);
-        Categories = new CategoryRepository(context);
-        Brands = new BrandRepository(context);
+        Deliveries = new DeliveryRepository(context);
+        Couriers = new CourierRepository(context);
     }
 
     ~UnitOfWork() => Dispose(false);
@@ -65,9 +61,8 @@ public class UnitOfWork : IUnitOfWork
             if (disposing)
             {
                 _context.Dispose();
-                Products.Dispose();
-                Categories.Dispose();
-                Brands.Dispose();
+                Deliveries.Dispose();
+                Couriers.Dispose();
             }
 
             _disposed = true;

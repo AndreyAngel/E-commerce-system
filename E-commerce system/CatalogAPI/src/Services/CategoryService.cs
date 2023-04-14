@@ -1,7 +1,7 @@
 ﻿using CatalogAPI.Services.Interfaces;
 using Infrastructure.Exceptions;
-using CatalogAPI.Models.DataBase;
 using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.DataBase.Entities;
 
 namespace CatalogAPI.Services;
 

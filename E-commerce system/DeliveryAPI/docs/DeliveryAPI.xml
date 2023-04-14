@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeliveryAPI</name>
+    </assembly>
+    <members>
+        <member name="T:DeliveryAPI.DataBase.Context">
+            <summary>
+            Class for the Entity Framework database context
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{DeliveryAPI.DataBase.Context})">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.DataBase.Context"/>.
+            </summary>
+            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:DeliveryAPI.DataBase.Entities.Address">
+            <summary>
+            Delivery address
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.City">
+            <summary>
+            City
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.Street">
+            <summary>
+            Street
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.NumberOfHome">
+            <summary>
+            Number of home
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.ApartmentNumber">
+            <summary>
+            Apartment number
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Address.PostalCode">
+            <summary>
+            Postal code
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.Helpers.MappingProfile">
+            <summary>
+            Class for models mapping
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.MappingProfile.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:DeliveryAPI.Helpers.MappingProfile"/>.
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.City">
+            <summary>
+            City
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.Street">
+            <summary>
+            Street
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.NumberOfHome">
+            <summary>
+            Number of home
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.ApartmentNumber">
+            <summary>
+            Apartment number
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.PostalCode">
+            <summary>
+            Postal code
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.CourierRepository">
+            <summary>
+            The courier repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.CourierRepository.#ctor(DeliveryAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.UnitOfWork.DeliveryRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.DeliveryRepository">
+            <summary>
+            The delivery repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.DeliveryRepository.#ctor(DeliveryAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.UnitOfWork.DeliveryRepository"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.GenericRepository`1">
+            <summary>
+            The generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="F:DeliveryAPI.UnitOfWork.GenericRepository`1._context">
+            <summary>
+            Database context
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.UnitOfWork.GenericRepository`1._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.#ctor(DeliveryAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.UnitOfWork.GenericRepository`1"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.AddAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.UpdateAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.RemoveAsync(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.GenericRepository`1.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.Interfaces.ICourierRepository">
+            <summary>
+            Interface for the courier repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.Interfaces.IDeliveryRepository">
+            <summary>
+            Interface for the delivery repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1">
+            <summary>
+            Interface for the generic repository class containing methods for interaction with the database
+            </summary>
+            <typeparam name="TEntity"> Entity type </typeparam>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.GetAll">
+            <summary>
+            Get all entity objects
+            </summary>
+            <returns> List of entity objects </returns>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.GetById(System.Guid)">
+            <summary>
+            Get entity by Id
+            </summary>
+            <param name="Id"> Object Id </param>
+            <returns> One entity object </returns>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.Include(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Include data from another database table
+            </summary>
+            <param name="includeProperties"> Include properties </param>
+            <returns> A new query with the released data included </returns>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.AddAsync(`0)">
+            <summary>
+            Create a new entity object
+            </summary>
+            <param name="entity"> New entity object </param>
+            <returns> New entity object </returns>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.UpdateAsync(`0)">
+            <summary>
+            Update a entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object containing updated entity object </returns>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IGenericRepositoty`1.RemoveAsync(`0)">
+            <summary>
+            Remove entity object
+            </summary>
+            <param name="entity"> Entity object </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork">
+            <summary>
+            An interface for class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork.Deliveries">
+            <summary>
+            Interface for the delivery repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork.Couriers">
+            <summary>
+            Interface for the courier repository class containing methods for interaction with the database
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            Save changes
+            </summary>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:DeliveryAPI.UnitOfWork.UnitOfWork">
+            <summary>
+            The class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.UnitOfWork.UnitOfWork._context">
+            <summary>
+            Database context
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.UnitOfWork.UnitOfWork._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.UnitOfWork.UnitOfWork.Deliveries">
+            <inheritdoc/>
+        </member>
+        <member name="P:DeliveryAPI.UnitOfWork.UnitOfWork.Couriers">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.UnitOfWork.#ctor(DeliveryAPI.DataBase.Context)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.UnitOfWork.UnitOfWork"/>.
+            </summary>
+            <param name="context"> Database context </param>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.UnitOfWork.SaveChangesAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.UnitOfWork.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.UnitOfWork.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.UnitOfWork.UnitOfWork.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="T:OrderAPI.Exceptions.DeliveryStatusException">
+            <summary>
+            The exception that is throw when a delivery status error is detected
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.DeliveryStatusException.#ctor">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.DeliveryStatusException"/>.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Exceptions.DeliveryStatusException.#ctor(System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.DeliveryStatusException"/>.
+            </summary>
+            <param name="message"> Message </param>
+        </member>
+        <member name="M:OrderAPI.Exceptions.DeliveryStatusException.#ctor(System.String,System.String)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Exceptions.DeliveryStatusException"/>.
+            </summary>
+            <param name="message"> Message </param>
+            <param name="paramName"> Param name </param>
+        </member>
+    </members>
+</doc>

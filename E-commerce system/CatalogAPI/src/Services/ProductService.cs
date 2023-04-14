@@ -2,9 +2,9 @@
 using Infrastructure.DTO;
 using AutoMapper;
 using Infrastructure.Exceptions;
-using CatalogAPI.Models.DataBase;
 using CatalogAPI.Models.DTO;
 using CatalogAPI.UnitOfWork.Interfaces;
+using CatalogAPI.DataBase.Entities;
 
 namespace CatalogAPI.Services;
 

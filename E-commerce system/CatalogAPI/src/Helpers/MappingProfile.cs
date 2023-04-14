@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using CatalogAPI.Models.DataBase;
+using CatalogAPI.DataBase;
+using CatalogAPI.DataBase.Entities;
 using CatalogAPI.Models.DTO;
 using Infrastructure.DTO;
 

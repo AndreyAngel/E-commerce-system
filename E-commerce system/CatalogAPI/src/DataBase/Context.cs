@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CatalogAPI.DataBase.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace CatalogAPI.Models.DataBase;
+namespace CatalogAPI.DataBase;
 
 /// <summary>
 /// Class for the Entity Framework database context

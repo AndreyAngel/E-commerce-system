@@ -282,14 +282,14 @@ public class UserService : UserManager<User>, IUserService
     private async Task SendMessageAboutAddingToken(string token)
     {
         ThrowIfDisposed();
-        await RabbitMQClient.Request<TokenDTO>(_bus, new() { Value = token},
+        await RabbitMQClient.Request<TokenDTORAbbitMQ>(_bus, new() { Value = token},
             new($"{_configuration["RabbitMQ:Host"]}/addTokenQueue"));
     }
 
     private async Task SendMessageAboutDeletingToken(string tokenValue)
     {
         ThrowIfDisposed();
-        await RabbitMQClient.Request<TokenDTO>(_bus, new() { Value = tokenValue },
+        await RabbitMQClient.Request<TokenDTORAbbitMQ>(_bus, new() { Value = tokenValue },
             new($"{_configuration["RabbitMQ:Host"]}/deleteTokenQueue"));
     }
 

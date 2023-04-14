@@ -1,6 +1,9 @@
 ﻿namespace Infrastructure.DTO;
 
-public class TokenDTO
+/// <summary>
+/// Token data transfer object used by RabbitMQ
+/// </summary>
+public class TokenDTORAbbitMQ
 {
     /// <summary>
     /// Gets or set a token value

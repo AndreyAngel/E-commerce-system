@@ -30,7 +30,7 @@ public class DeliveryController : ControllerBase
     public IActionResult GetAll()
     {
         var result = _deliveryService.GetAll();
-        var response = _mapper.Map<DeliveryDTOResponse>(result);
+        var response = _mapper.Map<List<DeliveryDTOResponse>>(result);
 
         return Ok(response);
     }

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace OrderAPI.Helpers;
+namespace DeliveryAPI.Helpers;
 
 /// <summary>
 /// Middleware adding user in context items

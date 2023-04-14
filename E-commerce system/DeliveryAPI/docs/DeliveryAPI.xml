@@ -4,6 +4,44 @@
         <name>DeliveryAPI</name>
     </assembly>
     <members>
+        <member name="T:DeliveryAPI.Consumers.CreateCourierConsumer">
+            <summary>
+            Consumer of the message about creating of the user with courier role
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Consumers.CreateCourierConsumer._service">
+            <summary>
+            Object of class <see cref="T:DeliveryAPI.Services.ICourierService"/> providing the APIs for managing courier in a persistence store.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Consumers.CreateCourierConsumer._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DeliveryAPI.Consumers.CreateCourierConsumer.#ctor(DeliveryAPI.Services.ICourierService,AutoMapper.IMapper)" -->
+        <member name="M:DeliveryAPI.Consumers.CreateCourierConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.CourierDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
+        <member name="T:DeliveryAPI.Consumers.CreateDeliveryConsumer">
+            <summary>
+            Consumer of the message about creating of the order with delivery
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Consumers.CreateDeliveryConsumer._service">
+            <summary>
+            Object of class <see cref="T:DeliveryAPI.Services.ICourierService"/> providing the APIs for managing delivery in a persistence store.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Consumers.CreateDeliveryConsumer._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DeliveryAPI.Consumers.CreateDeliveryConsumer.#ctor(DeliveryAPI.Services.IDeliveryService,AutoMapper.IMapper)" -->
+        <member name="M:DeliveryAPI.Consumers.CreateDeliveryConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.DeliveryDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:DeliveryAPI.DataBase.Context">
             <summary>
             Class for the Entity Framework database context
@@ -50,6 +88,36 @@
             Postal code
             </summary>
         </member>
+        <member name="T:DeliveryAPI.Helpers.AuthorizeHandler">
+            <summary>
+            User authorization handler
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.AuthorizeHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,Microsoft.AspNetCore.Authorization.Infrastructure.RolesAuthorizationRequirement)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DeliveryAPI.Helpers.CustomAuthenticateMiddleware">
+            <summary>
+            Middleware adding user in context items
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Helpers.CustomAuthenticateMiddleware._next">
+            <summary>
+            Request delegate
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.CustomAuthenticateMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of <see cref="T:DeliveryAPI.Helpers.CustomAuthenticateMiddleware"/>.
+            </summary>
+            <param name="next">The next item in the middleware pipeline.</param>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.CustomAuthenticateMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the middleware performing authentication.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
         <member name="T:DeliveryAPI.Helpers.MappingProfile">
             <summary>
             Class for models mapping
@@ -83,6 +151,47 @@
         <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.PostalCode">
             <summary>
             Postal code
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.Models.Role">
+            <summary>
+            User role
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Models.Role.Admin">
+            <summary>
+            Administrator
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Models.Role.Buyer">
+            <summary>
+            Buyer
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Models.Role.Salesman">
+            <summary>
+            Salesman
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Models.Role.Courier">
+            <summary>
+            Courier
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.DeliveryService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.ThrowIfDisposed">
+            <summary>
+            Throws if this class has been disposed.
             </summary>
         </member>
         <member name="T:DeliveryAPI.UnitOfWork.CourierRepository">

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DeliveryAPI.DataBase.Entities;
 using DeliveryAPI.Models.DTO;
+using Infrastructure.DTO;
 
 namespace DeliveryAPI.Helpers;
 
@@ -19,5 +20,9 @@ public class MappingProfile : Profile
         CreateMap<Delivery, DeliveryDTOResponse>();
 
         CreateMap<AddressDTORequest, Address>();
+
+        CreateMap<CourierDTORabbitMQ, Courier>();
+
+        CreateMap<DeliveryDTORabbitMQ,  Delivery>();
     }
 }

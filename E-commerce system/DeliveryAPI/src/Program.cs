@@ -1,14 +1,19 @@
 using DeliveryAPI.Consumers;
 using DeliveryAPI.DataBase;
 using DeliveryAPI.Helpers;
+using DeliveryAPI.Models;
 using DeliveryAPI.Services;
 using DeliveryAPI.UnitOfWork;
 using DeliveryAPI.UnitOfWork.Interfaces;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +22,38 @@ var builder = WebApplication.CreateBuilder(args);
 var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
 builder.Services.AddDbContext<Context>(option => option.UseSqlite(dataBaseConnection));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Secret"])),
+                });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Get information by delivery", builder =>
+    {
+        builder.RequireRole(Role.Admin.ToString(), Role.Courier.ToString());
+    });
+
+    options.AddPolicy("Creating delivery", builder =>
+    {
+        builder.RequireRole(Role.Admin.ToString(), Role.Buyer.ToString());
+    });
+
+    options.AddPolicy("Courier", builder =>
+    {
+        builder.RequireRole(Role.Buyer.ToString());
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDeliveryService, DeliveryService>();
+builder.Services.AddScoped<ICourierService, CourierService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -121,6 +156,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseMiddleware<CustomAuthenticateMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

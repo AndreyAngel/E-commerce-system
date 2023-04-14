@@ -6,7 +6,15 @@ namespace DeliveryAPI.Services;
 public class CourierService : ICourierService
 {
     public readonly IUnitOfWork _db;
-    private bool disposedValue;
+
+    private bool _disposed;
+
+    public CourierService(IUnitOfWork db)
+    {
+        _db = db;
+    }
+
+    ~CourierService() => Dispose(false);
 
     public async Task Create(Courier courier)
     {
@@ -16,20 +24,31 @@ public class CourierService : ICourierService
 
     public void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
+    protected void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposed)
         {
             if (disposing)
             {
-
+                _db.Dispose();
             }
 
-            disposedValue = true;
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
         }
     }
 }

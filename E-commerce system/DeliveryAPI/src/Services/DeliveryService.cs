@@ -8,21 +8,31 @@ namespace DeliveryAPI.Services;
 
 public class DeliveryService : IDeliveryService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _db;
+
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
+    private bool _disposed = false;
 
     public DeliveryService(IUnitOfWork unitOfWork)
     {
-        _unitOfWork = unitOfWork;
+        _db = unitOfWork;
     }
+
+    ~DeliveryService() => Dispose(false);
 
     public IEnumerable<Delivery> GetAll()
     {
-        return _unitOfWork.Deliveries.GetAll();
+        ThrowIfDisposed();
+        return _db.Deliveries.GetAll();
     }
 
     public Delivery GetById(Guid Id)
     {
-        var delivery = _unitOfWork.Deliveries.Include(x => x.Address, x => x.Courier)
+        ThrowIfDisposed();
+        var delivery = _db.Deliveries.Include(x => x.Address, x => x.Courier)
                                              .FirstOrDefault(x => x.Id == Id);
 
         if (delivery == null)
@@ -35,19 +45,23 @@ public class DeliveryService : IDeliveryService
 
     public async Task<Delivery> Create(Delivery delivery)
     {
-        if (_unitOfWork.Deliveries.GetAll().FirstOrDefault(x => x.OrderId == delivery.OrderId) != null)
+        ThrowIfDisposed();
+
+        if (_db.Deliveries.GetAll().FirstOrDefault(x => x.OrderId == delivery.OrderId) != null)
         {
             throw new ObjectNotUniqueException("Delivery with this order Id already exists");
         }
 
-        await _unitOfWork.Deliveries.AddAsync(delivery);
+        delivery.Id = delivery.OrderId;
+        await _db.Deliveries.AddAsync(delivery);
 
         return delivery;
     }
 
     public void PickUpOrderFromWarehouse(Guid Id, Guid courierId)
     {
-        var delivery = _unitOfWork.Deliveries.GetById(Id);
+        ThrowIfDisposed();
+        var delivery = _db.Deliveries.GetById(Id);
 
         if (delivery == null)
         {
@@ -65,7 +79,8 @@ public class DeliveryService : IDeliveryService
 
     public void Complete(Guid Id)
     {
-        var delivery = _unitOfWork.Deliveries.GetById(Id);
+        ThrowIfDisposed();
+        var delivery = _db.Deliveries.GetById(Id);
 
         if (delivery == null)
         {
@@ -92,7 +107,8 @@ public class DeliveryService : IDeliveryService
 
     public void Cancel(Guid Id)
     {
-        var delivery = _unitOfWork.Deliveries.GetById(Id);
+        ThrowIfDisposed();
+        var delivery = _db.Deliveries.GetById(Id);
 
         if (delivery == null)
         {
@@ -109,7 +125,8 @@ public class DeliveryService : IDeliveryService
 
     public void ReturnToWarehouse(Guid Id)
     {
-        var delivery = _unitOfWork.Deliveries.GetById(Id);
+        ThrowIfDisposed();
+        var delivery = _db.Deliveries.GetById(Id);
 
         if (delivery == null)
         {
@@ -131,6 +148,31 @@ public class DeliveryService : IDeliveryService
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Throws if this class has been disposed.
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().Name);
+        }
     }
 }

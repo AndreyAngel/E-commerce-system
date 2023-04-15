@@ -128,6 +128,18 @@
             Initializes a new instance of <see cref="T:DeliveryAPI.Helpers.MappingProfile"/>.
             </summary>
         </member>
+        <member name="T:DeliveryAPI.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:DeliveryAPI.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DeliveryAPI.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DeliveryAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.City">
             <summary>
             City

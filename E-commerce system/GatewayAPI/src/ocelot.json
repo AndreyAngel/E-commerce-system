@@ -31,6 +31,21 @@
     },
 
     {
+      // DeliveryAPI
+      "DownstreamPathTemplate": "/api/v1/DeliveryAPI/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44301
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/DeliveryAPI/{everything}",
+      "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+      "SwaggerKey": "DeliveryAPI"
+    },
+
+    {
       // IdentityAPI
       "DownstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
       "DownstreamScheme": "https",
@@ -65,6 +80,17 @@
           "Name": "OrderAPI",
           "Version": "v1",
           "Url": "https://localhost:44361/swagger/v1/swagger.json"
+        }
+      ]
+    },
+
+    {
+      "Key": "DeliveryAPI",
+      "Config": [
+        {
+          "Name": "DeliveryAPI",
+          "Version": "v1",
+          "Url": "https://localhost:44301/swagger/v1/swagger.json"
         }
       ]
     },

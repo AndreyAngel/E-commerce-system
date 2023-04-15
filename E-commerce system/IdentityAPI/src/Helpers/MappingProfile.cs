@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.Models.DTO;
+using IdentityAPI.Models.DTO.Requests;
+using IdentityAPI.Models.DTO.Response;
+using Infrastructure.DTO;
 
 namespace IdentityAPI.Helpers;
 
@@ -16,6 +19,8 @@ public class MappingProfile : Profile
     {
         CreateMap<RegisterDTORequest, User>().ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
 
+        CreateMap<RegisterCourierDTORequest, User>().ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.Email));
+
         CreateMap<UserDTORequest, User>();
 
         CreateMap<User, UserDTOResponse>();
@@ -23,5 +28,7 @@ public class MappingProfile : Profile
         CreateMap<AddressDTO, Address>();
 
         CreateMap<Address, AddressDTO>();
+
+        CreateMap<User, CourierDTORabbitMQ>();
     }
 }

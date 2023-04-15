@@ -42,14 +42,14 @@
             <param name="productService"></param>
             <param name="mapper"></param>
         </member>
-        <member name="M:OrderAPI.Controllers.CartController.GetByCartId(System.Guid)">
+        <member name="M:OrderAPI.Controllers.CartController.GetByUserId(System.Guid)">
             <summary>
-            Get cart by cart Id
+            Get cart by user Id
             </summary>
-            <param name="cartId"> Cart Id </param>
+            <param name="userId"> User Id </param>
             <returns> Task object containig the action result of getting cart </returns>
             <response code="200"> Successful completion </response>
-            <response code="400"> Incorrect cart Id </response>
+            <response code="400"> Incorrect user Id </response>
             <response code="401"> Unauthorized </response>
             <response code="404"> Cart with this Id wasn't founded </response>
         </member>

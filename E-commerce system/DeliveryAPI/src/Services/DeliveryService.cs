@@ -26,7 +26,7 @@ public class DeliveryService : IDeliveryService
     public IEnumerable<Delivery> GetAll()
     {
         ThrowIfDisposed();
-        return _db.Deliveries.GetAll();
+        return _db.Deliveries.Include(x => x.Address, x => x.Courier);
     }
 
     public Delivery GetById(Guid Id)

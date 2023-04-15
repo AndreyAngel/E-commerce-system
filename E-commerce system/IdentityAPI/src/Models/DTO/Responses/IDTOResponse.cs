@@ -1,4 +1,4 @@
-﻿namespace IdentityAPI.Models.DTO;
+﻿namespace IdentityAPI.Models.DTO.Response;
 
 /// <summary>
 /// Identity response interface

@@ -54,7 +54,7 @@ public class CartController : ControllerBase
     /// <response code="400"> Incorrect user Id </response>
     /// <response code="401"> Unauthorized </response>
     /// <response code="404"> Cart with this Id wasn't founded </response>
-    [HttpGet("{cartId:Guid}")]
+    [HttpGet("{userId:Guid}")]
     [ProducesResponseType(typeof(CartDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]

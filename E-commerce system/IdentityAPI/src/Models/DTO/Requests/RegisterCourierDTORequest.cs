@@ -5,7 +5,7 @@ namespace IdentityAPI.Models.DTO.Requests;
 /// <summary>
 /// Registration data transfer object
 /// </summary>
-public class RegisterDTORequest
+public class RegisterCourierDTORequest
 {
     /// <summary>
     /// Email
@@ -33,9 +33,15 @@ public class RegisterDTORequest
     public string? PasswordConfirm { get; set; }
 
     /// <summary>
-    /// User role
+    /// Name
     /// </summary>
     [Required]
-    [Range(0, 2, ErrorMessage = "Incorrect role")]
-    public RoleDTO Role { get; set; }
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Phone number
+    /// </summary>
+    [Phone]
+    [Required]
+    public string? PhoneNumber { get; set; }
 }

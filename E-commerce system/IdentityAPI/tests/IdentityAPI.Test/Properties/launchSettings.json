@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "IdentityAPI.Test": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50058;http://localhost:50059"
+    }
+  }
+}

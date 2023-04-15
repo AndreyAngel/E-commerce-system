@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using IdentityAPI.Exceptions;
-using IdentityAPI.Models.DTO;
 using IdentityAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -9,6 +8,8 @@ using IdentityAPI.Helpers;
 using Infrastructure.Exceptions;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.Models.DTO.Requests;
+using IdentityAPI.Models.DTO.Response;
+using IdentityAPI.Models.Enums;
 
 namespace IdentityAPI.Controllers;
 
@@ -106,10 +107,37 @@ public class UserController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Register(RegisterDTORequest model)
+    public async Task<IActionResult> Registration(RegisterDTORequest model)
     {
         var user = _mapper.Map<User>(model);
-        var result = await _userService.Register(user, model.Password, model.Role);
+        var role = Enum.GetName(typeof(Role), model.Role);
+        var result = await _userService.Register(user, model.Password, (Role)Enum.Parse(typeof(Role), role));
+
+        if (result.GetType() == typeof(IdentityErrorsDTOResponse))
+        {
+            return BadRequest(result);
+        }
+
+        await _userService.Store.Context.SaveChangesAsync();
+
+        return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
+    }
+
+    /// <summary>
+    /// Registration of the new courier
+    /// </summary>
+    /// <param name="model"> Registration DTO </param>
+    /// <returns> The task object containing the authorization result </returns>
+    /// <response code="201"> Courier registrated </response>
+    /// <response code="400"> Incorrect data was sent during registration </response>
+    [Login]
+    [HttpPost]
+    [ProducesResponseType(typeof(AuthorizationDTOResponse), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(IdentityErrorsDTOResponse), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> RegistrationOfCourier(RegisterCourierDTORequest model)
+    {
+        var user = _mapper.Map<User>(model);
+        var result = await _userService.Register(user, model.Password, Role.Courier);
 
         if (result.GetType() == typeof(IdentityErrorsDTOResponse))
         {

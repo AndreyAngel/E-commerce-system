@@ -1,6 +1,5 @@
 using IdentityAPI.Exceptions;
 using IdentityAPI.Helpers;
-using IdentityAPI.Models.DTO;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -14,6 +13,8 @@ using Infrastructure;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
 using AutoMapper;
+using IdentityAPI.Models.DTO.Response;
+using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 
@@ -131,6 +132,11 @@ public class UserService : UserManager<User>, IUserService
         if (userRole.Name == Role.Buyer.ToString())
         {
             await CreateCart(new Guid(user.Id));
+        }
+
+        else if (userRole.Name == Role.Courier.ToString())
+        {
+            await CreateCourier(user);
         }
         
         await AddToRoleAsync(user, userRole.Name);
@@ -277,6 +283,15 @@ public class UserService : UserManager<User>, IUserService
         ThrowIfDisposed();
         await RabbitMQClient.Request<CartDTORabbitMQ>(_bus, new(userId),
             new($"{_configuration["RabbitMQ:Host"]}/createCartQueue"));
+    }
+
+    private async Task CreateCourier(User user)
+    {
+        ThrowIfDisposed();
+        var courier = _mapper.Map<CourierDTORabbitMQ>(user);
+
+        await RabbitMQClient.Request(_bus, courier,
+            new($"{_configuration["RabbitMQ:Host"]}/createCourierQueue"));
     }
 
     private async Task SendMessageAboutAddingToken(string token)

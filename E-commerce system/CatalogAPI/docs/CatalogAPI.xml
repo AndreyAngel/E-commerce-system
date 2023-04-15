@@ -289,6 +289,124 @@
             <response code="200"> Successful completion </response>
             <response code="404"> Product with this Id wasn't founded </response>
         </member>
+        <member name="T:CatalogAPI.DataBase.Context">
+            <summary>
+            Class for the Entity Framework database context
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{CatalogAPI.DataBase.Context})">
+            <summary>
+            Creates an instance of the <see cref="T:CatalogAPI.DataBase.Context"/>.
+            </summary>
+            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:CatalogAPI.DataBase.Entities.BaseEntity">
+            <summary>
+            Stores base entity data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.BaseEntity.Id">
+            <summary>
+            Gets or sets a Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.BaseEntity.Name">
+            <summary>
+            Gets or sets a name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.BaseEntity.Description">
+            <summary>
+            Gets or sets a descriptions
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.BaseEntity.CreationDate">
+            <summary>
+            Gets or sets a creation date
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.DataBase.Entities.Category">
+            <summary>
+            Stores category data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Category.Products">
+            <summary>
+            Gets or sets a product list in this category
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.DataBase.Entities.IEntity">
+            <summary>
+            Base entity interface
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.IEntity.Id">
+            <summary>
+            Gets or sets a Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.IEntity.Name">
+            <summary>
+            Gets or sets a name
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.IEntity.Description">
+            <summary>
+            Gets or sets description
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.IEntity.CreationDate">
+            <summary>
+            Gets or sets creation date
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.DataBase.Entities.Product">
+            <summary>
+            Stores product data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.Price">
+            <summary>
+            Gets or sets a price
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.CategoryId">
+            <summary>
+            Gets or sets a category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.Category">
+            <summary>
+            Gets or sets a category
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.BrandId">
+            <summary>
+            Gets or sets a category Id
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.Brand">
+            <summary>
+            Gets or sets a brand
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Entities.Product.IsSale">
+            <summary>
+            Gets or sets a stausa producta
+            true, if is salling
+            false, if isn't salling
+            </summary>
+        </member>
+        <member name="T:CatalogAPI.DataBase.Brand">
+            <summary>
+            Stores category data
+            </summary>
+        </member>
+        <member name="P:CatalogAPI.DataBase.Brand.Products">
+            <summary>
+            Gets or sets a product list in this category
+            </summary>
+        </member>
         <member name="T:CatalogAPI.Helpers.AuthorizeHandler">
             <summary>
             User authorization handler
@@ -318,124 +436,6 @@
         </member>
         <member name="M:CatalogAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.BaseEntity">
-            <summary>
-            Stores base entity data
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Id">
-            <summary>
-            Gets or sets a Id
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Name">
-            <summary>
-            Gets or sets a name
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.Description">
-            <summary>
-            Gets or sets a descriptions
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.BaseEntity.CreationDate">
-            <summary>
-            Gets or sets a creation date
-            </summary>
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.Brand">
-            <summary>
-            Stores category data
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Brand.Products">
-            <summary>
-            Gets or sets a product list in this category
-            </summary>
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.Category">
-            <summary>
-            Stores category data
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Category.Products">
-            <summary>
-            Gets or sets a product list in this category
-            </summary>
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.Context">
-            <summary>
-            Class for the Entity Framework database context
-            </summary>
-        </member>
-        <member name="M:CatalogAPI.Models.DataBase.Context.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{CatalogAPI.Models.DataBase.Context})">
-            <summary>
-            Creates an instance of the <see cref="T:CatalogAPI.Models.DataBase.Context"/>.
-            </summary>
-            <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.IEntity">
-            <summary>
-            Base entity interface
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.IEntity.Id">
-            <summary>
-            Gets or sets a Id
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.IEntity.Name">
-            <summary>
-            Gets or sets a name
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.IEntity.Description">
-            <summary>
-            Gets or sets description
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.IEntity.CreationDate">
-            <summary>
-            Gets or sets creation date
-            </summary>
-        </member>
-        <member name="T:CatalogAPI.Models.DataBase.Product">
-            <summary>
-            Stores product data
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.Price">
-            <summary>
-            Gets or sets a price
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.CategoryId">
-            <summary>
-            Gets or sets a category Id
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.Category">
-            <summary>
-            Gets or sets a category
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.BrandId">
-            <summary>
-            Gets or sets a category Id
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.Brand">
-            <summary>
-            Gets or sets a brand
-            </summary>
-        </member>
-        <member name="P:CatalogAPI.Models.DataBase.Product.IsSale">
-            <summary>
-            Gets or sets a stausa producta
-            true, if is salling
-            false, if isn't salling
-            </summary>
         </member>
         <member name="T:CatalogAPI.Models.DTO.BrandDTORequest">
             <summary>
@@ -670,10 +670,10 @@
         <member name="M:CatalogAPI.Services.BrandService.GetByName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.BrandService.Create(CatalogAPI.Models.DataBase.Brand)">
+        <member name="M:CatalogAPI.Services.BrandService.Create(CatalogAPI.DataBase.Brand)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.BrandService.Update(CatalogAPI.Models.DataBase.Brand)">
+        <member name="M:CatalogAPI.Services.BrandService.Update(CatalogAPI.DataBase.Brand)">
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.BrandService.Dispose">
@@ -718,10 +718,10 @@
         <member name="M:CatalogAPI.Services.CategoryService.GetByName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.CategoryService.Create(CatalogAPI.Models.DataBase.Category)">
+        <member name="M:CatalogAPI.Services.CategoryService.Create(CatalogAPI.DataBase.Entities.Category)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.CategoryService.Update(CatalogAPI.Models.DataBase.Category)">
+        <member name="M:CatalogAPI.Services.CategoryService.Update(CatalogAPI.DataBase.Entities.Category)">
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.Dispose">
@@ -751,7 +751,7 @@
             Get category by Id
             </summary>
             <param name="id"> category Id </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Brand"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this Id wasn't founded </exception>
         </member>
         <member name="M:CatalogAPI.Services.Interfaces.IBrandService.GetByName(System.String)">
@@ -759,23 +759,23 @@
             Get category by name
             </summary>
             <param name="name"> category name </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Brand"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this name wasn't founded </exception>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Create(CatalogAPI.Models.DataBase.Brand)">
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Create(CatalogAPI.DataBase.Brand)">
             <summary>
             Create a new category
             </summary>
             <param name="category"> New category </param>
-            <returns> Task containing a created category, <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <returns> Task containing a created category, <see cref="T:CatalogAPI.DataBase.Brand"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> category with this name alredy exists </exception>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Update(CatalogAPI.Models.DataBase.Brand)">
+        <member name="M:CatalogAPI.Services.Interfaces.IBrandService.Update(CatalogAPI.DataBase.Brand)">
             <summary>
             Change category data
             </summary>
             <param name="category"> category data for changing </param>
-            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.Models.DataBase.Brand"/> </returns>
+            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.DataBase.Brand"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> category with this name wasn't founded </exception>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> category with this name alredy exists </exception>
         </member>
@@ -795,7 +795,7 @@
             Get category by Id
             </summary>
             <param name="id"> category Id </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Entities.Category"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this Id wasn't founded </exception>
         </member>
         <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.GetByName(System.String)">
@@ -803,23 +803,23 @@
             Get category by name
             </summary>
             <param name="name"> Category name </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Entities.Category"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this name wasn't founded </exception>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Create(CatalogAPI.Models.DataBase.Category)">
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Create(CatalogAPI.DataBase.Entities.Category)">
             <summary>
             Create a new category
             </summary>
             <param name="category"> New category </param>
-            <returns> Task containing a created category, <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <returns> Task containing a created category, <see cref="T:CatalogAPI.DataBase.Entities.Category"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Category with this name alredy exists </exception>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Update(CatalogAPI.Models.DataBase.Category)">
+        <member name="M:CatalogAPI.Services.Interfaces.ICategoryService.Update(CatalogAPI.DataBase.Entities.Category)">
             <summary>
             Change category data
             </summary>
             <param name="category"> category data for changing </param>
-            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.Models.DataBase.Category"/> </returns>
+            <returns> Task containing a chenged category, <see cref="T:CatalogAPI.DataBase.Entities.Category"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Category with this name wasn't founded </exception>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Category with this name alredy exists </exception>
         </member>
@@ -839,7 +839,7 @@
             Get product by Id
             </summary>
             <param name="id"> Product Id </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Entities.Product"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this Id wasn't founded </exception>
         </member>
         <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetByName(System.String)">
@@ -847,7 +847,7 @@
             Get product by name
             </summary>
             <param name="name"> Product name </param>
-            <returns> <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <returns> <see cref="T:CatalogAPI.DataBase.Entities.Product"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name wasn't founded </exception>
         </member>
         <member name="M:CatalogAPI.Services.Interfaces.IProductService.GetByFilter(CatalogAPI.Models.DTO.ProductFilterDTO)">
@@ -857,21 +857,21 @@
             <param name="model"> Model with filters </param>
             <returns> Products list, <see cref="T:System.Collections.Generic.List`1"/> </returns>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Create(CatalogAPI.Models.DataBase.Product)">
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Create(CatalogAPI.DataBase.Entities.Product)">
             <summary>
             Create a new product
             </summary>
             <param name="product"> New product </param>
-            <returns> Task containing a created product, <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <returns> Task containing a created product, <see cref="T:CatalogAPI.DataBase.Entities.Product"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Product with this name alredy exists </exception>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name or Id wasn't founded </exception>
         </member>
-        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Update(CatalogAPI.Models.DataBase.Product)">
+        <member name="M:CatalogAPI.Services.Interfaces.IProductService.Update(CatalogAPI.DataBase.Entities.Product)">
             <summary>
             Change product data
             </summary>
             <param name="product"> Product data for changing </param>
-            <returns> Task containing a chenged product, <see cref="T:CatalogAPI.Models.DataBase.Product"/> </returns>
+            <returns> Task containing a chenged product, <see cref="T:CatalogAPI.DataBase.Entities.Product"/> </returns>
             <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Product with this name wasn't founded </exception>
             <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Product with this name alredy exists </exception>
         </member>
@@ -922,10 +922,10 @@
         <member name="M:CatalogAPI.Services.ProductService.GetByFilter(CatalogAPI.Models.DTO.ProductFilterDTO)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.ProductService.Create(CatalogAPI.Models.DataBase.Product)">
+        <member name="M:CatalogAPI.Services.ProductService.Create(CatalogAPI.DataBase.Entities.Product)">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.Services.ProductService.Update(CatalogAPI.Models.DataBase.Product)">
+        <member name="M:CatalogAPI.Services.ProductService.Update(CatalogAPI.DataBase.Entities.Product)">
             <inheritdoc/>
         </member>
         <member name="M:CatalogAPI.Services.ProductService.CheckProducts(Infrastructure.DTO.ProductListDTORabbitMQ{System.Guid})">
@@ -947,7 +947,7 @@
             The brand repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.BrandRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.BrandRepository.#ctor(CatalogAPI.DataBase.Context)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.BrandRepository"/>.
             </summary>
@@ -958,7 +958,7 @@
             The category repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.CategoryRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.CategoryRepository.#ctor(CatalogAPI.DataBase.Context)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.CategoryRepository"/>.
             </summary>
@@ -981,7 +981,7 @@
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.#ctor(CatalogAPI.Models.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.#ctor(CatalogAPI.DataBase.Context)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.GenericRepository`1"/>.
             </summary>
@@ -1110,7 +1110,7 @@
             The product repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.ProductRepository.#ctor(CatalogAPI.Models.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.ProductRepository.#ctor(CatalogAPI.DataBase.Context)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.ProductRepository"/>.
             </summary>
@@ -1142,7 +1142,7 @@
         <member name="P:CatalogAPI.UnitOfWork.UnitOfWork.Brands">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.#ctor(CatalogAPI.Models.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.#ctor(CatalogAPI.DataBase.Context)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.UnitOfWork"/>.
             </summary>

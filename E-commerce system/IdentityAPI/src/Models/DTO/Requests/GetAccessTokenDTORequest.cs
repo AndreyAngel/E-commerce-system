@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityAPI.Models.DTO;
+namespace IdentityAPI.Models.DTO.Requests;
 
 /// <summary>
 /// Model of request for get access token

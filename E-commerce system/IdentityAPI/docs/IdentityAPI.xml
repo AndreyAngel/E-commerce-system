@@ -36,7 +36,7 @@
             <response code="404"> User with this Id wasn't founded </response>
             <response code="401"> Unauthorized </response>
         </member>
-        <member name="M:IdentityAPI.Controllers.UserController.GetAccessToken(IdentityAPI.Models.DTO.GetAccessTokenDTORequest)">
+        <member name="M:IdentityAPI.Controllers.UserController.GetAccessToken(IdentityAPI.Models.DTO.Requests.GetAccessTokenDTORequest)">
             <summary>
             Get new access token with refresh token
             </summary>
@@ -45,7 +45,7 @@
             <response code="200"> Successful completion </response>
             <response code="403"> Insecure request </response>
         </member>
-        <member name="M:IdentityAPI.Controllers.UserController.Register(IdentityAPI.Models.DTO.RegisterDTORequest)">
+        <member name="M:IdentityAPI.Controllers.UserController.Registration(IdentityAPI.Models.DTO.Requests.RegisterDTORequest)">
             <summary>
             Registration of the new user
             </summary>
@@ -54,7 +54,16 @@
             <response code="201"> User registrated </response>
             <response code="400"> Incorrect data was sent during registration </response>
         </member>
-        <member name="M:IdentityAPI.Controllers.UserController.Login(IdentityAPI.Models.DTO.LoginDTORequest)">
+        <member name="M:IdentityAPI.Controllers.UserController.RegistrationOfCourier(IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest)">
+            <summary>
+            Registration of the new courier
+            </summary>
+            <param name="model"> Registration DTO </param>
+            <returns> The task object containing the authorization result </returns>
+            <response code="201"> Courier registrated </response>
+            <response code="400"> Incorrect data was sent during registration </response>
+        </member>
+        <member name="M:IdentityAPI.Controllers.UserController.Login(IdentityAPI.Models.DTO.Requests.LoginDTORequest)">
             <summary>
             Authorization of the user
             </summary>
@@ -73,7 +82,7 @@
             <response code="204"> Successful completion </response>
             <response code="401"> Unauthorized </response>
         </member>
-        <member name="M:IdentityAPI.Controllers.UserController.Update(IdentityAPI.Models.DTO.UserDTORequest,System.Guid)">
+        <member name="M:IdentityAPI.Controllers.UserController.Update(IdentityAPI.Models.DTO.Requests.UserDTORequest,System.Guid)">
             <summary>
              Update of user date
              </summary>
@@ -490,124 +499,174 @@
             New password
             </summary>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.GetAccessTokenDTORequest">
+        <member name="T:IdentityAPI.Models.DTO.Requests.GetAccessTokenDTORequest">
             <summary>
             Model of request for get access token
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.GetAccessTokenDTORequest.RefreshToken">
+        <member name="P:IdentityAPI.Models.DTO.Requests.GetAccessTokenDTORequest.RefreshToken">
             <summary>
             Refresh token
             </summary>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.LoginDTORequest">
+        <member name="T:IdentityAPI.Models.DTO.Requests.LoginDTORequest">
             <summary>
             Login data transfer object
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.LoginDTORequest.Email">
+        <member name="P:IdentityAPI.Models.DTO.Requests.LoginDTORequest.Email">
             <summary>
             Email
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.LoginDTORequest.Password">
+        <member name="P:IdentityAPI.Models.DTO.Requests.LoginDTORequest.Password">
             <summary>
             Password
             </summary>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.RegisterDTORequest">
+        <member name="T:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest">
             <summary>
             Registration data transfer object
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Email">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.Email">
             <summary>
             Email
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.BirthDate">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.BirthDate">
             <summary>
             BirthDate
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Password">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.Password">
             <summary>
             Password
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.PasswordConfirm">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.PasswordConfirm">
             <summary>
             Password confirm
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.RegisterDTORequest.Role">
-            <summary>
-            User role
-            </summary>
-        </member>
-        <member name="T:IdentityAPI.Models.DTO.UserDTORequest">
-            <summary>
-            Data transfer object for changing user data
-            </summary>
-        </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Name">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.Name">
             <summary>
             Name
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Surname">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterCourierDTORequest.PhoneNumber">
             <summary>
-            Surname
+            Phone number
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTORequest.BirthDate">
+        <member name="T:IdentityAPI.Models.DTO.Requests.RegisterDTORequest">
+            <summary>
+            Registration data transfer object
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterDTORequest.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterDTORequest.BirthDate">
             <summary>
             BirthDate
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTORequest.Address">
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterDTORequest.Password">
+            <summary>
+            Password
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterDTORequest.PasswordConfirm">
+            <summary>
+            Password confirm
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.RegisterDTORequest.Role">
+            <summary>
+            User role
+            </summary>
+        </member>
+        <member name="T:IdentityAPI.Models.DTO.Requests.RoleDTO">
+            <summary>
+            User role data transfer object
+            </summary>
+        </member>
+        <member name="F:IdentityAPI.Models.DTO.Requests.RoleDTO.Admin">
+            <summary>
+            Administrator
+            </summary>
+        </member>
+        <member name="F:IdentityAPI.Models.DTO.Requests.RoleDTO.Buyer">
+            <summary>
+            Buyer
+            </summary>
+        </member>
+        <member name="F:IdentityAPI.Models.DTO.Requests.RoleDTO.Salesman">
+            <summary>
+            Salesman
+            </summary>
+        </member>
+        <member name="T:IdentityAPI.Models.DTO.Requests.UserDTORequest">
+            <summary>
+            Data transfer object for changing user data
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.UserDTORequest.Name">
+            <summary>
+            Name
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.UserDTORequest.Surname">
+            <summary>
+            Surname
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.UserDTORequest.BirthDate">
+            <summary>
+            BirthDate
+            </summary>
+        </member>
+        <member name="P:IdentityAPI.Models.DTO.Requests.UserDTORequest.Address">
             <summary>
             Address data transfer object
             </summary>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.AuthorizationDTOResponse">
+        <member name="T:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse">
             <summary>
             The data transfer object of the response containing the access token and refresh token
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.UserId">
+        <member name="P:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.UserId">
             <summary>
             User Id
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.ExpiresIn">
+        <member name="P:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.ExpiresIn">
             <summary>
             Access token lifetime in seconds
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.TokenType">
+        <member name="P:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.TokenType">
             <summary>
             Access token type
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.AccessToken">
+        <member name="P:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.AccessToken">
             <summary>
             Access token
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.RefreshToken">
+        <member name="P:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.RefreshToken">
             <summary>
             Refresh token
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.AuthorizationDTOResponse.CartId">
+        <member name="M:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse.#ctor(System.Int32,System.String,System.String,System.String,System.Guid)">
             <summary>
-            User cart Id
-            </summary>
-        </member>
-        <member name="M:IdentityAPI.Models.DTO.AuthorizationDTOResponse.#ctor(System.Int32,System.String,System.String,System.String,System.Guid)">
-            <summary>
-            Creates an instance of the <see cref="T:IdentityAPI.Models.DTO.AuthorizationDTOResponse"/>.
+            Creates an instance of the <see cref="T:IdentityAPI.Models.DTO.Response.AuthorizationDTOResponse"/>.
             </summary>
             <param name="expiresIn"> Access token lifetime in seconds </param>
             <param name="accessToken"> Access token </param>
@@ -615,63 +674,63 @@
             <param name="tokenType"> Access token type </param>
             <param name="userId"> userId </param>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse">
+        <member name="T:IdentityAPI.Models.DTO.Response.IdentityErrorsDTOResponse">
             <summary>
             The data transfer object of the response containing the identity errors
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse.Errors">
+        <member name="P:IdentityAPI.Models.DTO.Response.IdentityErrorsDTOResponse.Errors">
             <summary>
             Identity errors list
             </summary>
         </member>
-        <member name="M:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse.#ctor(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IdentityError})">
+        <member name="M:IdentityAPI.Models.DTO.Response.IdentityErrorsDTOResponse.#ctor(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IdentityError})">
             <summary>
-            Creates an instance of the <see cref="T:IdentityAPI.Models.DTO.IdentityErrorsDTOResponse"/>.
+            Creates an instance of the <see cref="T:IdentityAPI.Models.DTO.Response.IdentityErrorsDTOResponse"/>.
             </summary>
             <param name="errors"> Identity errors list </param>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.IDTOResponse">
+        <member name="T:IdentityAPI.Models.DTO.Response.IDTOResponse">
             <summary>
             Identity response interface
             </summary>
         </member>
-        <member name="T:IdentityAPI.Models.DTO.UserDTOResponse">
+        <member name="T:IdentityAPI.Models.DTO.Response.UserDTOResponse">
             <summary>
             The data transfer object of the response containing the user data
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Id">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.Id">
             <summary>
             User Id
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Email">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.Email">
             <summary>
             Email
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.PhoneNumber">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.PhoneNumber">
             <summary>
             Phone number
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Name">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.Name">
             <summary>
             Name
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Surname">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.Surname">
             <summary>
             Surname
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.BirthDate">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.BirthDate">
             <summary>
             BirthDate
             </summary>
         </member>
-        <member name="P:IdentityAPI.Models.DTO.UserDTOResponse.Address">
+        <member name="P:IdentityAPI.Models.DTO.Response.UserDTOResponse.Address">
             <summary>
             Address data transfer object
             </summary>
@@ -751,7 +810,7 @@
             <param name="role"> User role </param>
             <returns> The task object containing the authorization result </returns>
         </member>
-        <member name="M:IdentityAPI.Services.IUserService.Login(IdentityAPI.Models.DTO.LoginDTORequest)">
+        <member name="M:IdentityAPI.Services.IUserService.Login(IdentityAPI.Models.DTO.Requests.LoginDTORequest)">
             <summary>
             Authorization of the user
             </summary>
@@ -842,7 +901,7 @@
         <member name="M:IdentityAPI.Services.UserService.GetById(System.Guid)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.Models.DTO.LoginDTORequest)">
+        <member name="M:IdentityAPI.Services.UserService.Login(IdentityAPI.Models.DTO.Requests.LoginDTORequest)">
             <inheritdoc/>
         </member>
         <member name="M:IdentityAPI.Services.UserService.Register(IdentityAPI.DataBase.Entities.User,System.String,IdentityAPI.Models.Enums.Role)">

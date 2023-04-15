@@ -1,4 +1,4 @@
-﻿namespace IdentityAPI.Models.DTO;
+﻿namespace IdentityAPI.Models.DTO.Requests;
 
 /// <summary>
 /// Data transfer object for changing user data

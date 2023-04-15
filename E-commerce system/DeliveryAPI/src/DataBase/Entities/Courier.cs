@@ -9,7 +9,7 @@ public class Courier
 
     public string Name { get; set; }
 
-    public string? Phone { get; set; }
+    public string PhoneNumber { get; set; }
 
     public List<Delivery> Deliveries { get; set; } = new();
 }

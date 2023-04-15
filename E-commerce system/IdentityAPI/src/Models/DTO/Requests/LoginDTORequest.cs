@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityAPI.Models.DTO;
+namespace IdentityAPI.Models.DTO.Requests;
 
 /// <summary>
 /// Login data transfer object

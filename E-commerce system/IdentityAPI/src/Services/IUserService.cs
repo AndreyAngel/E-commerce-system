@@ -1,10 +1,11 @@
-using IdentityAPI.Models.DTO;
 using IdentityAPI.Exceptions;
 using System.Security;
 using IdentityAPI.Models.Enums;
 using Infrastructure.Exceptions;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.DataBase;
+using IdentityAPI.Models.DTO.Response;
+using IdentityAPI.Models.DTO.Requests;
 
 namespace IdentityAPI.Services;
 

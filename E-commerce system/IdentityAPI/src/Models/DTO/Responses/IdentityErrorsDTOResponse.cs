@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace IdentityAPI.Models.DTO;
+namespace IdentityAPI.Models.DTO.Response;
 
 /// <summary>
 /// The data transfer object of the response containing the identity errors

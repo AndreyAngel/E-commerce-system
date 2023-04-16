@@ -23,19 +23,28 @@ public class CartController : ControllerBase
     /// </summary>
     private readonly IUnitOfWork _unitOfWork;
 
+    /// <summary>
+    /// Class providing the APIs for managing cart in a persistence store.
+    /// </summary>
     private readonly ICartService _cartService;
 
+    /// <summary>
+    /// Class providing the APIs for managing cart product in a persistence store.
+    /// </summary>
     private readonly ICartProductService _productService;
 
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
 
     /// <summary>
     /// Creates an instance of the <see cref="CartController"/>.
     /// </summary>
-    /// <param name="unitOfWork"></param>
-    /// <param name="cartService"></param>
-    /// <param name="productService"></param>
-    /// <param name="mapper"></param>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="cartService"> Class providing the APIs for managing cart in a persistence store. </param>
+    /// <param name="productService"> Class providing the APIs for managing cart product in a persistence store. </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public CartController(IUnitOfWork unitOfWork, ICartService cartService,
                           ICartProductService productService, IMapper mapper)
     {
@@ -114,7 +123,7 @@ public class CartController : ControllerBase
 
             var response = _mapper.Map<CartProductDTOResponse>(product);
 
-            return Created(new Uri($"https://localhost:7045/api/v1/ord/Cart/GetById/{product.CartId}"), response);
+            return Created(new Uri($"https://localhost:44389/api/v1/OrderAPI/Cart/GetById/{product.CartId}"), response);
         }
         catch (NotFoundException ex)
         {

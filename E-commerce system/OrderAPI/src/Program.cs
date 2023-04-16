@@ -50,6 +50,9 @@ var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateCartConsumer>();
+    x.AddConsumer<OrderIsReceivedConsumer>();
+    x.AddConsumer<ConfirmOrderIdConsumer>();
+
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
         cfg.Host(rabbitMQSettings["Host"], settings =>
@@ -63,6 +66,20 @@ builder.Services.AddMassTransit(x =>
             ep.PrefetchCount = 16;
             ep.UseMessageRetry(r => r.Interval(2, 3000));
             ep.ConfigureConsumer<CreateCartConsumer>(provider);
+        });
+
+        cfg.ReceiveEndpoint("orderIsReceivedQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<OrderIsReceivedConsumer>(provider);
+        });
+
+        cfg.ReceiveEndpoint("confirmOrderIdQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<ConfirmOrderIdConsumer>(provider);
         });
     }));
 });

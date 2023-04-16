@@ -1,14 +1,31 @@
 ﻿using DeliveryAPI.DataBase;
 using DeliveryAPI.DataBase.Entities;
 using DeliveryAPI.UnitOfWork.Interfaces;
+using Infrastructure.DTO;
+using Infrastructure;
 using Infrastructure.Exceptions;
 using OrderAPI.Exceptions;
+using MassTransit;
 
 namespace DeliveryAPI.Services;
 
 public class DeliveryService : IDeliveryService
 {
+    /// <summary>
+    /// An interface for class that implements the unit of work pattern
+    /// and contains all entity repositories to create a single database context.
+    /// </summary>
     private readonly IUnitOfWork _db;
+
+    /// <summary>
+    /// Configurations of application
+    /// </summary>
+    private readonly IConfiguration _configuration;
+
+    /// <summary>
+    /// <see cref="IBusControl"/>.
+    /// </summary>
+    private readonly IBusControl _bus;
 
     /// <summary>
     /// True, if object is disposed
@@ -16,9 +33,11 @@ public class DeliveryService : IDeliveryService
     /// </summary>
     private bool _disposed = false;
 
-    public DeliveryService(IUnitOfWork unitOfWork)
+    public DeliveryService(IUnitOfWork unitOfWork, IConfiguration configuration, IBusControl bus)
     {
         _db = unitOfWork;
+        _configuration = configuration;
+        _bus = bus;
     }
 
     ~DeliveryService() => Dispose(false);
@@ -77,7 +96,7 @@ public class DeliveryService : IDeliveryService
         delivery.Status = DeliveryStatus.TheOrderReceivedByCourier;
     }
 
-    public void Complete(Guid Id)
+    public async void Complete(Guid Id)
     {
         ThrowIfDisposed();
         var delivery = _db.Deliveries.GetById(Id);
@@ -103,6 +122,7 @@ public class DeliveryService : IDeliveryService
         }
 
         delivery.Status = DeliveryStatus.TheOrderReceivedByCustomer;
+        await OrderIsReceived(delivery.OrderId);
     }
 
     public void Cancel(Guid Id)
@@ -146,6 +166,22 @@ public class DeliveryService : IDeliveryService
         delivery.Status = DeliveryStatus.ReturnedToWarehouse;
     }
 
+    public async Task<bool> ConfirmOrderId(Guid orderId)
+    {
+        ThrowIfDisposed();
+
+        var response = await RabbitMQClient.Request<ConfirmOrderIdDTORabbitMQ, ConfirmOrderIdDTORabbitMQ>
+                        (_bus, new ConfirmOrderIdDTORabbitMQ() { OrderId = orderId },
+                        new($"{_configuration["RabbitMQ:Host"]}/confirmOrderIdQueue"));
+
+        if (response.OrderId != orderId)
+        {
+            throw new NotFoundException(response.Error);
+        }
+
+        return true;
+    }
+
     public void Dispose()
     {
         Dispose(true);
@@ -174,5 +210,13 @@ public class DeliveryService : IDeliveryService
         {
             throw new ObjectDisposedException(GetType().Name);
         }
+    }
+
+    private async Task OrderIsReceived(Guid orderId)
+    {
+        ThrowIfDisposed();
+
+        await RabbitMQClient.Request(_bus, new OrderIsReceivedDTORabbitMQ() { OrderId = orderId},
+            new($"{_configuration["RabbitMQ:Host"]}/orderIsReceivedQueue"));
     }
 }

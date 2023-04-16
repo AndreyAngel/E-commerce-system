@@ -134,7 +134,7 @@ public class BrandController : ControllerBase
 
             var res = _mapper.Map<BrandDTOResponse>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/category/GetById/{res.Id}"), res);
+            return Created(new Uri($"http://localhost:44389/api/v1/CatalogAPI/Brand/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {

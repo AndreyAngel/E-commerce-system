@@ -4,6 +4,25 @@
         <name>OrderAPI</name>
     </assembly>
     <members>
+        <member name="T:OrderAPI.Consumers.ConfirmOrderIdConsumer">
+            <summary>
+            Consumer of the message for create cart
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Consumers.ConfirmOrderIdConsumer._orderService">
+            <summary>
+            Interface for class providing the APIs for managing order in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Consumers.ConfirmOrderIdConsumer.#ctor(OrderAPI.Services.Interfaces.IOrderService)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Consumers.CreateCartConsumer"/>.
+            </summary>
+            <param name="orderService"> Interface for class providing the APIs for managing order in a persistence store. </param>
+        </member>
+        <member name="M:OrderAPI.Consumers.ConfirmOrderIdConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.ConfirmOrderIdDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:OrderAPI.Consumers.CreateCartConsumer">
             <summary>
             Consumer of the message for create cart
@@ -23,6 +42,25 @@
         <member name="M:OrderAPI.Consumers.CreateCartConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.CartDTORabbitMQ})">
             <inheritdoc/>
         </member>
+        <member name="T:OrderAPI.Consumers.OrderIsReceivedConsumer">
+            <summary>
+            Consumer of the message for create cart
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Consumers.OrderIsReceivedConsumer._orderService">
+            <summary>
+            Interface for class providing the APIs for managing order in a persistence store.
+            </summary>
+        </member>
+        <member name="M:OrderAPI.Consumers.OrderIsReceivedConsumer.#ctor(OrderAPI.Services.Interfaces.IOrderService)">
+            <summary>
+            Creates an instance of the <see cref="T:OrderAPI.Consumers.CreateCartConsumer"/>.
+            </summary>
+            <param name="orderService"> Interface for class providing the APIs for managing order in a persistence store. </param>
+        </member>
+        <member name="M:OrderAPI.Consumers.OrderIsReceivedConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.OrderIsReceivedDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:OrderAPI.Controllers.CartController">
             <summary>
             Provides the APIs for handling all the cart logic
@@ -33,14 +71,29 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:OrderAPI.Controllers.CartController._cartService">
+            <summary>
+            Class providing the APIs for managing cart in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Controllers.CartController._productService">
+            <summary>
+            Class providing the APIs for managing cart product in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Controllers.CartController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
         <member name="M:OrderAPI.Controllers.CartController.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,OrderAPI.Services.Interfaces.ICartService,OrderAPI.Services.Interfaces.ICartProductService,AutoMapper.IMapper)">
             <summary>
             Creates an instance of the <see cref="T:OrderAPI.Controllers.CartController"/>.
             </summary>
-            <param name="unitOfWork"></param>
-            <param name="cartService"></param>
-            <param name="productService"></param>
-            <param name="mapper"></param>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="cartService"> Class providing the APIs for managing cart in a persistence store. </param>
+            <param name="productService"> Class providing the APIs for managing cart product in a persistence store. </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
         </member>
         <member name="M:OrderAPI.Controllers.CartController.GetByUserId(System.Guid)">
             <summary>
@@ -109,13 +162,23 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:OrderAPI.Controllers.OrderController._orderService">
+            <summary>
+            Сlass providing the APIs for managing cart in a persistence store.
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Controllers.OrderController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
         <member name="M:OrderAPI.Controllers.OrderController.#ctor(OrderAPI.Services.Interfaces.IOrderService,OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
             <summary>
             Creates an instance of the <see cref="T:OrderAPI.Controllers.OrderController"/>.
             </summary>
-            <param name="unitOfWork"></param>
-            <param name="orderService"></param>
-            <param name="mapper"></param>
+            <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="orderService"> Сlass providing the APIs for managing cart in a persistence store. </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
         </member>
         <member name="M:OrderAPI.Controllers.OrderController.GetAll">
             <summary>
@@ -1110,6 +1173,14 @@
             <param name="id"> The order Id </param>
             <returns> Task object containing order </returns>
         </member>
+        <member name="M:OrderAPI.Services.Interfaces.IOrderService.CreateDelivery(OrderAPI.DataBase.Entities.Order,OrderAPI.Models.DTO.AddressDTO)">
+            <summary>
+            Send message to DeliveryAPI service for creating delivery
+            </summary>
+            <param name="order"> The order </param>
+            <param name="address"> Delivery address </param>
+            <returns> Task object </returns>
+        </member>
         <member name="T:OrderAPI.Services.OrderService">
             <summary>
             Сlass providing the APIs for managing cart product in a persistence store.
@@ -1125,18 +1196,30 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:OrderAPI.Services.OrderService._configuration">
+            <summary>
+            Configurations of application
+            </summary>
+        </member>
+        <member name="F:OrderAPI.Services.OrderService._bus">
+            <summary>
+            <see cref="T:MassTransit.IBusControl"/>.
+            </summary>
+        </member>
         <member name="F:OrderAPI.Services.OrderService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:OrderAPI.Services.OrderService.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+        <member name="M:OrderAPI.Services.OrderService.#ctor(OrderAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper,Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl)">
             <summary>
             Creates an instance of the <see cref="T:OrderAPI.Services.OrderService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
             <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+            <param name="configuration"> Configurations of application </param>
+            <param name="bus"> <see cref="T:MassTransit.IBusControl"/>. </param>
         </member>
         <member name="M:OrderAPI.Services.OrderService.GetAll">
             <inheritdoc/>
@@ -1163,6 +1246,9 @@
             <inheritdoc/>
         </member>
         <member name="M:OrderAPI.Services.OrderService.IsPaymented(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.CreateDelivery(OrderAPI.DataBase.Entities.Order,OrderAPI.Models.DTO.AddressDTO)">
             <inheritdoc/>
         </member>
         <member name="M:OrderAPI.Services.OrderService.Dispose">

@@ -60,17 +60,23 @@ public class DeliveryController : ControllerBase
     {
         try
         {
+            await _deliveryService.ConfirmOrderId(model.OrderId);
+
             var delivery = _mapper.Map<Delivery>(model);
             var result = await _deliveryService.Create(delivery);
             var response = _mapper.Map<DeliveryDTOResponse>(result);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return Ok(response);
+            return Created(new Uri($"https://localhost:44389/api/v1/DeliveryAPI/Delivery/GetById/{response.Id}"), response);
         }
         catch (ObjectNotUniqueException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 

@@ -24,16 +24,22 @@ public class OrderController : ControllerBase
     /// </summary>
     private readonly IUnitOfWork _unitOfWork;
 
+    /// <summary>
+    /// Сlass providing the APIs for managing cart in a persistence store.
+    /// </summary>
     private readonly IOrderService _orderService;
 
+    /// <summary>
+    /// Object of class <see cref="IMapper"/> for models mapping
+    /// </summary>
     private readonly IMapper _mapper;
 
     /// <summary>
     /// Creates an instance of the <see cref="OrderController"/>.
     /// </summary>
-    /// <param name="unitOfWork"></param>
-    /// <param name="orderService"></param>
-    /// <param name="mapper"></param>
+    /// <param name="unitOfWork"> Repository group interface showing data context </param>
+    /// <param name="orderService"> Сlass providing the APIs for managing cart in a persistence store. </param>
+    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     public OrderController(IOrderService orderService, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _orderService = orderService;
@@ -131,7 +137,7 @@ public class OrderController : ControllerBase
             await _unitOfWork.SaveChangesAsync();
             var response = _mapper.Map<OrderDTOResponse>(res);
 
-            return Created(new Uri($"https://localhost:7045/api/v1/ord/Order/GetById/{response.Id}"), response);
+            return Created(new Uri($"https://localhost:44389/api/v1/OrderAPI/Order/GetById/{response.Id}"), response);
         }
         catch (EmptyOrderException ex)
         {

@@ -29,6 +29,6 @@ public class CheckProductsConsumer : IConsumer<ProductListDTORabbitMQ<Guid>>
     {
         var content = context.Message;
         var res = _service.CheckProducts(content);
-        await context.RespondAsync<ProductListDTORabbitMQ<ProductDTORabbitMQ>>(res);
+        await context.RespondAsync(res);
     }
 }

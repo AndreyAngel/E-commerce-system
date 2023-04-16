@@ -251,6 +251,8 @@ public class OrderService : IOrderService
         order.IsCanceled = true;
         await _db.Orders.UpdateAsync(order);
 
+        await CancelDelivery(order.Id);
+
         return order;
     }
 
@@ -326,5 +328,13 @@ public class OrderService : IOrderService
         {
             throw new ObjectDisposedException(GetType().Name);
         }
+    }
+
+    private async Task CancelDelivery(Guid orderId)
+    {
+        ThrowIfDisposed();
+
+        await RabbitMQClient.Request(_bus, new CancelDeliveryDTORabbitMQ() { OrderId = orderId },
+            new($"{_configuration["RabbitMQ:Host"]}/cancelDeliveryQueue"));
     }
 }

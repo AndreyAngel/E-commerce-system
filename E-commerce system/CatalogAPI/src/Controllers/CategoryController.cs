@@ -135,7 +135,7 @@ public class CategoryController : ControllerBase
 
             var res = _mapper.Map<CategoryDTOResponse>(result);
 
-            return Created(new Uri($"https://localhost:5192/api/v1/cat/category/GetById/{result.Id}"), res);
+            return Created(new Uri($"https://localhost:44389/api/v1/CatalogAPI/Category/GetById/{result.Id}"), res);
         }
         catch(ObjectNotUniqueException ex)
         {

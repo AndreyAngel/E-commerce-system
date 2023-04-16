@@ -102,6 +102,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateCourierConsumer>();
     x.AddConsumer<CreateDeliveryConsumer>();
+    x.AddConsumer<CancelDeliveryConsumer>();
 
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
@@ -110,17 +111,26 @@ builder.Services.AddMassTransit(x =>
             settings.Username(rabbitMQSettings["Username"]);
             settings.Password(rabbitMQSettings["Password"]);
         });
+
         cfg.ReceiveEndpoint("createCourierQueue", ep =>
         {
             ep.PrefetchCount = 16;
             ep.UseMessageRetry(r => r.Interval(2, 3000));
             ep.ConfigureConsumer<CreateCourierConsumer>(provider);
         });
+
         cfg.ReceiveEndpoint("createDeliveryQueue", ep =>
         {
             ep.PrefetchCount = 16;
             ep.UseMessageRetry(r => r.Interval(2, 3000));
             ep.ConfigureConsumer<CreateDeliveryConsumer>(provider);
+        });
+
+        cfg.ReceiveEndpoint("cancelDeliveryQueue", ep =>
+        {
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 3000));
+            ep.ConfigureConsumer<CancelDeliveryConsumer>(provider);
         });
     }));
 });

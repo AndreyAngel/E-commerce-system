@@ -120,7 +120,7 @@ public class UserController : ControllerBase
 
         await _userService.Store.Context.SaveChangesAsync();
 
-        return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
+        return Created(new Uri($"https://localhost:44389/api/v1/IdentityAPI/User/GetById/{user.Id}"), result);
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class UserController : ControllerBase
 
         await _userService.Store.Context.SaveChangesAsync();
 
-        return Created(new Uri($"https://localhost:7281/api/v1/identity/User/GetById/{user.Id}"), result);
+        return Created(new Uri($"https://localhost:44389/api/v1/IdentityAPI/User/GetById/{user.Id}"), result);
     }
 
     /// <summary>

@@ -150,7 +150,7 @@ public class ProductController : ControllerBase
 
             var res = _mapper.Map<ProductDTOResponse>(result);
 
-            return Created(new Uri($"http://localhost:5192/api/v1/cat/Product/GetById/{res.Id}"), res);
+            return Created(new Uri($"http://localhost:44389/api/v1/CatalogAPI/Product/GetById/{res.Id}"), res);
         }
         catch (ObjectNotUniqueException ex)
         {

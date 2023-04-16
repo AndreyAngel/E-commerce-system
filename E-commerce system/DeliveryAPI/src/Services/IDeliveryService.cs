@@ -17,4 +17,6 @@ public interface IDeliveryService : IDisposable
     void Cancel(Guid Id);
 
     void ReturnToWarehouse(Guid Id);
+
+    Task<bool> ConfirmOrderId(Guid orderId);
 }

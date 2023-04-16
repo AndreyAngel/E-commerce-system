@@ -4,6 +4,20 @@
         <name>DeliveryAPI</name>
     </assembly>
     <members>
+        <member name="T:DeliveryAPI.Consumers.CancelDeliveryConsumer">
+            <summary>
+            Consumer of the message about creating of the order with delivery
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Consumers.CancelDeliveryConsumer._service">
+            <summary>
+            Object of class <see cref="T:DeliveryAPI.Services.ICourierService"/> providing the APIs for managing delivery in a persistence store.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DeliveryAPI.Consumers.CancelDeliveryConsumer.#ctor(DeliveryAPI.Services.IDeliveryService)" -->
+        <member name="M:DeliveryAPI.Consumers.CancelDeliveryConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.CancelDeliveryDTORabbitMQ})">
+            <inheritdoc/>
+        </member>
         <member name="T:DeliveryAPI.Consumers.CreateCourierConsumer">
             <summary>
             Consumer of the message about creating of the user with courier role
@@ -146,6 +160,11 @@
         <member name="M:DeliveryAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:DeliveryAPI.Models.DTO.AddressDTO">
+            <summary>
+            Address data transfer object
+            </summary>
+        </member>
         <member name="P:DeliveryAPI.Models.DTO.AddressDTO.City">
             <summary>
             City
@@ -199,6 +218,22 @@
         <member name="M:DeliveryAPI.Services.CourierService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.DeliveryService._db">
+            <summary>
+            An interface for class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.DeliveryService._configuration">
+            <summary>
+            Configurations of application
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.DeliveryService._bus">
+            <summary>
+            <see cref="T:MassTransit.IBusControl"/>.
             </summary>
         </member>
         <member name="F:DeliveryAPI.Services.DeliveryService._disposed">

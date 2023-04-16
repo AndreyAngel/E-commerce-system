@@ -137,6 +137,7 @@ public class OrderService : IOrderService
 
             var orderProduct = _mapper.Map<OrderProduct>(cartProduct);
             order.OrderProducts[i] = orderProduct;
+            order.TotalValue += orderProduct.TotalValue;
             await _db.CartProducts.RemoveAsync(cartProduct);
         }
 

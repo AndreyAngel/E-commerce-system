@@ -40,7 +40,7 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Get information by delivery", builder =>
     {
-        builder.RequireRole(Role.Admin.ToString(), Role.Courier.ToString());
+        builder.RequireRole(Role.Admin.ToString(), Role.Courier.ToString(), Role.Buyer.ToString());
     });
 
     options.AddPolicy("Creating delivery", builder =>
@@ -50,7 +50,7 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("Courier", builder =>
     {
-        builder.RequireRole(Role.Buyer.ToString());
+        builder.RequireRole(Role.Courier.ToString());
     });
 });
 

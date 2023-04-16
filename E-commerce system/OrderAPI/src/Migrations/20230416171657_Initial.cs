@@ -29,6 +29,7 @@ namespace OrderAPI.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TotalValue = table.Column<double>(type: "REAL", nullable: false),
                     IsReady = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsReceived = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsCanceled = table.Column<bool>(type: "INTEGER", nullable: false),

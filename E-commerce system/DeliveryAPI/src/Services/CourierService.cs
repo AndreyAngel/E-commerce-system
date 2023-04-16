@@ -1,5 +1,7 @@
-﻿using DeliveryAPI.DataBase.Entities;
+﻿using DeliveryAPI.DataBase;
+using DeliveryAPI.DataBase.Entities;
 using DeliveryAPI.UnitOfWork.Interfaces;
+using Infrastructure.Exceptions;
 
 namespace DeliveryAPI.Services;
 
@@ -15,6 +17,25 @@ public class CourierService : ICourierService
     }
 
     ~CourierService() => Dispose(false);
+
+    public IEnumerable<Courier> GetAll()
+    {
+        return _db.Couriers.GetAll();
+    }
+
+    public Courier GetById(Guid Id)
+    {
+        var result = _db.Couriers.Include(x => x.Deliveries
+                           .Where(x => x.Status == DeliveryStatus.TheOrderReceivedByCourier))
+                           .SingleOrDefault(x => x.Id == Id);
+
+        if (result == null)
+        {
+            throw new NotFoundException("Courier with this Id wasn't founded", nameof(Id));
+        }
+
+        return result;
+    }
 
     public async Task Create(Courier courier)
     {

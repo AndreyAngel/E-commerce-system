@@ -16,6 +16,11 @@ public class Order : BaseEntity
     public List<OrderProduct> OrderProducts { get; set; } = new();
 
     /// <summary>
+    /// Total value of the order
+    /// </summary>
+    public double TotalValue { get; set; }
+
+    /// <summary>
     /// Order is ready?
     /// </summary>
     public bool IsReady { get; set; } = false;

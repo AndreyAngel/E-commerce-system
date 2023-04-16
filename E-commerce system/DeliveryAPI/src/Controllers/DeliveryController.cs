@@ -55,6 +55,15 @@ public class DeliveryController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public IActionResult GetByFilter(DeliveryFilterDTORequest filters)
+    {
+        var result = _deliveryService.GetByFilter(filters);
+        var response = _mapper.Map<List<DeliveryDTOResponse>>(result);
+
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(DeliveryDTORequest model)
     {

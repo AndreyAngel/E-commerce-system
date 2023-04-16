@@ -26,5 +26,7 @@ public class MappingProfile : Profile
         CreateMap<DeliveryDTORabbitMQ,  Delivery>();
 
         CreateMap<Courier, CourierDTOResponse>();
+
+        CreateMap<Courier, CourierListDTOResponse>();
     }
 }

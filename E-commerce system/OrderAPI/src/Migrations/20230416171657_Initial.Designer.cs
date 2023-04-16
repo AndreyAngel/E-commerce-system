@@ -11,7 +11,7 @@ using OrderAPI.DataBase;
 namespace OrderAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230406123146_Initial")]
+    [Migration("20230416171657_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -75,6 +75,9 @@ namespace OrderAPI.Migrations
 
                     b.Property<bool>("IsReceived")
                         .HasColumnType("INTEGER");
+
+                    b.Property<double>("TotalValue")
+                        .HasColumnType("REAL");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");

@@ -73,6 +73,9 @@ namespace OrderAPI.Migrations
                     b.Property<bool>("IsReceived")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("TotalValue")
+                        .HasColumnType("REAL");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 

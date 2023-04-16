@@ -360,6 +360,11 @@
             The order products list
             </summary>
         </member>
+        <member name="P:OrderAPI.DataBase.Entities.Order.TotalValue">
+            <summary>
+            Total value of the order
+            </summary>
+        </member>
         <member name="P:OrderAPI.DataBase.Entities.Order.IsReady">
             <summary>
             Order is ready?

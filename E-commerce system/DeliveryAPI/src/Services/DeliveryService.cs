@@ -6,6 +6,7 @@ using Infrastructure;
 using Infrastructure.Exceptions;
 using OrderAPI.Exceptions;
 using MassTransit;
+using DeliveryAPI.Models.DTO;
 
 namespace DeliveryAPI.Services;
 
@@ -60,6 +61,52 @@ public class DeliveryService : IDeliveryService
         }
 
         return delivery;
+    }
+
+    public IEnumerable<Delivery> GetByFilter(DeliveryFilterDTORequest filters)
+    {
+        ThrowIfDisposed();
+        var deliveries = _db.Deliveries.Include(x => x.Address, x => x.Courier);
+
+        if (filters.Status != null)
+        {
+            deliveries = deliveries.Where(x => x.Status == filters.Status);
+        }
+
+        if (filters.CourierId != Guid.Empty)
+        {
+            deliveries = deliveries.Where(x => x.CourierId == filters.CourierId);
+        }
+
+        if (filters.Address != null)
+        {
+            if (filters.Address.City != null)
+            {
+                deliveries = deliveries.Where(x => x.Address.City == filters.Address.City);
+            }
+
+            if (filters.Address.Street != null)
+            {
+                deliveries = deliveries.Where(x => x.Address.Street == filters.Address.Street);
+            }
+
+            if (filters.Address.NumberOfHome != null)
+            {
+                deliveries = deliveries.Where(x => x.Address.NumberOfHome == filters.Address.NumberOfHome);
+            }
+
+            if (filters.Address.ApartmentNumber != null)
+            {
+                deliveries = deliveries.Where(x => x.Address.ApartmentNumber == filters.Address.ApartmentNumber);
+            }
+
+            if (filters.Address.PostalCode != null)
+            {
+                deliveries = deliveries.Where(x => x.Address.PostalCode == filters.Address.PostalCode);
+            }
+        }
+
+        return deliveries;
     }
 
     public async Task<Delivery> Create(Delivery delivery)

@@ -6,6 +6,10 @@ using OrderAPI.UnitOfWork.Interfaces;
 using Infrastructure.Exceptions;
 using OrderAPI.DataBase.Entities;
 using AutoMapper;
+using Infrastructure.DTO;
+using OrderAPI.Models.DTO;
+using Infrastructure;
+using MassTransit;
 
 namespace OrderAPI.Services;
 
@@ -25,6 +29,16 @@ public class OrderService : IOrderService
     private readonly IUnitOfWork _db;
 
     /// <summary>
+    /// Configurations of application
+    /// </summary>
+    private readonly IConfiguration _configuration;
+
+    /// <summary>
+    /// <see cref="IBusControl"/>.
+    /// </summary>
+    private readonly IBusControl _bus;
+
+    /// <summary>
     /// True, if object is disposed
     /// False, if object isn't disposed
     /// </summary>
@@ -35,10 +49,15 @@ public class OrderService : IOrderService
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
     /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
-    public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="bus"> <see cref="IBusControl"/>. </param>
+    public OrderService(IUnitOfWork unitOfWork, IMapper mapper,
+                        IConfiguration configuration, IBusControl bus)
     {
         _db = unitOfWork;
         _mapper = mapper;
+        _configuration = configuration;
+        _bus = bus;
     }
 
     ~OrderService() => Dispose(false);
@@ -260,6 +279,21 @@ public class OrderService : IOrderService
         await _db.Orders.UpdateAsync(order);
 
         return order;
+    }
+
+    /// <inheritdoc/>
+    public async Task CreateDelivery(Order order, AddressDTO address)
+    {
+        ThrowIfDisposed();
+
+        var deliveryDTO = new DeliveryDTORabbitMQ()
+        {
+            OrderId = order.Id,
+            Address = _mapper.Map<AddressDTORabbitMQ>(address)
+        };
+
+        await RabbitMQClient.Request(_bus, deliveryDTO,
+            new($"{_configuration["RabbitMQ:Host"]}/createDeliveryQueue"));
     }
 
     /// <inheritdoc/>

@@ -9,7 +9,7 @@ using OrderAPI.Exceptions;
 
 namespace DeliveryAPI.Controllers;
 
-[Route("api/v1/[controller]/[action]")]
+[Route("api/v1/DeliveryAPI/[controller]/[action]")]
 [ApiController]
 public class DeliveryController : ControllerBase
 {
@@ -26,6 +26,10 @@ public class DeliveryController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get all deliveries
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -70,13 +74,13 @@ public class DeliveryController : ControllerBase
         }
     }
 
-    [HttpPatch("{Id:Guid}")]
-    public async Task<IActionResult> PickUpOrderFromWarehouse(Guid Id)
+    [HttpPatch("{orderId:Guid}")]
+    public async Task<IActionResult> PickUpOrderFromWarehouse(Guid orderId)
     {
         try
         {
-            var courierId = HttpContext.Request.Headers["UserId"];
-            _deliveryService.PickUpOrderFromWarehouse(Id, Guid.Parse(courierId));
+            var courierId = HttpContext.Items["UserId"].ToString();
+            _deliveryService.PickUpOrderFromWarehouse(orderId, Guid.Parse(courierId));
             await _unitOfWork.SaveChangesAsync();
 
             return NoContent();

@@ -1,4 +1,5 @@
 ﻿using OrderAPI.DataBase.Entities;
+using OrderAPI.Models.DTO;
 using OrderAPI.Models.DTO.Order;
 
 namespace OrderAPI.Services.Interfaces;
@@ -69,4 +70,12 @@ public interface IOrderService : IDisposable
     /// <param name="id"> The order Id </param>
     /// <returns> Task object containing order </returns>
     Task<Order> IsPaymented(Guid id);
+
+    /// <summary>
+    /// Send message to DeliveryAPI service for creating delivery
+    /// </summary>
+    /// <param name="order"> The order </param>
+    /// <param name="address"> Delivery address </param>
+    /// <returns> Task object </returns>
+    Task CreateDelivery(Order order, AddressDTO address);
 }

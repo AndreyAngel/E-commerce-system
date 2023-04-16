@@ -4,6 +4,7 @@ using OrderAPI.Models.DTO.Cart;
 using OrderAPI.Models.DTO.Order;
 using OrderAPI.DataBase.Entities;
 using OrderAPI.Models;
+using OrderAPI.Models.DTO;
 
 namespace OrderAPI.Helpers;
 
@@ -54,5 +55,7 @@ public class MappingProfile : Profile
         CreateMap<OrderCartProductDTORequest, OrderProduct>();
 
         CreateMap<OrderProduct, OrderProductDTO>();
+
+        CreateMap<AddressDTO, AddressDTORabbitMQ>();
     }
 }

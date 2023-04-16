@@ -19,10 +19,12 @@ public class MappingProfile : Profile
 
         CreateMap<Delivery, DeliveryDTOResponse>();
 
-        CreateMap<AddressDTORequest, Address>();
+        CreateMap<AddressDTO, Address>();
 
         CreateMap<CourierDTORabbitMQ, Courier>();
 
         CreateMap<DeliveryDTORabbitMQ,  Delivery>();
+
+        CreateMap<Courier, CourierDTOResponse>();
     }
 }

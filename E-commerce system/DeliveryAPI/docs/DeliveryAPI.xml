@@ -42,6 +42,12 @@
         <member name="M:DeliveryAPI.Consumers.CreateDeliveryConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.DeliveryDTORabbitMQ})">
             <inheritdoc/>
         </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.GetAll">
+            <summary>
+            Get all deliveries
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:DeliveryAPI.DataBase.Context">
             <summary>
             Class for the Entity Framework database context
@@ -140,27 +146,27 @@
         <member name="M:DeliveryAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.City">
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTO.City">
             <summary>
             City
             </summary>
         </member>
-        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.Street">
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTO.Street">
             <summary>
             Street
             </summary>
         </member>
-        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.NumberOfHome">
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTO.NumberOfHome">
             <summary>
             Number of home
             </summary>
         </member>
-        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.ApartmentNumber">
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTO.ApartmentNumber">
             <summary>
             Apartment number
             </summary>
         </member>
-        <member name="P:DeliveryAPI.Models.DTO.AddressDTORequest.PostalCode">
+        <member name="P:DeliveryAPI.Models.DTO.AddressDTO.PostalCode">
             <summary>
             Postal code
             </summary>

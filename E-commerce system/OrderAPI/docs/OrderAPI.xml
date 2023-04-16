@@ -622,6 +622,36 @@
             Product price
             </summary>
         </member>
+        <member name="T:OrderAPI.Models.DTO.AddressDTO">
+            <summary>
+            Address data transfer object
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.AddressDTO.City">
+            <summary>
+            City
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.AddressDTO.Street">
+            <summary>
+            Street
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.AddressDTO.NumberOfHome">
+            <summary>
+            Number of home
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.AddressDTO.ApartmentNumber">
+            <summary>
+            Apartment number
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.AddressDTO.PostalCode">
+            <summary>
+            Postal code
+            </summary>
+        </member>
         <member name="T:OrderAPI.Models.DTO.Order.OrderCartProductDTORequest">
             <summary>
             Stores the product Id from the cart for the order creation request
@@ -645,6 +675,16 @@
         <member name="P:OrderAPI.Models.DTO.Order.OrderDTORequest.CartProducts">
             <summary>
             Cart product IDs for creation the order
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTORequest.Delivery">
+            <summary>
+            flag, true if delivery is needed, false if delivery isn't needed
+            </summary>
+        </member>
+        <member name="P:OrderAPI.Models.DTO.Order.OrderDTORequest.Address">
+            <summary>
+            Delivery address
             </summary>
         </member>
         <member name="T:OrderAPI.Models.DTO.Order.OrderDTOResponse">

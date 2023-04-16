@@ -17,4 +17,14 @@ public class OrderDTORequest
     /// Cart product IDs for creation the order
     /// </summary>
     public List<OrderCartProductDTORequest> CartProducts { get; set; } = new();
+
+    /// <summary>
+    /// flag, true if delivery is needed, false if delivery isn't needed
+    /// </summary>
+    public bool Delivery { get; set; } = false;
+
+    /// <summary>
+    /// Delivery address
+    /// </summary>
+    public AddressDTO? Address { get; set; } = null;
 }

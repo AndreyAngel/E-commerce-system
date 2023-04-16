@@ -116,10 +116,19 @@ public class OrderController : ControllerBase
         try
         {
             var order = _mapper.Map<Order>(model);
-
             var res = await _orderService.Create(order);
-            await _unitOfWork.SaveChangesAsync();
 
+            if (model.Delivery)
+            {
+                if (model.Address == null)
+                {
+                    return BadRequest("Delivery address is empty");
+                }
+
+                await _orderService.CreateDelivery(order, model.Address);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
             var response = _mapper.Map<OrderDTOResponse>(res);
 
             return Created(new Uri($"https://localhost:7045/api/v1/ord/Order/GetById/{response.Id}"), response);

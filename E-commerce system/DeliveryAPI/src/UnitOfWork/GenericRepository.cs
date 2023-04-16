@@ -56,16 +56,7 @@ public class GenericRepository<TEntity> : IGenericRepositoty<TEntity> where TEnt
     public TEntity? GetById(Guid Id)
     {
         ThrowIfDisposed();
-        var entity = _db.Find(Id);
-
-        if (entity == null)
-        {
-            return null;
-        }
-
-        _context.Entry(entity).State = EntityState.Detached;
-
-        return entity;
+        return _db.Find(Id);
     }
 
     /// <inheritdoc/>

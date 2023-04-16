@@ -1,21 +1,29 @@
-﻿namespace DeliveryAPI.Models.DTO;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class AddressDTORequest
+namespace OrderAPI.Models.DTO;
+
+/// <summary>
+/// Address data transfer object
+/// </summary>
+public class AddressDTO
 {
     /// <summary>
     /// City
     /// </summary>
-    public string City { get; set; }
+    [Required]
+    public string? City { get; set; }
 
     /// <summary>
     /// Street
     /// </summary>
-    public string Street { get; set; }
+    [Required]
+    public string? Street { get; set; }
 
     /// <summary>
     /// Number of home
     /// </summary>
-    public string NumberOfHome { get; set; }
+    [Required]
+    public string? NumberOfHome { get; set; }
 
     /// <summary>
     /// Apartment number

@@ -58,6 +58,21 @@
       "UpstreamPathTemplate": "/api/v1/IdentityAPI/{everything}",
       "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
       "SwaggerKey": "IdentityAPI"
+    },
+
+    {
+      // StoreAPI
+      "DownstreamPathTemplate": "/api/v1/StoreAPI/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44391
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/Store/{everything}",
+      "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+      "SwaggerKey": "StoreAPI"
     }
   ],
 
@@ -102,6 +117,17 @@
           "Name": "IdentityAPI",
           "Version": "v1",
           "Url": "https://localhost:44383/swagger/v1/swagger.json"
+        }
+      ]
+    },
+
+    {
+      "Key": "StoreAPI",
+      "Config": [
+        {
+          "Name": "StoreAPI",
+          "Version": "v1",
+          "Url": "https://localhost:44391/swagger/v1/swagger.json"
         }
       ]
     }

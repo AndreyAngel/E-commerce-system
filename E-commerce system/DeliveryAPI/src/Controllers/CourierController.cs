@@ -49,7 +49,7 @@ public class CourierController : ControllerBase
     public IActionResult GetAll()
     {
         var result = _courierService.GetAll();
-        var response = _mapper.Map<CourierDTOResponse>(result);
+        var response = _mapper.Map<List<CourierDTOResponse>>(result);
 
         return Ok(response);
     }

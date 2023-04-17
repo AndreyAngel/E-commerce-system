@@ -6,7 +6,7 @@
     <members>
         <member name="T:DeliveryAPI.Consumers.CancelDeliveryConsumer">
             <summary>
-            Consumer of the message about creating of the order with delivery
+            Consumer of the message about canceled of the order
             </summary>
         </member>
         <member name="F:DeliveryAPI.Consumers.CancelDeliveryConsumer._service">
@@ -56,11 +56,135 @@
         <member name="M:DeliveryAPI.Consumers.CreateDeliveryConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.DeliveryDTORabbitMQ})">
             <inheritdoc/>
         </member>
+        <member name="T:DeliveryAPI.Controllers.CourierController">
+            <summary>
+            Provides the APIs for handling all the courier logic
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Controllers.CourierController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Controllers.CourierController._courierService">
+            <summary>
+            Object of class <see cref="T:DeliveryAPI.Services.ICourierService"/> providing the APIs for managing courier data in a persistence store.
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.CourierController.#ctor(AutoMapper.IMapper,DeliveryAPI.Services.ICourierService)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.Controllers.CourierController"/>.
+            </summary>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+            <param name="courierService"> Object of class <see cref="T:DeliveryAPI.Services.ICourierService"/> providing the APIs
+            for managing courier data in a persistence store. </param>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.CourierController.GetAll">
+            <summary>
+            Get information about all couriers
+            </summary>
+            <returns> Action result of getting of information about all couriers </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.CourierController.GetById(System.Guid)">
+            <summary>
+            Get information about single courier by Id
+            </summary>
+            <param name="Id"> Courier Id </param>
+            <returns> Action result of getting of information about single courier </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
+            <response code="404"> Courier with this Id wasn't founded </response>
+        </member>
+        <member name="T:DeliveryAPI.Controllers.DeliveryController">
+            <summary>
+            Provides the APIs for handling all the delivery logic
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Controllers.DeliveryController._deliveryService">
+            <summary>
+            Object of class <see cref="T:DeliveryAPI.Services.IDeliveryService"/> providing the APIs for managing delivery in a persistence store.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Controllers.DeliveryController._unitOfWork">
+            <summary>
+            A repository group interface providing a common data context
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Controllers.DeliveryController._mapper">
+            <summary>
+            Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.#ctor(DeliveryAPI.Services.IDeliveryService,DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.Controllers.DeliveryController"/>.
+            </summary>
+            <param name="unitOfWork"> A repository group interface providing a common data context </param>
+            <param name="deliveryService"> Object of class <see cref="T:DeliveryAPI.Services.IDeliveryService"/>
+            providing the APIs for managing delivery in a persistence store </param>
+            <param name="mapper"> Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping </param>
+        </member>
         <member name="M:DeliveryAPI.Controllers.DeliveryController.GetAll">
             <summary>
             Get all deliveries
             </summary>
-            <returns></returns>
+            <returns> The action result of getting of deliveries </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.GetById(System.Guid)">
+            <summary>
+            Get of delivery by Id
+            </summary>
+            <param name="Id"> Delivery Id </param>
+            <returns> The action result of getting of delivery </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
+            <response code="404"> Delivery with this Id wasn't founded </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.GetByFilter(DeliveryAPI.Models.DTO.DeliveryFilterDTORequest)">
+            <summary>
+            Get of delivery by filters
+            </summary>
+            <param name="filters"> Filters </param>
+            <returns> The action result of getting of deliveries </returns>
+            <response code="200"> Successful completion </response>
+            <response code="401"> Unauthorized </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.PickUpOrderFromWarehouse(System.Guid)">
+            <summary>
+            Pick up of the order from warehouse by courier
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <returns> Task object containing action result </returns>
+            <response code="204"> Successful completion </response>
+            <response code="400"> Action cannot be performed </response>
+            <response code="401"> Unauthorized </response>
+            <response code="404"> Delivery with this order Id wasn't founded </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.Complete(System.Guid)">
+            <summary>
+            Complete of delivery
+            </summary>
+            <param name="Id"> Delivery Id </param>
+            <returns> Task object containing action result of completing of delivery </returns>
+            <response code="204"> Successful completion </response>
+            <response code="400"> Action cannot be performed </response>
+            <response code="401"> Unauthorized </response>
+            <response code="404"> Delivery with this Id wasn't founded </response>
+        </member>
+        <member name="M:DeliveryAPI.Controllers.DeliveryController.ReturnToWarehouse(System.Guid)">
+            <summary>
+            Return of the order to warehouse by courier
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <returns> Task object containing action result </returns>
+            <response code="204"> Successful completion </response>
+            <response code="400"> Action cannot be performed </response>
+            <response code="401"> Unauthorized </response>
+            <response code="404"> Delivery with this order Id wasn't founded </response>
         </member>
         <member name="T:DeliveryAPI.DataBase.Context">
             <summary>
@@ -72,6 +196,36 @@
             Creates an instance of the <see cref="T:DeliveryAPI.DataBase.Context"/>.
             </summary>
             <param name="options"> <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions`1"/> </param>
+        </member>
+        <member name="T:DeliveryAPI.DataBase.DeliveryStatus">
+            <summary>
+            Delivery status
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.DataBase.DeliveryStatus.WaitingForTheCourier">
+            <summary>
+            Waiting for the courier
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.DataBase.DeliveryStatus.TheOrderReceivedByCourier">
+            <summary>
+            The order received by courier
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.DataBase.DeliveryStatus.TheOrderReceivedByCustomer">
+            <summary>
+            The order received by customer
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.DataBase.DeliveryStatus.Canceled">
+            <summary>
+            Delivery is canceled
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.DataBase.DeliveryStatus.ReturnedToWarehouse">
+            <summary>
+            The order returned to warehouse
+            </summary>
         </member>
         <member name="T:DeliveryAPI.DataBase.Entities.Address">
             <summary>
@@ -108,6 +262,71 @@
             Postal code
             </summary>
         </member>
+        <member name="T:DeliveryAPI.DataBase.Entities.Courier">
+            <summary>
+            Information about courier
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Courier.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Courier.Name">
+            <summary>
+            Name
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Courier.PhoneNumber">
+            <summary>
+            Phone number
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Courier.Deliveries">
+            <summary>
+            Deliveries
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.DataBase.Entities.Delivery">
+            <summary>
+            Delivery
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.OrderId">
+            <summary>
+            Order Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.AddressId">
+            <summary>
+            Address Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.Address">
+            <summary>
+            Address
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.CourierId">
+            <summary>
+            Courier Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.Courier">
+            <summary>
+            Courier
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.DataBase.Entities.Delivery.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
         <member name="T:DeliveryAPI.Helpers.AuthorizeHandler">
             <summary>
             User authorization handler
@@ -137,6 +356,20 @@
             Invokes the middleware performing authentication.
             </summary>
             <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
+        <member name="T:DeliveryAPI.Helpers.EnumTypesSchemaFilter">
+            <summary>
+            Class used for auto-documentation of enums
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.EnumTypesSchemaFilter.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:DeliveryAPI.Helpers.EnumTypesSchemaFilter"/>.
+            </summary>
+            <param name="xmlPath"></param>
+        </member>
+        <member name="M:DeliveryAPI.Helpers.EnumTypesSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <inheritdoc/>
         </member>
         <member name="T:DeliveryAPI.Helpers.MappingProfile">
             <summary>
@@ -190,6 +423,91 @@
             Postal code
             </summary>
         </member>
+        <member name="T:DeliveryAPI.Models.DTO.CourierDTOResponse">
+            <summary>
+            The courier data transfer object as a response
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.CourierDTOResponse.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.CourierDTOResponse.Name">
+            <summary>
+            Name
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.CourierDTOResponse.PhoneNumber">
+            <summary>
+            Phone number
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.Models.DTO.DeliveryDTORequest">
+            <summary>
+            The delivery data transfer object as a request
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTORequest.OrderId">
+            <summary>
+            Order Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTORequest.Address">
+            <summary>
+            Address data transfer object
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.Models.DTO.DeliveryDTOResponse">
+            <summary>
+            The delivery data transfer object as a response
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTOResponse.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTOResponse.OrderId">
+            <summary>
+            Order Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTOResponse.Address">
+            <summary>
+            Address data transfer object
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTOResponse.Courier">
+            <summary>
+            The courier data transfer object as a response
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryDTOResponse.Status">
+            <summary>
+            Delivery status
+            </summary>
+        </member>
+        <member name="T:DeliveryAPI.Models.DTO.DeliveryFilterDTORequest">
+            <summary>
+            The delivery filter data transfer object as a request
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryFilterDTORequest.Status">
+            <summary>
+            Delivery ststus
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryFilterDTORequest.CourierId">
+            <summary>
+            Courier Id
+            </summary>
+        </member>
+        <member name="P:DeliveryAPI.Models.DTO.DeliveryFilterDTORequest.Address">
+            <summary>
+            Address data transfer object
+            </summary>
+        </member>
         <member name="T:DeliveryAPI.Models.Role">
             <summary>
             User role
@@ -214,6 +532,40 @@
             <summary>
             Courier
             </summary>
+        </member>
+        <member name="T:DeliveryAPI.Services.CourierService">
+            <summary>
+            Class providing the APIs for managing courier data in a persistence store.
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.CourierService._db">
+            <summary>
+            A repository group interface providing a common data context
+            </summary>
+        </member>
+        <member name="F:DeliveryAPI.Services.CourierService._disposed">
+            <summary>
+            True, if object is disposed
+            False, if object isn't disposed
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.#ctor(DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.Services.CourierService"/>.
+            </summary>
+            <param name="db"> A repository group interface providing a common data context </param>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.Create(DeliveryAPI.DataBase.Entities.Courier)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.CourierService.Dispose">
+            <inheritdoc/>
         </member>
         <member name="M:DeliveryAPI.Services.CourierService.ThrowIfDisposed">
             <summary>
@@ -242,10 +594,145 @@
             False, if object isn't disposed
             </summary>
         </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.#ctor(DeliveryAPI.UnitOfWork.Interfaces.IUnitOfWork,Microsoft.Extensions.Configuration.IConfiguration,MassTransit.IBusControl)">
+            <summary>
+            Creates an instance of the <see cref="T:DeliveryAPI.Services.DeliveryService"/>.
+            </summary>
+            <param name="unitOfWork"> An interface for class that implements the unit of work pattern
+            and contains all entity repositories to create a single database context. </param>
+            <param name="configuration"> Configurations of application </param>
+            <param name="bus"> <see cref="T:MassTransit.IBusControl"/>. </param>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.GetAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.GetById(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.GetByFilter(DeliveryAPI.Models.DTO.DeliveryFilterDTORequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.Create(DeliveryAPI.DataBase.Entities.Delivery)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.PickUpOrderFromWarehouse(System.Guid,System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.Complete(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.Cancel(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.ReturnToWarehouse(System.Guid)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.Dispose">
+            <inheritdoc/>
+        </member>
         <member name="M:DeliveryAPI.Services.DeliveryService.ThrowIfDisposed">
             <summary>
             Throws if this class has been disposed.
             </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.DeliveryService.OrderIsReceived(System.Guid)">
+            <summary>
+            Send of message about received of the order by customer
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:DeliveryAPI.Services.ICourierService">
+            <summary>
+            Interface for class providing the APIs for managing courier data in a persistence store.
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.ICourierService.GetAll">
+            <summary>
+            Get information about all couriers
+            </summary>
+            <returns> Information about all couriers </returns>
+        </member>
+        <member name="M:DeliveryAPI.Services.ICourierService.GetById(System.Guid)">
+            <summary>
+            Get information about single courier by Id
+            </summary>
+            <param name="Id"> Courier Id </param>
+            <returns> Information about single courier </returns>
+        </member>
+        <member name="M:DeliveryAPI.Services.ICourierService.Create(DeliveryAPI.DataBase.Entities.Courier)">
+            <summary>
+            Create of the new courier
+            </summary>
+            <param name="courier"> Courier object </param>
+            <returns> Task object </returns>
+        </member>
+        <member name="T:DeliveryAPI.Services.IDeliveryService">
+            <summary>
+            Interface for class providing the APIs for managing delivery in a persistence store.
+            </summary>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.GetAll">
+            <summary>
+            Get all deliveries
+            </summary>
+            <returns> All deliveries </returns>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.GetById(System.Guid)">
+            <summary>
+            Get delivery by Id
+            </summary>
+            <param name="Id"> Delivery Id </param>
+            <returns> <see cref="T:DeliveryAPI.DataBase.Entities.Delivery"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Delivery with this Id wasn't founded </exception>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.GetByFilter(DeliveryAPI.Models.DTO.DeliveryFilterDTORequest)">
+            <summary>
+            Get deliveries by filters
+            </summary>
+            <param name="filters"> Filters </param>
+            <returns> Deliveries </returns>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.Create(DeliveryAPI.DataBase.Entities.Delivery)">
+            <summary>
+            Create a new delivery
+            </summary>
+            <param name="delivery"> Delivery object </param>
+            <returns> Task object containing of the <see cref="T:DeliveryAPI.DataBase.Entities.Delivery"/> </returns>
+            <exception cref="T:Infrastructure.Exceptions.ObjectNotUniqueException"> Delivery with this order Id already exists </exception>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.PickUpOrderFromWarehouse(System.Guid,System.Guid)">
+            <summary>
+            Pick up of the order from warehouse by courier
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <param name="courierId"> Courier Id </param>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Delivery with this order Id wasn't founded </exception>
+            <exception cref="T:OrderAPI.Exceptions.DeliveryStatusException"> Delivery has already recieved by customer </exception>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.Complete(System.Guid)">
+            <summary>
+            Complete delivery
+            </summary>
+            <param name="Id"> Delivery Id </param>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Delivery with this order Id wasn't founded </exception>
+            <exception cref="T:OrderAPI.Exceptions.DeliveryStatusException"></exception>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.Cancel(System.Guid)">
+            <summary>
+            Cansel delivery
+            </summary>
+            <param name="Id"> Delivery Id </param>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Delivery with this order Id wasn't founded </exception>
+            <exception cref="T:OrderAPI.Exceptions.DeliveryStatusException"> The order already received by customer </exception>
+        </member>
+        <member name="M:DeliveryAPI.Services.IDeliveryService.ReturnToWarehouse(System.Guid)">
+            <summary>
+            Resturn of the order to warehouse bu courier
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <exception cref="T:Infrastructure.Exceptions.NotFoundException"> Delivery with this order Id wasn't founded </exception>
+            <exception cref="T:OrderAPI.Exceptions.DeliveryStatusException"></exception>
         </member>
         <member name="T:DeliveryAPI.UnitOfWork.CourierRepository">
             <summary>

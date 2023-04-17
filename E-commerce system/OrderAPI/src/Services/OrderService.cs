@@ -331,6 +331,11 @@ public class OrderService : IOrderService
         }
     }
 
+    /// <summary>
+    /// Send of message about canceled of the order to DeleveryAPI service
+    /// </summary>
+    /// <param name="orderId"> Order Id </param>
+    /// <returns> Task object </returns>
     private async Task CancelDelivery(Guid orderId)
     {
         ThrowIfDisposed();

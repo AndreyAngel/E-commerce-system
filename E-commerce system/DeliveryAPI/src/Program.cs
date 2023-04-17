@@ -19,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-
 builder.Services.AddControllers().AddNewtonsoftJson(x =>
             x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -43,9 +42,9 @@ builder.Services.AddAuthorization(options =>
         builder.RequireRole(Role.Admin.ToString(), Role.Courier.ToString(), Role.Buyer.ToString());
     });
 
-    options.AddPolicy("Creating delivery", builder =>
+    options.AddPolicy("Get information about the courier", builder =>
     {
-        builder.RequireRole(Role.Admin.ToString(), Role.Buyer.ToString());
+        builder.RequireRole(Role.Admin.ToString(), Role.Courier.ToString(), Role.Buyer.ToString());
     });
 
     options.AddPolicy("Courier", builder =>
@@ -70,6 +69,8 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(basePath, xmlFile);
     options.IncludeXmlComments(xmlPath);
+
+    options.SchemaFilter<EnumTypesSchemaFilter>(xmlPath);
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

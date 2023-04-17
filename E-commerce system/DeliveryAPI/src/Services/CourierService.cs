@@ -5,12 +5,26 @@ using Infrastructure.Exceptions;
 
 namespace DeliveryAPI.Services;
 
+/// <summary>
+/// Class providing the APIs for managing courier data in a persistence store.
+/// </summary>
 public class CourierService : ICourierService
 {
+    /// <summary>
+    /// A repository group interface providing a common data context
+    /// </summary>
     public readonly IUnitOfWork _db;
 
+    /// <summary>
+    /// True, if object is disposed
+    /// False, if object isn't disposed
+    /// </summary>
     private bool _disposed;
 
+    /// <summary>
+    /// Creates an instance of the <see cref="CourierService"/>.
+    /// </summary>
+    /// <param name="db"> A repository group interface providing a common data context </param>
     public CourierService(IUnitOfWork db)
     {
         _db = db;
@@ -18,16 +32,19 @@ public class CourierService : ICourierService
 
     ~CourierService() => Dispose(false);
 
+    /// <inheritdoc/>
     public IEnumerable<Courier> GetAll()
     {
+        ThrowIfDisposed();
         return _db.Couriers.GetAll();
     }
 
+    /// <inheritdoc/>
     public Courier GetById(Guid Id)
     {
-        var result = _db.Couriers.Include(x => x.Deliveries
-                           .Where(x => x.Status == DeliveryStatus.TheOrderReceivedByCourier))
-                           .SingleOrDefault(x => x.Id == Id);
+        ThrowIfDisposed();
+
+        var result = _db.Couriers.GetById(Id);
 
         if (result == null)
         {
@@ -37,12 +54,15 @@ public class CourierService : ICourierService
         return result;
     }
 
+    /// <inheritdoc/>
     public async Task Create(Courier courier)
     {
+        ThrowIfDisposed();
         await _db.Couriers.AddAsync(courier);
         await _db.SaveChangesAsync();
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);

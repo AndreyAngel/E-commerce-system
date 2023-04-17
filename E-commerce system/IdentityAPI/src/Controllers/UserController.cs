@@ -99,7 +99,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Registration of the new user
     /// </summary>
-    /// <param name="model"> Registration DTO </param>
+    /// <param name="model"> Registration data transfer object </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="201"> User registrated </response>
     /// <response code="400"> Incorrect data was sent during registration </response>
@@ -126,7 +126,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Registration of the new courier
     /// </summary>
-    /// <param name="model"> Registration DTO </param>
+    /// <param name="model"> Registration data transfer object </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="201"> Courier registrated </response>
     /// <response code="400"> Incorrect data was sent during registration </response>
@@ -152,7 +152,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Authorization of the user
     /// </summary>
-    /// <param name="model"> Login DTO </param>
+    /// <param name="model"> Login data transfer object </param>
     /// <returns> The task object containing the authorization result </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="404"> Incorrect data was sent during authorization </response>

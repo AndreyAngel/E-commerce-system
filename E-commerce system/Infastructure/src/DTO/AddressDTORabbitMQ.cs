@@ -1,5 +1,8 @@
 ﻿namespace Infrastructure.DTO;
 
+/// <summary>
+/// Address data transfer object used by RabbitMQ
+/// </summary>
 public class AddressDTORabbitMQ
 {
     /// <summary>

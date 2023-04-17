@@ -184,8 +184,8 @@ public class CartService: ICartService
         Uri uri = new("rabbitmq://localhost/checkProductsQueue");
 
         ProductListDTORabbitMQ<ProductDTORabbitMQ> response =
-        await RabbitMQClient.Request<ProductListDTORabbitMQ<Guid>,
-        ProductListDTORabbitMQ<ProductDTORabbitMQ>>(_bus, productsId, uri);
+            await RabbitMQClient.Request<ProductListDTORabbitMQ<Guid>,
+            ProductListDTORabbitMQ<ProductDTORabbitMQ>>(_bus, productsId, uri);
 
         CartDomainModel model = _mapper.Map<CartDomainModel>(cart);
 

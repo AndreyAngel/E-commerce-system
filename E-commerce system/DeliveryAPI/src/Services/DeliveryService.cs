@@ -34,6 +34,13 @@ public class DeliveryService : IDeliveryService
     /// </summary>
     private bool _disposed = false;
 
+    /// <summary>
+    /// Creates an instance of the <see cref="DeliveryService"/>.
+    /// </summary>
+    /// <param name="unitOfWork"> An interface for class that implements the unit of work pattern
+    /// and contains all entity repositories to create a single database context. </param>
+    /// <param name="configuration"> Configurations of application </param>
+    /// <param name="bus"> <see cref="IBusControl"/>. </param>
     public DeliveryService(IUnitOfWork unitOfWork, IConfiguration configuration, IBusControl bus)
     {
         _db = unitOfWork;
@@ -43,12 +50,14 @@ public class DeliveryService : IDeliveryService
 
     ~DeliveryService() => Dispose(false);
 
+    /// <inheritdoc/>
     public IEnumerable<Delivery> GetAll()
     {
         ThrowIfDisposed();
         return _db.Deliveries.Include(x => x.Address, x => x.Courier);
     }
 
+    /// <inheritdoc/>
     public Delivery GetById(Guid Id)
     {
         ThrowIfDisposed();
@@ -63,6 +72,7 @@ public class DeliveryService : IDeliveryService
         return delivery;
     }
 
+    /// <inheritdoc/>
     public IEnumerable<Delivery> GetByFilter(DeliveryFilterDTORequest filters)
     {
         ThrowIfDisposed();
@@ -109,6 +119,7 @@ public class DeliveryService : IDeliveryService
         return deliveries;
     }
 
+    /// <inheritdoc/>
     public async Task<Delivery> Create(Delivery delivery)
     {
         ThrowIfDisposed();
@@ -124,6 +135,7 @@ public class DeliveryService : IDeliveryService
         return delivery;
     }
 
+    /// <inheritdoc/>
     public void PickUpOrderFromWarehouse(Guid Id, Guid courierId)
     {
         ThrowIfDisposed();
@@ -143,6 +155,7 @@ public class DeliveryService : IDeliveryService
         delivery.Status = DeliveryStatus.TheOrderReceivedByCourier;
     }
 
+    /// <inheritdoc/>
     public async void Complete(Guid Id)
     {
         ThrowIfDisposed();
@@ -172,6 +185,7 @@ public class DeliveryService : IDeliveryService
         await OrderIsReceived(delivery.OrderId);
     }
 
+    /// <inheritdoc/>
     public void Cancel(Guid Id)
     {
         ThrowIfDisposed();
@@ -179,17 +193,18 @@ public class DeliveryService : IDeliveryService
 
         if (delivery == null)
         {
-            return;
+            throw new NotFoundException("Delivery with this Id wasn't founded", nameof(Id));
         }
 
         if (delivery.Status == DeliveryStatus.TheOrderReceivedByCustomer)
         {
-            return;
+            throw new DeliveryStatusException("The order already received by customer");
         }
 
         delivery.Status = DeliveryStatus.Canceled;
     }
 
+    /// <inheritdoc/>
     public void ReturnToWarehouse(Guid Id)
     {
         ThrowIfDisposed();
@@ -213,22 +228,7 @@ public class DeliveryService : IDeliveryService
         delivery.Status = DeliveryStatus.ReturnedToWarehouse;
     }
 
-    public async Task<bool> ConfirmOrderId(Guid orderId)
-    {
-        ThrowIfDisposed();
-
-        var response = await RabbitMQClient.Request<ConfirmOrderIdDTORabbitMQ, ConfirmOrderIdDTORabbitMQ>
-                        (_bus, new ConfirmOrderIdDTORabbitMQ() { OrderId = orderId },
-                        new($"{_configuration["RabbitMQ:Host"]}/confirmOrderIdQueue"));
-
-        if (response.OrderId != orderId)
-        {
-            throw new NotFoundException(response.Error);
-        }
-
-        return true;
-    }
-
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);
@@ -259,6 +259,11 @@ public class DeliveryService : IDeliveryService
         }
     }
 
+    /// <summary>
+    /// Send of message about received of the order by customer
+    /// </summary>
+    /// <param name="orderId"> Order Id </param>
+    /// <returns> Task object </returns>
     private async Task OrderIsReceived(Guid orderId)
     {
         ThrowIfDisposed();

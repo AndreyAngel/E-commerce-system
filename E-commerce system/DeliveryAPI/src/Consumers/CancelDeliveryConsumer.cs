@@ -1,12 +1,14 @@
 ﻿using MassTransit;
 using Infrastructure.DTO;
 using DeliveryAPI.Services;
-using AutoMapper;
+using Infrastructure.Exceptions;
+using OrderAPI.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeliveryAPI.Consumers;
 
 /// <summary>
-/// Consumer of the message about creating of the order with delivery
+/// Consumer of the message about canceled of the order
 /// </summary>
 public class CancelDeliveryConsumer : IConsumer<CancelDeliveryDTORabbitMQ>
 {
@@ -27,7 +29,12 @@ public class CancelDeliveryConsumer : IConsumer<CancelDeliveryDTORabbitMQ>
     /// <inheritdoc/>
     public async Task Consume(ConsumeContext<CancelDeliveryDTORabbitMQ> context)
     {
-        var content = context.Message;
-        _service.Cancel(content.OrderId);
+        try
+        {
+            var content = context.Message;
+            _service.Cancel(content.OrderId);
+        }
+        catch (NotFoundException) { }
+        catch (DeliveryStatusException) { }
     }
 }

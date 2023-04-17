@@ -51,7 +51,6 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateCartConsumer>();
     x.AddConsumer<OrderIsReceivedConsumer>();
-    x.AddConsumer<ConfirmOrderIdConsumer>();
 
     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
     {
@@ -73,13 +72,6 @@ builder.Services.AddMassTransit(x =>
             ep.PrefetchCount = 16;
             ep.UseMessageRetry(r => r.Interval(2, 3000));
             ep.ConfigureConsumer<OrderIsReceivedConsumer>(provider);
-        });
-
-        cfg.ReceiveEndpoint("confirmOrderIdQueue", ep =>
-        {
-            ep.PrefetchCount = 16;
-            ep.UseMessageRetry(r => r.Interval(2, 3000));
-            ep.ConfigureConsumer<ConfirmOrderIdConsumer>(provider);
         });
     }));
 });

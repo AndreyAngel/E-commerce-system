@@ -4,25 +4,6 @@
         <name>OrderAPI</name>
     </assembly>
     <members>
-        <member name="T:OrderAPI.Consumers.ConfirmOrderIdConsumer">
-            <summary>
-            Consumer of the message for create cart
-            </summary>
-        </member>
-        <member name="F:OrderAPI.Consumers.ConfirmOrderIdConsumer._orderService">
-            <summary>
-            Interface for class providing the APIs for managing order in a persistence store.
-            </summary>
-        </member>
-        <member name="M:OrderAPI.Consumers.ConfirmOrderIdConsumer.#ctor(OrderAPI.Services.Interfaces.IOrderService)">
-            <summary>
-            Creates an instance of the <see cref="T:OrderAPI.Consumers.CreateCartConsumer"/>.
-            </summary>
-            <param name="orderService"> Interface for class providing the APIs for managing order in a persistence store. </param>
-        </member>
-        <member name="M:OrderAPI.Consumers.ConfirmOrderIdConsumer.Consume(MassTransit.ConsumeContext{Infrastructure.DTO.ConfirmOrderIdDTORabbitMQ})">
-            <inheritdoc/>
-        </member>
         <member name="T:OrderAPI.Consumers.CreateCartConsumer">
             <summary>
             Consumer of the message for create cart
@@ -1266,6 +1247,13 @@
             <summary>
             Throws if this class has been disposed.
             </summary>
+        </member>
+        <member name="M:OrderAPI.Services.OrderService.CancelDelivery(System.Guid)">
+            <summary>
+            Send of message about canceled of the order to DeleveryAPI service
+            </summary>
+            <param name="orderId"> Order Id </param>
+            <returns> Task object </returns>
         </member>
         <member name="T:OrderAPI.UnitOfWork.CartProductRepository">
             <summary>

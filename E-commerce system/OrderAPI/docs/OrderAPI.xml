@@ -1268,12 +1268,12 @@
         </member>
         <member name="T:OrderAPI.UnitOfWork.CartRepository">
             <summary>
-            The cart cart repository class containing methods for interaction with the database
+            The cart repository class containing methods for interaction with the database
             </summary>
         </member>
         <member name="M:OrderAPI.UnitOfWork.CartRepository.#ctor(OrderAPI.DataBase.Context)">
             <summary>
-            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.CartProductRepository"/>.
+            Creates an instance of the <see cref="T:OrderAPI.UnitOfWork.CartRepository"/>.
             </summary>
             <param name="context"> Database context </param>
         </member>

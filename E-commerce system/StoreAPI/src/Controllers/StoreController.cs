@@ -81,13 +81,13 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpGet("{productId:Guid}")]
-    public IActionResult GetProductQuanityByProductId(Guid productId)
+    [HttpGet("{storeId:Guid},{productId:Guid}")]
+    public IActionResult GetProductQuanityByProductId(Guid storeId, Guid productId)
     {
         try
         {
-            var stockProduct = _stockService.GetStockProductByProductId(productId);
-            var storeProduct = _storeService.GetStoreProductByProductId(productId);
+            var stockProduct = _stockService.GetStockProductByProductId(storeId, productId);
+            var storeProduct = _storeService.GetStoreProductByProductId(storeId, productId);
             var response = stockProduct.Quantity + storeProduct.Quantity;
 
             return Ok(response);
@@ -124,12 +124,12 @@ public class StoreController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPatch("{stockProductId:Guid},{quantity:int}")]
-    public async Task<IActionResult> TakeProductFromStock(Guid stockProductId, int quantity)
+    [HttpPatch("{storeId:Guid},{stockProductId:Guid},{quantity:int}")]
+    public async Task<IActionResult> TakeProductFromStock(Guid storeId, Guid stockProductId, int quantity)
     {
         try
         {
-            var stockProduct = await _stockService.TakeProductFromStock(stockProductId, quantity);
+            var stockProduct = await _stockService.TakeProductFromStock(storeId, stockProductId, quantity);
             var storeProduct = _mapper.Map<StoreProduct>(stockProduct);
             await _storeService.TakeProductFromStock(storeProduct);
 
@@ -141,12 +141,12 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpPatch("{storeProductId:Guid},{quantity:int}")]
-    public async Task<IActionResult> ReturnProductToStock(Guid storeProductId, int quantity)
+    [HttpPatch("{storeId:Guid},{storeProductId:Guid},{quantity:int}")]
+    public async Task<IActionResult> ReturnProductToStock(Guid storeId, Guid storeProductId, int quantity)
     {
         try
         {
-            var storeProduct = await _storeService.ReturnProductToStock(storeProductId, quantity);
+            var storeProduct = await _storeService.ReturnProductToStock(storeId, storeProductId, quantity);
             var stockProduct = _mapper.Map<StockProduct>(storeProduct);
             await _stockService.ReturnProductToStock(stockProduct);
 
@@ -158,12 +158,12 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpPatch("{storeProductId:Guid}")]
-    public async Task<IActionResult> SellProduct(Guid storeProductId)
+    [HttpPatch("{storeId:Guid},{productId:Guid}")]
+    public async Task<IActionResult> SellProduct(Guid storeId, Guid productId)
     {
         try
         {
-            await _storeService.SellProduct(storeProductId);
+            await _storeService.SellProduct(storeId, productId);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -172,12 +172,12 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpPatch("{stockProductId:Guid},{quantity:int}")]
-    public async Task<IActionResult> ReturnProductToStore(Guid stockProductId, int quantity)
+    [HttpPatch("{storeId:Guid},{stockProductId:Guid},{quantity:int}")]
+    public async Task<IActionResult> ReturnProductToStore(Guid storeId, Guid stockProductId, int quantity)
     {
         try
         {
-            var result = await _storeService.ReturnProductToStore(stockProductId, quantity);
+            var result = await _storeService.ReturnProductToStore(storeId, stockProductId, quantity);
             var response = _mapper.Map<StoreProductDTOResponse>(result);
 
             return Ok(response);
@@ -188,12 +188,12 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpPatch("{stockProductId:Guid},{quantity:int}")]
-    public async Task<IActionResult> WriteOffTheProduct(Guid stockProductId, int quantity)
+    [HttpPatch("{storeId:Guid},{stockProductId:Guid},{quantity:int}")]
+    public async Task<IActionResult> WriteOffTheProduct(Guid storeId, Guid stockProductId, int quantity)
     {
         try
         {
-            await _stockService.WriteOffTheProduct(stockProductId, quantity);
+            await _stockService.WriteOffTheProduct(storeId, stockProductId, quantity);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -208,6 +208,7 @@ public class StoreController : ControllerBase
         try
         {
             var store = _mapper.Map<Store>(model);
+            store.Id = storeId;
             var result = await _storeService.Update(store);
             var response = _mapper.Map<StoreDTOResponse>(store);
 
@@ -220,34 +221,6 @@ public class StoreController : ControllerBase
         catch (ObjectNotUniqueException ex)
         {
             return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpDelete("{stockProductId:Guid}")]
-    public async Task<IActionResult> DeleteProductFromStock(Guid stockProductId)
-    {
-        try
-        {
-            await _stockService.DeleteProduct(stockProductId);
-            return NoContent();
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
-
-    [HttpDelete("{storeProductId:Guid}")]
-    public async Task<IActionResult> DeleteProductFromStore(Guid storeProductId)
-    {
-        try
-        {
-            await _storeService.DeleteProduct(storeProductId);
-            return NoContent();
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
         }
     }
 

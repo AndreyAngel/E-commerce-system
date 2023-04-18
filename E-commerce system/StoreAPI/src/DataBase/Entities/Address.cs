@@ -25,13 +25,14 @@ public class Address
     /// </summary>
     public string NumberOfHome { get; set; }
 
-    /// <summary>
-    /// Apartment number
-    /// </summary>
-    public string? ApartmentNumber { get; set; }
+    public override int GetHashCode()
+    {
+        return (City + Street + NumberOfHome).GetHashCode();
+    }
 
-    /// <summary>
-    /// Postal code
-    /// </summary>
-    public string? PostalCode { get; set; }
+    public override bool Equals(object? obj)
+    {
+        return obj is Address address && address.City == City &&
+               address.Street == Street && address.NumberOfHome == NumberOfHome;
+    }
 }

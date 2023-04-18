@@ -2,19 +2,21 @@
 
 namespace StoreAPI.Services.Interfaces;
 
-public interface IStockService
+public interface IStockService : IDisposable
 {
     Stock GetByStoreId(Guid storeId);
 
-    StockProduct GetStockProductByProductId(Guid productId);
+    StockProduct GetStockProductByProductId(Guid storeId, Guid productId);
+
+    Task<Stock> Create(Stock stock);
 
     Task<StockProduct> AddProduct(StockProduct product);
 
-    Task<StockProduct> TakeProductFromStock(Guid stockProductId, int quantity);
+    Task<StockProduct> TakeProductFromStock(Guid storeId, Guid stockProductId, int quantity);
 
     Task ReturnProductToStock(StockProduct stockProduct);
 
-    Task WriteOffTheProduct(Guid stockProductId, int quantity);
+    Task WriteOffTheProduct(Guid storeId, Guid stockProductId, int quantity);
 
-    Task DeleteProduct(Guid stockProductId);
+    Task Delete(Guid storeId);
 }

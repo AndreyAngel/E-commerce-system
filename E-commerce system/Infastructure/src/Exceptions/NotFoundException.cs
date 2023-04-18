@@ -14,7 +14,7 @@ public class NotFoundException: ArgumentException
     /// Creates an instance of the <see cref="NotFoundException"/>.
     /// </summary>
     /// <param name="paramName"> Param name </param>
-    public NotFoundException(string paramName) : base(paramName) { }
+    public NotFoundException(string message) : base(message) { }
 
     /// <summary>
     /// Creates an instance of the <see cref="NotFoundException"/>.

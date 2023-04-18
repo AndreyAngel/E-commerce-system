@@ -70,7 +70,7 @@
           "Port": 44391
         }
       ],
-      "UpstreamPathTemplate": "/api/v1/Store/{everything}",
+      "UpstreamPathTemplate": "/api/v1/StoreAPI/{everything}",
       "UpstreamHttpsMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
       "SwaggerKey": "StoreAPI"
     }

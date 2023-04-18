@@ -12,5 +12,5 @@ public class Store
 
     public Stock Stock { get; set; }
 
-    public List<StoreProduct> StoreProducts { get; set; }
+    public List<StoreProduct> StoreProducts { get; set; } = new();
 }

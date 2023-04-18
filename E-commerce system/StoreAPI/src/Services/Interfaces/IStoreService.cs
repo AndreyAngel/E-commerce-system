@@ -10,6 +10,8 @@ public interface IStoreService
 
     StoreProduct GetStoreProductByProductId(Guid productId);
 
+    IEnumerable<StoreProduct> GetStoreProductsByStoreId(Guid storeId);
+
     Task<Store> Create(Store store);
 
     Task<Store> Update(Store store);

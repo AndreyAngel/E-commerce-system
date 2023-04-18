@@ -65,6 +65,22 @@ public class StoreController : ControllerBase
         }
     }
 
+    [HttpGet("{storeId:Guid}")]
+    public IActionResult GetStoreProductsByStoreId(Guid storeId)
+    {
+        try
+        {
+            var storeProducts = _storeService.GetStoreProductsByStoreId(storeId);
+            var response = _mapper.Map<List<StoreProductDTOResponse>>(storeProducts);
+
+            return Ok(response);
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
     [HttpGet("{productId:Guid}")]
     public IActionResult GetProductQuanityByProductId(Guid productId)
     {

@@ -1,5 +1,6 @@
 ﻿using CatalogAPI.DataBase;
 using CatalogAPI.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CatalogAPI.UnitOfWork;
 

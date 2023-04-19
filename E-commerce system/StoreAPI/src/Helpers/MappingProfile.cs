@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using StoreAPI.DataBase;
-using StoreAPI.DataBase.Entities;
-using StoreAPI.Models.DTO;
-using Infrastructure.DTO;
 
 namespace StoreAPI.Helpers;
 
@@ -16,6 +12,5 @@ public class MappingProfile : Profile
     /// </summary>
     public MappingProfile()
     {
-        
     }
 }

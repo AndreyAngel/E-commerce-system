@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StoreAPI.DataBase.Entities;
 using StoreAPI.Models.DTO;
 using StoreAPI.Services.Interfaces;
+using StoreAPI.UnitOfWork.Interfaces;
 
 namespace StoreAPI.Controllers;
 
@@ -15,12 +16,16 @@ public class StoreController : ControllerBase
 
     private readonly IStockService _stockService;
 
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly IMapper _mapper;
 
-    public StoreController(IStoreService storeService, IStockService stockService, IMapper mapper)
+    public StoreController(IStoreService storeService, IStockService stockService,
+                           IMapper mapper, IUnitOfWork unitOfWork)
     {
         _storeService = storeService;
         _stockService = stockService;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -105,6 +110,7 @@ public class StoreController : ControllerBase
         {
             var result = await _storeService.Create(store);
             var response = _mapper.Map<StoreDTOResponse>(store);
+            await _unitOfWork.SaveChangesAsync();
 
             return Ok(response);
         }
@@ -121,6 +127,8 @@ public class StoreController : ControllerBase
         var result = await _stockService.AddProduct(stockProduct);
         var response = _mapper.Map<StockProductDTOResponse>(result);
 
+        await _unitOfWork.SaveChangesAsync();
+
         return Ok(response);
     }
 
@@ -132,6 +140,8 @@ public class StoreController : ControllerBase
             var stockProduct = await _stockService.TakeProductFromStock(storeId, stockProductId, quantity);
             var storeProduct = _mapper.Map<StoreProduct>(stockProduct);
             await _storeService.TakeProductFromStock(storeProduct);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return Ok(storeProduct);
         }
@@ -150,6 +160,8 @@ public class StoreController : ControllerBase
             var stockProduct = _mapper.Map<StockProduct>(storeProduct);
             await _stockService.ReturnProductToStock(stockProduct);
 
+            await _unitOfWork.SaveChangesAsync();
+
             return Ok(storeProduct);
         }
         catch (NotFoundException ex)
@@ -164,6 +176,8 @@ public class StoreController : ControllerBase
         try
         {
             await _storeService.SellProduct(storeId, productId);
+            await _unitOfWork.SaveChangesAsync();
+
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -179,6 +193,7 @@ public class StoreController : ControllerBase
         {
             var result = await _storeService.ReturnProductToStore(storeId, stockProductId, quantity);
             var response = _mapper.Map<StoreProductDTOResponse>(result);
+            await _unitOfWork.SaveChangesAsync();
 
             return Ok(response);
         }
@@ -194,6 +209,8 @@ public class StoreController : ControllerBase
         try
         {
             await _stockService.WriteOffTheProduct(storeId, stockProductId, quantity);
+            await _unitOfWork.SaveChangesAsync();
+
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -211,6 +228,8 @@ public class StoreController : ControllerBase
             store.Id = storeId;
             var result = await _storeService.Update(store);
             var response = _mapper.Map<StoreDTOResponse>(store);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return Ok(response);
         }
@@ -230,6 +249,8 @@ public class StoreController : ControllerBase
         try
         {
             await _storeService.Delete(storeId);
+            await _unitOfWork.SaveChangesAsync();
+
             return NoContent();
         }
         catch (NotFoundException ex)

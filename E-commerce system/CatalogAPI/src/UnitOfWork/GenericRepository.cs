@@ -2,6 +2,7 @@
 using CatalogAPI.DataBase.Entities;
 using CatalogAPI.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Linq.Expressions;
 
 namespace CatalogAPI.UnitOfWork;
@@ -15,9 +16,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     /// <summary>
     /// Database context
     /// </summary>
-    private protected readonly Context _context;
+    protected readonly Context _context;
 
-    private readonly DbSet<TEntity> _db;
+    protected readonly DbSet<TEntity> _db;
 
     /// <summary>
     /// True, if object is disposed
@@ -57,11 +58,12 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     public TEntity? GetById(Guid Id)
     {
         ThrowIfDisposed();
+
         var entity = _db.Find(Id);
 
         if (entity == null)
         {
-            return null;
+           return null;
         }
 
         _context.Entry(entity).State = EntityState.Detached;

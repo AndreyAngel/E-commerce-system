@@ -2,6 +2,7 @@
 using Infrastructure.Exceptions;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.DataBase.Entities;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CatalogAPI.Services;
 
@@ -16,6 +17,11 @@ public class CategoryService: ICategoryService
     private readonly IUnitOfWork _db;
 
     /// <summary>
+    /// Represents a local in-memory cache whose values are not serialized
+    /// </summary>
+    private readonly IMemoryCache _cache;
+
+    /// <summary>
     /// True, if object is disposed
     /// False, if object isn't disposed
     /// </summary>
@@ -25,9 +31,11 @@ public class CategoryService: ICategoryService
     /// Creates an instance of the <see cref="ProductService"/>.
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
-    public CategoryService(IUnitOfWork unitOfWork)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public CategoryService(IUnitOfWork unitOfWork, IMemoryCache memoryCache)
     {
         _db = unitOfWork;
+        _cache = memoryCache;
     }
 
     ~CategoryService() => Dispose(false);
@@ -36,7 +44,15 @@ public class CategoryService: ICategoryService
     public List<Category> GetAll()
     {
         ThrowIfDisposed();
-        return _db.Categories.GetAll().ToList();
+
+        if (!_cache.TryGetValue(typeof(List<Category>), out List<Category>? categories))
+        {
+            categories = _db.Categories.GetAll().ToList();
+            _cache.Set(typeof(List<Category>), categories,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
+
+        return categories;
     }
 
     /// <inheritdoc/>
@@ -44,14 +60,20 @@ public class CategoryService: ICategoryService
     {
         ThrowIfDisposed();
 
-        var res = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
-
-        if (res == null)
+        if (!_cache.TryGetValue(id, out Category? category))
         {
-            throw new NotFoundException("category with this Id was not founded!", nameof(id));
+            category = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
+
+            if (category == null)
+            {
+                throw new NotFoundException("Category with this Id was not founded!", nameof(id));
+            }
+
+            _cache.Set(id, category,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return category;
     }
 
     /// <inheritdoc/>
@@ -61,12 +83,20 @@ public class CategoryService: ICategoryService
 
         var res = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
 
-        if (res == null)
+        if (!_cache.TryGetValue(name, out Category? category))
         {
-            throw new NotFoundException("category with this name was not founded!", nameof(name));
+            category = _db.Categories.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
+
+            if (category == null)
+            {
+                throw new NotFoundException("Category with this name was not founded!", nameof(name));
+            }
+
+            _cache.Set(name, category,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return category;
     }
 
     /// <inheritdoc/>

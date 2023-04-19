@@ -5,6 +5,7 @@ using Infrastructure.Exceptions;
 using CatalogAPI.Models.DTO;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.DataBase.Entities;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CatalogAPI.Services;
 
@@ -24,6 +25,11 @@ public class ProductService: IProductService
     private readonly IMapper _mapper;
 
     /// <summary>
+    /// Represents a local in-memory cache whose values are not serialized
+    /// </summary>
+    private readonly IMemoryCache _cache;
+
+    /// <summary>
     /// True, if object is disposed
     /// False, if object isn't disposed
     /// </summary>
@@ -34,10 +40,12 @@ public class ProductService: IProductService
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
     /// <param name="mapper"> Object of class for models mapping </param>
-    public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IMemoryCache memoryCache)
     {
         _db = unitOfWork;
         _mapper = mapper;
+        _cache = memoryCache;
     }
 
     ~ProductService() => Dispose(false);
@@ -46,52 +54,79 @@ public class ProductService: IProductService
     public List<Product> GetAll()
     {
         ThrowIfDisposed();
-        return _db.Products.GetAll().Where(x => x.IsSale).ToList();
+
+        if (!_cache.TryGetValue(typeof(List<Product>), out List<Product>? products))
+        {
+            products = _db.Products.GetAll().Where(x => x.IsSale).ToList();
+            _cache.Set(typeof(List<Product>), products,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
+
+        return products;
     }
 
     /// <inheritdoc/>
     public Product GetById(Guid id)
     {
         ThrowIfDisposed();
-        var res = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
 
-        if (res == null)
+        if (!_cache.TryGetValue(id, out Product? product))
         {
-            throw new NotFoundException("Product with this Id was not founded!", nameof(id));
+            product = _db.Products.Include(x => x.Category, x => x.Brand).SingleOrDefault(x => x.Id == id);
+
+            if (product == null)
+            {
+                throw new NotFoundException("Product with this Id was not founded!", nameof(id));
+            }
+
+            _cache.Set(id, product,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return product;
     }
 
     /// <inheritdoc/>
     public Product GetByName(string name)
     {
         ThrowIfDisposed();
-        var res = _db.Products.Include(x => x.Name == name, x => x.Category, y => y.Brand)
+
+        if (!_cache.TryGetValue(name, out Product? product))
+        {
+            product = _db.Products.Include(x => x.Name == name, x => x.Category, y => y.Brand)
                                       .SingleOrDefault(x => x.Name == name);
 
-        if (res == null)
-        {
-            throw new NotFoundException("Product with this name was not founded!", nameof(name));
+            if (product == null)
+            {
+                throw new NotFoundException("Product with this name was not founded!", nameof(name));
+            }
+
+            _cache.Set(name, product,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return product;
     }
 
     /// <inheritdoc/>
     public List<Product> GetByFilter(ProductFilterDTO model)
     {
         ThrowIfDisposed();
-        var products = _db.Products.GetAll();
+        if (!_cache.TryGetValue(typeof(List<Product>), out List<Product>? products))
+        {
+            products = _db.Products.GetAll().ToList();
+            _cache.Set(typeof(List<Product>), products,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
 
         if (model.BrandId != null)
         {
-            products = products.Where(x => x.BrandId == model.BrandId);
+            products = products.Where(x => x.BrandId == model.BrandId).ToList();
         }
 
         if (model.CategoryId != null)
         {
-            products = products.Where(x => x.CategoryId == model.CategoryId);
+            products = products.Where(x => x.CategoryId == model.CategoryId).ToList();
         }
 
         return products.ToList();

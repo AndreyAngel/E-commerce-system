@@ -2,6 +2,7 @@
 using Infrastructure.Exceptions;
 using CatalogAPI.UnitOfWork.Interfaces;
 using CatalogAPI.DataBase;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CatalogAPI.Services;
 
@@ -16,6 +17,11 @@ public class BrandService: IBrandService
     private readonly IUnitOfWork _db;
 
     /// <summary>
+    /// Represents a local in-memory cache whose values are not serialized
+    /// </summary>
+    private readonly IMemoryCache _cache;
+
+    /// <summary>
     /// True, if object is disposed
     /// False, if object isn't disposed
     /// </summary>
@@ -25,9 +31,11 @@ public class BrandService: IBrandService
     /// Creates an instance of the <see cref="BrandService"/>.
     /// </summary>
     /// <param name="unitOfWork"> Repository group interface showing data context </param>
-    public BrandService(IUnitOfWork unitOfWork)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public BrandService(IUnitOfWork unitOfWork, IMemoryCache memoryCache)
     {
         _db = unitOfWork;
+        _cache = memoryCache;
     }
 
     ~BrandService() => Dispose(false);
@@ -36,35 +44,57 @@ public class BrandService: IBrandService
     public List<Brand> GetAll()
     {
         ThrowIfDisposed();
-        return _db.Brands.GetAll().ToList();
+
+        if (!_cache.TryGetValue(typeof(List<Brand>), out List<Brand>? brands))
+        {
+            brands = _db.Brands.GetAll().ToList();
+            _cache.Set(typeof(List<Brand>), brands,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
+
+        return brands;
     }
 
     /// <inheritdoc/>
     public Brand GetById(Guid id)
     {
         ThrowIfDisposed();
-        var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
 
-        if (res == null)
+        if (!_cache.TryGetValue(id, out Brand? brand))
         {
-            throw new NotFoundException("category with this Id was not founded!", nameof(id));
+            brand = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Id == id);
+
+            if (brand == null)
+            {
+                throw new NotFoundException("Brand with this Id was not founded!", nameof(id));
+            }
+
+            _cache.Set(id, brand,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return brand;
     }
 
     /// <inheritdoc/>
     public Brand GetByName(string name)
     {
         ThrowIfDisposed();
-        var res = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
 
-        if (res == null)
+        if (!_cache.TryGetValue(name, out Brand? brand))
         {
-            throw new NotFoundException("category with this name was not founded!", nameof(name));
+            brand = _db.Brands.Include(x => x.Products).SingleOrDefault(x => x.Name == name);
+
+            if (brand == null)
+            {
+                throw new NotFoundException("Brand with this name was not founded!", nameof(name));
+            }
+
+            _cache.Set(name, brand,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
-        return res;
+        return brand;
     }
 
     /// <inheritdoc/>

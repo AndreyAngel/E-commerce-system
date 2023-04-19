@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using CatalogAPI.DataBase;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,17 @@ builder.Services.AddEndpointsApiExplorer();
 
 var dataBaseConnection = builder.Configuration.GetConnectionString("DataBaseConnection");
 builder.Services.AddDbContext<Context>(option => option.UseSqlite(dataBaseConnection));
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+
+    options.ExcludedMimeTypes = new[] { "text/plain" };
+
+    options.Providers.Add(new GzipCompressionProvider(new GzipCompressionProviderOptions()));
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
@@ -147,6 +159,8 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 var app = builder.Build();
+
+app.UseResponseCompression();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

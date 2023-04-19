@@ -649,17 +649,23 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:CatalogAPI.Services.BrandService._cache">
+            <summary>
+            Represents a local in-memory cache whose values are not serialized
+            </summary>
+        </member>
         <member name="F:CatalogAPI.Services.BrandService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
+        <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.BrandService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.BrandService.GetAll">
             <inheritdoc/>
@@ -697,17 +703,23 @@
             Repository group interface showing data context
             </summary>
         </member>
+        <member name="F:CatalogAPI.Services.CategoryService._cache">
+            <summary>
+            Represents a local in-memory cache whose values are not serialized
+            </summary>
+        </member>
         <member name="F:CatalogAPI.Services.CategoryService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
+        <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.GetAll">
             <inheritdoc/>
@@ -897,18 +909,24 @@
             Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
             </summary>
         </member>
+        <member name="F:CatalogAPI.Services.ProductService._cache">
+            <summary>
+            Represents a local in-memory cache whose values are not serialized
+            </summary>
+        </member>
         <member name="F:CatalogAPI.Services.ProductService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
+        <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
             <param name="mapper"> Object of class for models mapping </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.ProductService.GetAll">
             <inheritdoc/>

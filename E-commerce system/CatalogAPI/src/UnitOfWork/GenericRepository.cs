@@ -14,11 +14,9 @@ namespace CatalogAPI.UnitOfWork;
 public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
 {
     /// <summary>
-    /// Database context
+    /// Represents a local in-memory cache whose values are not serialized
     /// </summary>
-    protected readonly Context _context;
-
-    protected readonly DbSet<TEntity> _db;
+    private readonly IMemoryCache _cache;
 
     /// <summary>
     /// True, if object is disposed
@@ -27,11 +25,20 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     private bool _disposed = false;
 
     /// <summary>
+    /// Database context
+    /// </summary>
+    protected readonly Context _context;
+
+    protected readonly DbSet<TEntity> _db;
+
+    /// <summary>
     /// Creates an instance of the <see cref="GenericRepository{TEntity}"/>.
     /// </summary>
     /// <param name="context"> Database context </param>
-    public GenericRepository(Context context)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public GenericRepository(Context context, IMemoryCache memoryCache)
     {
+        _cache = memoryCache;
         _context = context;
         _db = context.Set<TEntity>();
     }
@@ -39,19 +46,35 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     ~GenericRepository() => Dispose(false);
 
     /// <inheritdoc/>
-    public IEnumerable<TEntity> GetAll()
+    public List<TEntity> GetAll()
     {
         ThrowIfDisposed();
-        return _db.AsNoTracking();
+
+        if (!_cache.TryGetValue(typeof(List<TEntity>), out List<TEntity>? entities))
+        {
+            entities = _db.AsNoTracking().ToList();
+            _cache.Set(typeof(List<TEntity>), entities,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
+
+        return entities;
     }
 
     /// <inheritdoc/>
-    public IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
+    public List<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
     {
         ThrowIfDisposed();
-        IQueryable<TEntity> query = _db.AsNoTracking();
-        return includeProperties
-            .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+        if (!_cache.TryGetValue(typeof(List<TEntity>) + "Include", out List<TEntity>? entities))
+        {
+            IQueryable<TEntity> query = _db.AsNoTracking();
+            entities = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty)).ToList();
+
+            _cache.Set(typeof(List<TEntity>) + "Include", entities,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+        }
+
+        return entities;
     }
 
     /// <inheritdoc/>
@@ -59,15 +82,21 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     {
         ThrowIfDisposed();
 
-        var entity = _db.Find(Id);
-
-        if (entity == null)
+        if (!_cache.TryGetValue(Id, out TEntity? entity))
         {
-           return null;
+            entity = _db.Find(Id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            _context.Entry(entity).State = EntityState.Detached;
+
+            _cache.Set(Id, entity,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
-
-        _context.Entry(entity).State = EntityState.Detached;
-
+            
         return entity;
     }
 

@@ -649,23 +649,17 @@
             Repository group interface showing data context
             </summary>
         </member>
-        <member name="F:CatalogAPI.Services.BrandService._cache">
-            <summary>
-            Represents a local in-memory cache whose values are not serialized
-            </summary>
-        </member>
         <member name="F:CatalogAPI.Services.BrandService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+        <member name="M:CatalogAPI.Services.BrandService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.BrandService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
-            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.BrandService.GetAll">
             <inheritdoc/>
@@ -703,23 +697,17 @@
             Repository group interface showing data context
             </summary>
         </member>
-        <member name="F:CatalogAPI.Services.CategoryService._cache">
-            <summary>
-            Represents a local in-memory cache whose values are not serialized
-            </summary>
-        </member>
         <member name="F:CatalogAPI.Services.CategoryService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+        <member name="M:CatalogAPI.Services.CategoryService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
-            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.CategoryService.GetAll">
             <inheritdoc/>
@@ -909,24 +897,17 @@
             Object of class <see cref="T:AutoMapper.IMapper"/> for models mapping
             </summary>
         </member>
-        <member name="F:CatalogAPI.Services.ProductService._cache">
-            <summary>
-            Represents a local in-memory cache whose values are not serialized
-            </summary>
-        </member>
         <member name="F:CatalogAPI.Services.ProductService._disposed">
             <summary>
             True, if object is disposed
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+        <member name="M:CatalogAPI.Services.ProductService.#ctor(CatalogAPI.UnitOfWork.Interfaces.IUnitOfWork,AutoMapper.IMapper)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.Services.ProductService"/>.
             </summary>
             <param name="unitOfWork"> Repository group interface showing data context </param>
-            <param name="mapper"> Object of class for models mapping </param>
-            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.Services.ProductService.GetAll">
             <inheritdoc/>
@@ -965,22 +946,24 @@
             The brand repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.BrandRepository.#ctor(CatalogAPI.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.BrandRepository.#ctor(CatalogAPI.DataBase.Context,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.BrandRepository"/>.
             </summary>
             <param name="context"> Database context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="T:CatalogAPI.UnitOfWork.CategoryRepository">
             <summary>
             The category repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.CategoryRepository.#ctor(CatalogAPI.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.CategoryRepository.#ctor(CatalogAPI.DataBase.Context,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.CategoryRepository"/>.
             </summary>
             <param name="context"> Database context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="T:CatalogAPI.UnitOfWork.GenericRepository`1">
             <summary>
@@ -988,9 +971,9 @@
             </summary>
             <typeparam name="TEntity"> Entity type </typeparam>
         </member>
-        <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._context">
+        <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._cache">
             <summary>
-            Database context
+            Represents a local in-memory cache whose values are not serialized
             </summary>
         </member>
         <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._disposed">
@@ -999,11 +982,17 @@
             False, if object isn't disposed
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.#ctor(CatalogAPI.DataBase.Context)">
+        <member name="F:CatalogAPI.UnitOfWork.GenericRepository`1._context">
+            <summary>
+            Database context
+            </summary>
+        </member>
+        <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.#ctor(CatalogAPI.DataBase.Context,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.GenericRepository`1"/>.
             </summary>
             <param name="context"> Database context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.UnitOfWork.GenericRepository`1.GetAll">
             <inheritdoc/>
@@ -1128,11 +1117,12 @@
             The product repository class containing methods for interaction with the database
             </summary>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.ProductRepository.#ctor(CatalogAPI.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.ProductRepository.#ctor(CatalogAPI.DataBase.Context,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.ProductRepository"/>.
             </summary>
             <param name="context"> Database context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="T:CatalogAPI.UnitOfWork.UnitOfWork">
             <summary>
@@ -1160,11 +1150,12 @@
         <member name="P:CatalogAPI.UnitOfWork.UnitOfWork.Brands">
             <inheritdoc/>
         </member>
-        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.#ctor(CatalogAPI.DataBase.Context)">
+        <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.#ctor(CatalogAPI.DataBase.Context,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
             Creates an instance of the <see cref="T:CatalogAPI.UnitOfWork.UnitOfWork"/>.
             </summary>
             <param name="context"> Database context </param>
+            <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
         </member>
         <member name="M:CatalogAPI.UnitOfWork.UnitOfWork.SaveChangesAsync">
             <inheritdoc/>

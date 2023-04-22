@@ -12,7 +12,7 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     /// Get all entity objects
     /// </summary>
     /// <returns> List of entity objects </returns>
-    IEnumerable<TEntity> GetAll();
+    List<TEntity> GetAll();
 
     /// <summary>
     /// Get entity by Id
@@ -26,7 +26,7 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     /// </summary>
     /// <param name="includeProperties"> Include properties </param>
     /// <returns> A new query with the released data included </returns>
-    IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties);
+    List<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties);
 
     /// <summary>
     /// Create a new entity object

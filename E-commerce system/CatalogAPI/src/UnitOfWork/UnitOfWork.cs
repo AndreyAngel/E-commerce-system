@@ -34,12 +34,13 @@ public class UnitOfWork : IUnitOfWork
     /// Creates an instance of the <see cref="UnitOfWork"/>.
     /// </summary>
     /// <param name="context"> Database context </param>
-    public UnitOfWork(Context context)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public UnitOfWork(Context context, IMemoryCache memoryCache)
     {
         _context = context;
-        Products = new ProductRepository(context);
-        Categories = new CategoryRepository(context);
-        Brands = new BrandRepository(context);
+        Products = new ProductRepository(context, memoryCache);
+        Categories = new CategoryRepository(context, memoryCache);
+        Brands = new BrandRepository(context, memoryCache);
     }
 
     ~UnitOfWork() => Dispose(false);

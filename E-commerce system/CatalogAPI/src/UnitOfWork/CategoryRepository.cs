@@ -1,6 +1,7 @@
 ﻿using CatalogAPI.DataBase;
 using CatalogAPI.DataBase.Entities;
 using CatalogAPI.UnitOfWork.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CatalogAPI.UnitOfWork;
 
@@ -13,6 +14,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     /// Creates an instance of the <see cref="CategoryRepository"/>.
     /// </summary>
     /// <param name="context"> Database context </param>
-    public CategoryRepository(Context context) : base(context)
+    /// <param name="memoryCache"> Represents a local in-memory cache whose values are not serialized </param>
+    public CategoryRepository(Context context, IMemoryCache memoryCache) : base(context, memoryCache)
     { }
 }

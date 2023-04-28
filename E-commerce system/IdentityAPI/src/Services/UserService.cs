@@ -33,6 +33,9 @@ public class UserService : UserManager<User>, IUserService
     /// </summary>
     private readonly IBusControl _bus;
 
+    /// <inheritdoc/>
+    private readonly RoleManager<IdentityRole> _roleManager;
+
     /// <summary>
     /// Object of class <see cref="IMapper"/> for models mapping
     /// </summary>
@@ -62,6 +65,7 @@ public class UserService : UserManager<User>, IUserService
     /// <param name="services">The <see cref="IServiceProvider"/> used to resolve services.</param>
     /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
     /// <param name="logger">The logger used to log messages, warnings and errors.</param>
+    /// <param name="roleManager"> Provides the APIs for managing roles in a persistence store. </param>
     public UserService( IConfiguration configuration,
                         IBusControl bus,
                         ICustomUserStore store,
@@ -73,7 +77,8 @@ public class UserService : UserManager<User>, IUserService
                         IdentityErrorDescriber errors,
                         IServiceProvider services,
                         IMapper mapper,
-                        ILogger<UserManager<User>> logger) : base(store,
+                        ILogger<UserManager<User>> logger,
+                        RoleManager<IdentityRole> roleManager) : base(store,
                                                                   optionsAccessor,
                                                                   passwordHasher,
                                                                   userValidators,
@@ -87,6 +92,7 @@ public class UserService : UserManager<User>, IUserService
         _bus = bus;
         Store = store;
         _mapper = mapper;
+        _roleManager = roleManager;
     }
 
     /// <inheritdoc/>
@@ -138,8 +144,16 @@ public class UserService : UserManager<User>, IUserService
         {
             await CreateCourier(user);
         }
-        
-        await AddToRoleAsync(user, userRole.Name);
+
+        try
+        {
+            await AddToRoleAsync(user, userRole.Name);
+        }
+        catch (InvalidOperationException)
+        {
+            await _roleManager.CreateAsync(userRole);
+            await AddToRoleAsync(user, userRole.Name);
+        }
 
         var claims = new List<Claim>()
         {

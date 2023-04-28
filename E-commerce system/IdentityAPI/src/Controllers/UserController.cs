@@ -118,7 +118,8 @@ public class UserController : ControllerBase
             return BadRequest(result);
         }
 
-        await _userService.Store.Context.SaveChangesAsync();
+        //TODO: Решить проблему с сохранением всех изменений после завершения всех процессов
+        //await _userService.Store.Context.SaveChangesAsync();
 
         return Created(new Uri($"https://localhost:44389/api/v1/IdentityAPI/User/GetById/{user.Id}"), result);
     }
@@ -144,7 +145,7 @@ public class UserController : ControllerBase
             return BadRequest(result);
         }
 
-        await _userService.Store.Context.SaveChangesAsync();
+        //await _userService.Store.Context.SaveChangesAsync();
 
         return Created(new Uri($"https://localhost:44389/api/v1/IdentityAPI/User/GetById/{user.Id}"), result);
     }

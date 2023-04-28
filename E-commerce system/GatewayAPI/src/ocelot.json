@@ -67,7 +67,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44390
+          "Port": 44391
         }
       ],
       "UpstreamPathTemplate": "/api/v1/StoreAPI/{everything}",
@@ -127,7 +127,7 @@
         {
           "Name": "StoreAPI",
           "Version": "v1",
-          "Url": "https://localhost:44390/swagger/v1/swagger.json"
+          "Url": "https://localhost:44391/swagger/v1/swagger.json"
         }
       ]
     }

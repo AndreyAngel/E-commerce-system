@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using IdentityAPI.Models.Enums;
 using IdentityAPI.DataBase.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityAPI.DataBase;
 
@@ -102,6 +103,20 @@ public class CustomUserStore : UserStore<User>, ICustomUserStore, IDisposable
     {
         ThrowIfDisposed();
         return await Users.Include(x => x.Address).SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public override async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfDisposed();
+        if (user == null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
+        Context.Add(user);
+        await SaveChanges(cancellationToken);
+        return IdentityResult.Success;
     }
 
     public void Dispose()

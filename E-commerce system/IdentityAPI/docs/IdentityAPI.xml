@@ -159,9 +159,6 @@
         <member name="M:IdentityAPI.DataBase.CustomUserStore.FindUserAsync(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
-        <member name="M:IdentityAPI.DataBase.CustomUserStore.CreateAsync(IdentityAPI.DataBase.Entities.User,System.Threading.CancellationToken)">
-            <inheritdoc/>
-        </member>
         <member name="M:IdentityAPI.DataBase.CustomUserStore.Dispose(System.Boolean)">
             <summary>
             Protected implementation of Dispose pattern.

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Infastructure\src\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\CatalogAPI.Contracts\CatalogAPI.Contracts.csproj" />
+    <ProjectReference Include="..\..\CatalogAPI.Domain\CatalogAPI.Domain.Entities\CatalogAPI.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\CatalogAPI.Domain\CatalogAPI.Domain.Repositories.Interfaces\CatalogAPI.Domain.Repositories.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.0.8" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.8" />
+    <ProjectReference Include="..\CatalogAPI.Domain.Entities\CatalogAPI.Domain.Entities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\andry\OneDrive\Рабочий стол\Проекты\E-commerce system\E-commerce system\OrderAPI\docs\OrderAPI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infastructure\src\Infrastructure.csproj" />
+    <ProjectReference Include="..\Infastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

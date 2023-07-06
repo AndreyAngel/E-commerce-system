@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\andry\OneDrive\Рабочий стол\Проекты\E-commerce system\E-commerce system\CatalogAPI\docs\CatalogAPI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Infastructure\src\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Infastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\CatalogAPI.Contracts\CatalogAPI.Contracts.csproj" />
     <ProjectReference Include="..\..\CatalogAPI.Domain\CatalogAPI.Domain.Entities\CatalogAPI.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\CatalogAPI.Domain\CatalogAPI.Domain.Repositories.Interfaces\CatalogAPI.Domain.Repositories.Interfaces.csproj" />

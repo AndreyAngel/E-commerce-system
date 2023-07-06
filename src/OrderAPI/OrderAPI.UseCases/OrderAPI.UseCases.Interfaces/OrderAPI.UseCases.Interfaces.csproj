@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OrderAPI.Contracts\OrderAPI.Contracts.csproj" />
+    <ProjectReference Include="..\..\OrderAPI.Domain\OrderAPI.Domain.Entities\OrderAPI.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\OrderAPI.Domain\OrderAPI.Domain.Models\OrderAPI.Domain.Models.csproj" />
+    <ProjectReference Include="..\..\OrderAPI.Domain\OrderAPI.Domain.Repositories.Interfaces\OrderAPI.Domain.Repositories.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

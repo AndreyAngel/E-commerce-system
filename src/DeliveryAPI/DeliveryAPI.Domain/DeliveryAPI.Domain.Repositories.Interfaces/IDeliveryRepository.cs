@@ -1,0 +1,10 @@
+﻿using DeliveryAPI.Domain.Entities;
+
+namespace DeliveryAPI.Domain.Repositories.Interfaces;
+
+/// <summary>
+/// Interface for the delivery repository class containing methods for interaction with the database
+/// </summary>
+public interface IDeliveryRepository : IGenericRepositoty<Delivery>
+{
+}

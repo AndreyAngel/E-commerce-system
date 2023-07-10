@@ -1,6 +1,5 @@
 ﻿using DeliveryAPI.Domain.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace DeliveryAPI.Domain.Repositories.Implementation;
 
@@ -13,9 +12,9 @@ public class GenericRepository<TEntity> : IGenericRepositoty<TEntity> where TEnt
     /// <summary>
     /// Database context
     /// </summary>
-    private protected readonly Context _context;
+    protected readonly Context _context;
 
-    private readonly DbSet<TEntity> _db;
+    protected readonly DbSet<TEntity> _db;
 
     /// <summary>
     /// True, if object is disposed
@@ -43,15 +42,6 @@ public class GenericRepository<TEntity> : IGenericRepositoty<TEntity> where TEnt
     }
 
     /// <inheritdoc/>
-    public IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
-    {
-        ThrowIfDisposed();
-        IQueryable<TEntity> query = _db.AsNoTracking();
-        return includeProperties
-            .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
-    }
-
-    /// <inheritdoc/>
     public TEntity? GetById(Guid Id)
     {
         ThrowIfDisposed();
@@ -63,20 +53,6 @@ public class GenericRepository<TEntity> : IGenericRepositoty<TEntity> where TEnt
     {
         ThrowIfDisposed();
         await _db.AddAsync(entity);
-    }
-
-    /// <inheritdoc/>
-    public async Task UpdateAsync(TEntity entity)
-    {
-        ThrowIfDisposed();
-        await Task.Run(() => _db.Update(entity));
-    }
-
-    /// <inheritdoc/>
-    public async Task RemoveAsync(TEntity entity)
-    {
-        ThrowIfDisposed();
-        await Task.Run(() => _db.Remove(entity));
     }
 
     /// <inheritdoc/>

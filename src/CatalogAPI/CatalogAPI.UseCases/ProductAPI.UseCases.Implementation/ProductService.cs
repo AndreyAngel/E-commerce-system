@@ -172,7 +172,7 @@ public class ProductService: IProductService
 
     // Returns actuality products by ID
     /// <inheritdoc/>
-    public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> productList)
+    public ProductListDTORabbitMQ<ProductDTORabbitMQ> GetActualityProducts(ProductListDTORabbitMQ<Guid> productList)
     {
         ThrowIfDisposed();
         ProductListDTORabbitMQ<ProductDTORabbitMQ> products = new();

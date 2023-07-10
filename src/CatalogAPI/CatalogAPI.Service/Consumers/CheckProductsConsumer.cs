@@ -28,7 +28,7 @@ public class CheckProductsConsumer : IConsumer<ProductListDTORabbitMQ<Guid>>
     public async Task Consume(ConsumeContext<ProductListDTORabbitMQ<Guid>> context)
     {
         var content = context.Message;
-        var res = _service.CheckProducts(content);
+        var res = _service.GetActualityProducts(content);
         await context.RespondAsync(res);
     }
 }

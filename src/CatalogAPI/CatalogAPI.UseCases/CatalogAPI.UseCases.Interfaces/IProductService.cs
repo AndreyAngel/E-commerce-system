@@ -62,5 +62,5 @@ public interface IProductService : IDisposable
     /// </summary>
     /// <param name="products"> List of product IDs coming from an external service </param>
     /// <returns> List of actuality products, <see cref="ProductListDTORabbitMQ{ProductDTORabbitMQ}"/> </returns>
-    public ProductListDTORabbitMQ<ProductDTORabbitMQ> CheckProducts(ProductListDTORabbitMQ<Guid> products);
+    public ProductListDTORabbitMQ<ProductDTORabbitMQ> GetActualityProducts(ProductListDTORabbitMQ<Guid> products);
 }

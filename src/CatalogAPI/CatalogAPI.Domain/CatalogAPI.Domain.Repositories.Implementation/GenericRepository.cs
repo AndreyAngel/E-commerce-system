@@ -114,13 +114,6 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     }
 
     /// <inheritdoc/>
-    public async Task RemoveAsync(TEntity entity)
-    {
-        ThrowIfDisposed();
-        await Task.Run(() => _db.Remove(entity));
-    }
-
-    /// <inheritdoc/>
     public virtual void Dispose()
     {
         Dispose(true);

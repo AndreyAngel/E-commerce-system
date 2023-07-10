@@ -1,4 +1,5 @@
 ﻿using DeliveryAPI.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace DeliveryAPI.Domain.Repositories.Interfaces;
 
@@ -7,4 +8,10 @@ namespace DeliveryAPI.Domain.Repositories.Interfaces;
 /// </summary>
 public interface IDeliveryRepository : IGenericRepositoty<Delivery>
 {
+    /// <summary>
+    /// Include data from another database table
+    /// </summary>
+    /// <param name="includeProperties"> Include properties </param>
+    /// <returns> A new query with the released data included </returns>
+    IQueryable<Delivery> Include(params Expression<Func<Delivery, object>>[] includeProperties);
 }

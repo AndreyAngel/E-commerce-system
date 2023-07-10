@@ -41,11 +41,4 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     /// <param name="entity"> Entity object </param>
     /// <returns> Task object containing updated entity object </returns>
     Task UpdateAsync(TEntity entity);
-
-    /// <summary>
-    /// Remove entity object
-    /// </summary>
-    /// <param name="entity"> Entity object </param>
-    /// <returns> Task object </returns>
-    Task RemoveAsync(TEntity entity);
 }

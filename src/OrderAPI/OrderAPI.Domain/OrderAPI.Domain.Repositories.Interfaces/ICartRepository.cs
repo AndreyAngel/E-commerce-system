@@ -1,4 +1,5 @@
 ﻿using OrderAPI.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace OrderAPI.Domain.Repositories.Interfaces;
 
@@ -7,4 +8,10 @@ namespace OrderAPI.Domain.Repositories.Interfaces;
 /// </summary>
 public interface ICartRepository : IGenericRepository<Cart>
 {
+    /// <summary>
+    /// Include data from another database table
+    /// </summary>
+    /// <param name="includeProperties"> Include properties </param>
+    /// <returns> A new query with the released data included </returns>
+    IQueryable<Cart> Include(params Expression<Func<Cart, object>>[] includeProperties);
 }

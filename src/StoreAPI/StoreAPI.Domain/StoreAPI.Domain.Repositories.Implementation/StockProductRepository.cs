@@ -1,4 +1,5 @@
-﻿using StoreAPI.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StoreAPI.Domain.Entities;
 using StoreAPI.Domain.Repositories.Interfaces;
 
 namespace StoreAPI.Domain.Repositories.Implementation;
@@ -14,4 +15,25 @@ public class StockProductRepository : GenericRepository<StockProduct>, IStockPro
     /// <param name="context"> Database context </param>
     public StockProductRepository(Context context) : base(context)
     { }
+
+    /// <inheritdoc/>
+    public IQueryable<StockProduct> GetAll()
+    {
+        ThrowIfDisposed();
+        return _db.AsNoTracking();
+    }
+
+    /// <inheritdoc/>
+    public async Task UpdateAsync(StockProduct entity)
+    {
+        ThrowIfDisposed();
+        await Task.Run(() => _db.Update(entity));
+    }
+
+    /// <inheritdoc/>
+    public async Task RemoveAsync(StockProduct entity)
+    {
+        ThrowIfDisposed();
+        await Task.Run(() => _db.Remove(entity));
+    }
 }

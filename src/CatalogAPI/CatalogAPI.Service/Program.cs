@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.ResponseCompression;
-using CatalogAPI.UseCases.Interfaces;
-using CatalogAPI.UseCases.Implementation;
 using CatalogAPI.Domain.Repositories.Implementation;
 using CatalogAPI.Contracts.Enums;
 using CatalogAPI.Domain.Repositories.Interfaces;
@@ -15,6 +13,8 @@ using MassTransit;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using CatalogAPI.UseCases;
+using CatalogAPI.UseCases.GetProductList;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,9 +67,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorizeHandler>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetProductListQuery).Assembly));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));

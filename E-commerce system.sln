@@ -27,12 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogAPI.Domain.Repositor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogAPI.Domain.Repositories.Implementation", "src\CatalogAPI\CatalogAPI.Domain\CatalogAPI.Domain.Repositories.Implementation\CatalogAPI.Domain.Repositories.Implementation.csproj", "{FDDE0831-43E3-4753-9C96-ED7D6C4B8A58}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CatalogAPI.UseCases", "CatalogAPI.UseCases", "{97CD8F04-87EE-45A8-9215-A5332D23C942}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogAPI.UseCases.Interfaces", "src\CatalogAPI\CatalogAPI.UseCases\CatalogAPI.UseCases.Interfaces\CatalogAPI.UseCases.Interfaces.csproj", "{BB7659DF-66FB-4D4B-A4FC-7AB782F16649}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductAPI.UseCases.Implementation", "src\CatalogAPI\CatalogAPI.UseCases\ProductAPI.UseCases.Implementation\ProductAPI.UseCases.Implementation.csproj", "{7218B706-E37A-4932-817D-D0F115521E20}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogAPI.Service", "src\CatalogAPI\CatalogAPI.Service\CatalogAPI.Service.csproj", "{7485757B-BFBB-4031-8745-D862DDF147CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeliveryAPI", "DeliveryAPI", "{CD8A8B8F-E745-4EE5-ADC7-BC961BF0B907}"
@@ -83,19 +77,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoreAPI.Domain", "StoreAPI
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoreAPI.UseCases", "StoreAPI.UseCases", "{B852620B-0907-4FE3-8495-FCFF6FEB8B5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.Contracts", "src\StoreAPI\StoreAPI.Contracts\StoreAPI.Contracts.csproj", "{5E82CE43-133E-4FDC-AE70-483DB6D30367}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.Contracts", "src\StoreAPI\StoreAPI.Contracts\StoreAPI.Contracts.csproj", "{5E82CE43-133E-4FDC-AE70-483DB6D30367}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.Service", "src\StoreAPI\StoreAPI.Service\StoreAPI.Service.csproj", "{CBBF1813-9AD5-470B-BFE1-D20A9269E3E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.Domain.Entities", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Entities\StoreAPI.Domain.Entities.csproj", "{00891EFA-7C03-4E16-8004-BF277ED2516B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.Domain.Entities", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Entities\StoreAPI.Domain.Entities.csproj", "{00891EFA-7C03-4E16-8004-BF277ED2516B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.Domain.Repositories.Interfaces", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Repositories.Interfaces\StoreAPI.Domain.Repositories.Interfaces.csproj", "{E2098548-51C5-4ED9-B17B-69FA182DD18C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.Domain.Repositories.Interfaces", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Repositories.Interfaces\StoreAPI.Domain.Repositories.Interfaces.csproj", "{E2098548-51C5-4ED9-B17B-69FA182DD18C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.Domain.Repositories.Implementation", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Repositories.Implementation\StoreAPI.Domain.Repositories.Implementation.csproj", "{5742395C-9085-4752-BFD9-845FFDA9677F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.Domain.Repositories.Implementation", "src\StoreAPI\StoreAPI.Domain\StoreAPI.Domain.Repositories.Implementation\StoreAPI.Domain.Repositories.Implementation.csproj", "{5742395C-9085-4752-BFD9-845FFDA9677F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.UseCases.Interfaces", "src\StoreAPI\StoreAPI.UseCases\StoreAPI.UseCases.Interfaces\StoreAPI.UseCases.Interfaces.csproj", "{BB39E2A5-8EFB-4BC6-BE7C-25844B36ECFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.UseCases.Interfaces", "src\StoreAPI\StoreAPI.UseCases\StoreAPI.UseCases.Interfaces\StoreAPI.UseCases.Interfaces.csproj", "{BB39E2A5-8EFB-4BC6-BE7C-25844B36ECFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreAPI.UseCases.Implementation", "src\StoreAPI\StoreAPI.UseCases\StoreAPI.UseCases.Implementation\StoreAPI.UseCases.Implementation.csproj", "{D14D5EDA-D5C5-41FE-A6C8-C57341530C67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreAPI.UseCases.Implementation", "src\StoreAPI\StoreAPI.UseCases\StoreAPI.UseCases.Implementation\StoreAPI.UseCases.Implementation.csproj", "{D14D5EDA-D5C5-41FE-A6C8-C57341530C67}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogAPI.UseCases", "src\CatalogAPI\CatalogAPI.UseCases\CatalogAPI.UseCases.csproj", "{FA3382E5-2529-477F-AB61-0E04C2676D34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,14 +131,6 @@ Global
 		{FDDE0831-43E3-4753-9C96-ED7D6C4B8A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDDE0831-43E3-4753-9C96-ED7D6C4B8A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDDE0831-43E3-4753-9C96-ED7D6C4B8A58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB7659DF-66FB-4D4B-A4FC-7AB782F16649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB7659DF-66FB-4D4B-A4FC-7AB782F16649}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB7659DF-66FB-4D4B-A4FC-7AB782F16649}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB7659DF-66FB-4D4B-A4FC-7AB782F16649}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7218B706-E37A-4932-817D-D0F115521E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7218B706-E37A-4932-817D-D0F115521E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7218B706-E37A-4932-817D-D0F115521E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7218B706-E37A-4932-817D-D0F115521E20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7485757B-BFBB-4031-8745-D862DDF147CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7485757B-BFBB-4031-8745-D862DDF147CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7485757B-BFBB-4031-8745-D862DDF147CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -235,6 +223,10 @@ Global
 		{D14D5EDA-D5C5-41FE-A6C8-C57341530C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D14D5EDA-D5C5-41FE-A6C8-C57341530C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D14D5EDA-D5C5-41FE-A6C8-C57341530C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3382E5-2529-477F-AB61-0E04C2676D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3382E5-2529-477F-AB61-0E04C2676D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3382E5-2529-477F-AB61-0E04C2676D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3382E5-2529-477F-AB61-0E04C2676D34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -250,9 +242,6 @@ Global
 		{FB4F9D2F-95DA-4B8B-B068-ACC7BE608B9B} = {FBF91002-66F4-471C-A68F-440E3E3289CE}
 		{FF2098B1-FC00-4D55-AA38-C6C0B0C35662} = {FBF91002-66F4-471C-A68F-440E3E3289CE}
 		{FDDE0831-43E3-4753-9C96-ED7D6C4B8A58} = {FBF91002-66F4-471C-A68F-440E3E3289CE}
-		{97CD8F04-87EE-45A8-9215-A5332D23C942} = {64E54F19-F394-489F-B742-0DB97E4984BD}
-		{BB7659DF-66FB-4D4B-A4FC-7AB782F16649} = {97CD8F04-87EE-45A8-9215-A5332D23C942}
-		{7218B706-E37A-4932-817D-D0F115521E20} = {97CD8F04-87EE-45A8-9215-A5332D23C942}
 		{7485757B-BFBB-4031-8745-D862DDF147CF} = {64E54F19-F394-489F-B742-0DB97E4984BD}
 		{CD8A8B8F-E745-4EE5-ADC7-BC961BF0B907} = {A56B0E88-3DEB-4BA7-8869-4B590282D49C}
 		{C9C4146D-1B65-42BF-9E2F-B1BFE33A6C77} = {CD8A8B8F-E745-4EE5-ADC7-BC961BF0B907}
@@ -285,6 +274,7 @@ Global
 		{5742395C-9085-4752-BFD9-845FFDA9677F} = {D24B065A-8AC3-4E82-AF5A-05905F8248F2}
 		{BB39E2A5-8EFB-4BC6-BE7C-25844B36ECFB} = {B852620B-0907-4FE3-8495-FCFF6FEB8B5A}
 		{D14D5EDA-D5C5-41FE-A6C8-C57341530C67} = {B852620B-0907-4FE3-8495-FCFF6FEB8B5A}
+		{FA3382E5-2529-477F-AB61-0E04C2676D34} = {64E54F19-F394-489F-B742-0DB97E4984BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2034E5E-4829-4C31-8950-DB1CA97F6643}

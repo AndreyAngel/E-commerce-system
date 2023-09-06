@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\CatalogAPI.Contracts\CatalogAPI.Contracts.csproj" />
     <ProjectReference Include="..\CatalogAPI.Domain\CatalogAPI.Domain.Repositories.Implementation\CatalogAPI.Domain.Repositories.Implementation.csproj" />
     <ProjectReference Include="..\CatalogAPI.Domain\CatalogAPI.Domain.Repositories.Interfaces\CatalogAPI.Domain.Repositories.Interfaces.csproj" />
-    <ProjectReference Include="..\CatalogAPI.UseCases\CatalogAPI.UseCases.Interfaces\CatalogAPI.UseCases.Interfaces.csproj" />
-    <ProjectReference Include="..\CatalogAPI.UseCases\ProductAPI.UseCases.Implementation\ProductAPI.UseCases.Implementation.csproj" />
+    <ProjectReference Include="..\CatalogAPI.UseCases\CatalogAPI.UseCases.csproj" />
   </ItemGroup>
 
 </Project>

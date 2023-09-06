@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Exceptions;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
-using CatalogAPI.Domain.Repositories.Interfaces;
-using CatalogAPI.UseCases.Interfaces;
 using CatalogAPI.Contracts.DTO;
-using CatalogAPI.Domain.Entities;
+using MediatR;
+using CatalogAPI.UseCases.GetProductDetails;
+using CatalogAPI.UseCases.CreateProduct;
+using CatalogAPI.UseCases.UpdateProduct;
+using CatalogAPI.UseCases.GetProductList;
+using CatalogAPI.UseCases.WithdrawFromSale;
 
 namespace CatalogAPI.Controllers;
 
@@ -17,33 +19,14 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
-    /// <summary>
-    /// Repository group interface showing data context
-    /// </summary>
-    private readonly IUnitOfWork _unitOfWork;
-
-    /// <summary>
-    /// Object of class <see cref="IProductService"/> providing the APIs for managing product in a persistence store.
-    /// </summary>
-    private readonly IProductService _service;
-
-    /// <summary>
-    /// Object of class <see cref="IMapper"/> for models mapping
-    /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Creates an instance of the <see cref="ProductController"/>.
     /// </summary>
-    /// <param name="unitOfWork"> Repository group interface showing data context </param>
-    /// <param name="service"> Object of class <see cref="IProductService"/>
-    /// providing the APIs for managing product in a persistence store </param>
-    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
-    public ProductController(IUnitOfWork unitOfWork, IProductService service, IMapper mapper)
+    public ProductController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _service = service;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -51,14 +34,15 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <returns> The action result of getting products information </returns>
     /// <response code="200"> Successful completion </response>
-    [HttpGet]
-    [ProducesResponseType(typeof(List<ProductListDTOResponse>), (int)HttpStatusCode.OK)]
-    public IActionResult GetAll()
+    [HttpGet()]
+    [ProducesResponseType(typeof(IAsyncEnumerable<ProductListDTOResponse>), (int)HttpStatusCode.OK)]
+    public ActionResult<IAsyncEnumerable<ProductListDTOResponse>> GetList(
+        string? sort = null,
+        string? searchString = null,
+        [FromQuery] ProductFilterDTO? filters = null)
     {
-        var result = _service.GetAll();
-        var res = _mapper.Map<List<ProductListDTOResponse>>(result);
-
-        return Ok(res);
+        var result = _mediator.CreateStream(new GetProductListQuery(sort, searchString, filters));
+        return Ok(result);
     }
 
     /// <summary>
@@ -71,14 +55,12 @@ public class ProductController : ControllerBase
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetById(Guid id)
+    public async Task<IActionResult> GetDetails(Guid id)
     {
         try
         {
-            var result = _service.GetById(id);
-            var res = _mapper.Map<ProductDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetProductDetailsQuery(id));
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {
@@ -96,14 +78,12 @@ public class ProductController : ControllerBase
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetByName(string name)
+    public async Task<IActionResult> GetDetails(string name)
     {
         try
         {
-            var result = _service.GetByName(name);
-            var res = _mapper.Map<ProductDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetProductDetailsQuery(name));
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {
@@ -112,23 +92,9 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
-    /// Get the products information by filters
-    /// </summary>
-    /// <param name="filter"> Filters </param>
-    /// <returns> The action resuslt to getting information about filtered products </returns>
-    /// <response code="200"> Successful completion </response>
-    [HttpPost]
-    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
-    public IActionResult GetByFilter(ProductFilterDTO filter)
-    {
-        var result = _mapper.Map<List<ProductListDTOResponse>>(_service.GetByFilter(filter));
-        return Ok(result);
-    }
-
-    /// <summary>
     /// Create a new product or put it back on sale
     /// </summary>
-    /// <param name="model"> Product data transfer object </param>
+    /// <param name="request"> Product data transfer object </param>
     /// <returns> The task object containing the action result of creating a new product </returns>
     /// <response code="201"> Successful completion </response>
     /// <response code="409"> Product with this name already exists </response>
@@ -139,18 +105,13 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Create(ProductDTORequest model)
+    public async Task<IActionResult> Create(ProductDTORequest request)
     {
         try
         {
-            Product product = _mapper.Map<Product>(model);
-
-            var result = await _service.Create(product);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<ProductDTOResponse>(result);
-
-            return Created(new Uri($"http://localhost:44389/api/v1/CatalogAPI/Product/GetById/{res.Id}"), res);
+            var result = await _mediator.Send(new CreateProductCommand(request));
+            return Created(
+                new Uri($"http://localhost:44389/api/v1/CatalogAPI/Product/GetDetails/{result.Id}"), result);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -166,7 +127,7 @@ public class ProductController : ControllerBase
     /// Change product data
     /// </summary>
     /// <param name="id"> Product Id </param>
-    /// <param name="model"> Product data transfer object </param>
+    /// <param name="request"> Product data transfer object </param>
     /// <returns> The task object containing the action result of changing product </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="409"> Product with this name already exists </response>
@@ -174,22 +135,15 @@ public class ProductController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update(Guid id, ProductDTORequest model)
+    public async Task<IActionResult> Update(Guid id, ProductDTORequest request)
     {
         try
         {
-            Product product = _mapper.Map<Product>(model);
-            product.Id = id;
-
-            var result = await _service.Update(product);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<ProductDTOResponse>(result);
-
-            return Ok(res);
+            await _mediator.Send(new UpdateProductCommand(id, request));
+            return NoContent();
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -202,28 +156,23 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
-    /// Remove a product from the public domain.
+    /// Withdraw from sale
     /// Product is withdrawn from sale.
     /// </summary>
     /// <param name="id"> Product Id </param>
     /// <returns> The task object containing the action result of delete product </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="404"> Product with this Id wasn't founded </response>
-    [HttpDelete("{id:Guid}")]
+    [HttpPatch("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    [ProducesResponseType(typeof(ProductDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> WithdrawFromSale(Guid id)
     {
         try
         {
-            var res = _service.GetById(id);
-            res.IsSale = false;
-            await _service.Update(res);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Ok();
+            await _mediator.Send(new WithdrawProductFromSaleCommand(id));
+            return NoContent();
         }
         catch (NotFoundException ex)
         {

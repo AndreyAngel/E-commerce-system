@@ -28,7 +28,7 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     /// </summary>
     protected readonly Context _context;
 
-    protected readonly DbSet<TEntity> _db;
+    protected readonly DbSet<TEntity> _brandTable;
 
     /// <summary>
     /// Creates an instance of the <see cref="GenericRepository{TEntity}"/>.
@@ -39,20 +39,20 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     {
         _cache = memoryCache;
         _context = context;
-        _db = context.Set<TEntity>();
+        _brandTable = context.Set<TEntity>();
     }
 
     ~GenericRepository() => Dispose(false);
 
     /// <inheritdoc/>
-    public List<TEntity> GetAll()
+    public IQueryable<TEntity> GetAll()
     {
         ThrowIfDisposed();
 
-        if (!_cache.TryGetValue(typeof(List<TEntity>), out List<TEntity>? entities))
+        if (!_cache.TryGetValue(typeof(IQueryable<TEntity>), out IQueryable<TEntity>? entities))
         {
-            entities = _db.AsNoTracking().ToList();
-            _cache.Set(typeof(List<TEntity>), entities,
+            entities = _brandTable.AsNoTracking();
+            _cache.Set(typeof(IQueryable<TEntity>), entities,
                 new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
         }
 
@@ -66,7 +66,7 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
 
         if (!_cache.TryGetValue(typeof(List<TEntity>) + "Include", out List<TEntity>? entities))
         {
-            IQueryable<TEntity> query = _db.AsNoTracking();
+            IQueryable<TEntity> query = _brandTable.AsNoTracking();
             entities = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty)).ToList();
 
             _cache.Set(typeof(List<TEntity>) + "Include", entities,
@@ -83,14 +83,14 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
 
         if (!_cache.TryGetValue(Id, out TEntity? entity))
         {
-            entity = _db.Find(Id);
+            entity = _brandTable.Find(Id);
 
             if (entity == null)
             {
                 return null;
             }
 
-            _context.Entry(entity).State = EntityState.Detached;
+            //_context.Entry(entity).State = EntityState.Detached;
 
             _cache.Set(Id, entity,
                 new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
@@ -103,14 +103,14 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     public async Task AddAsync(TEntity entity)
     {
         ThrowIfDisposed();
-        await _db.AddAsync(entity);
+        await _brandTable.AddAsync(entity);
     }
 
     /// <inheritdoc/>
     public async Task UpdateAsync(TEntity entity)
     {
         ThrowIfDisposed();
-        await Task.Run(() => _db.Update(entity));
+        await Task.Run(() => _brandTable.Update(entity));
     }
 
     /// <inheritdoc/>

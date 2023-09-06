@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using CatalogAPI.UseCases.Interfaces;
+using CatalogAPI.Contracts.DTO;
+using CatalogAPI.UseCases.GetProductDetails;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using MassTransit;
+using MediatR;
 
 namespace CatalogAPI.Consumers;
 
@@ -11,10 +13,7 @@ namespace CatalogAPI.Consumers;
 /// </summary>
 public class GetProductConsumer: IConsumer<ProductDTORabbitMQ>
 {
-    /// <summary>
-    /// Object of class <see cref="IProductService"/> providing the APIs for managing product in a persistence store.
-    /// </summary>
-    private readonly IProductService _service;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Object of class <see cref="IMapper"/> for models mapping
@@ -24,12 +23,10 @@ public class GetProductConsumer: IConsumer<ProductDTORabbitMQ>
     /// <summary>
     /// Creates an instance of the <see cref="GetProductConsumer"/>.
     /// </summary>
-    /// <param name="service"> Object of class <see cref="IProductService"/>
-    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
-    public GetProductConsumer(IProductService service, IMapper mapper)
+    public GetProductConsumer(IMediator mediator)
     {
-        _service = service;
-        _mapper = mapper;
+        _mediator = mediator;
+        _mapper = new Mapper(CreateMapperConfiguration());
     }
 
     /// <inheritdoc/>
@@ -39,7 +36,7 @@ public class GetProductConsumer: IConsumer<ProductDTORabbitMQ>
 
         try
         {
-            var product = _service.GetById(content.Id);
+            var product = await _mediator.Send(new GetProductDetailsQuery(content.Id));
             var result = _mapper.Map<ProductDTORabbitMQ>(product);
             await context.RespondAsync(result);
         }
@@ -55,5 +52,17 @@ public class GetProductConsumer: IConsumer<ProductDTORabbitMQ>
         {
             await context.RespondAsync(new ProductDTORabbitMQ() { Id = content.Id, ErrorMessage = ex.Message });
         }
+    }
+
+    /// <summary>
+    /// Create mapper configuration
+    /// </summary>
+    /// <returns><see cref="MapperConfiguration"/></returns>
+    private static MapperConfiguration CreateMapperConfiguration()
+    {
+        return new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<ProductDTOResponse, ProductDTORabbitMQ>();
+        });
     }
 }

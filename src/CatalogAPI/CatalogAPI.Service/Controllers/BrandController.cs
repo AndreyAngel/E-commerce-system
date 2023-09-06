@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Exceptions;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
-using CatalogAPI.Domain.Repositories.Interfaces;
-using CatalogAPI.UseCases.Interfaces;
 using CatalogAPI.Contracts.DTO;
-using CatalogAPI.Domain.Entities;
+using MediatR;
+using CatalogAPI.UseCases.GetBrandsList;
+using CatalogAPI.UseCases.GetBrandDetails;
+using CatalogAPI.UseCases.CreateBrand;
+using CatalogAPI.UseCases.UpdateBrand;
 
 namespace CatalogAPI.Controllers;
 
@@ -18,33 +19,14 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class BrandController : ControllerBase
 {
-    /// <summary>
-    /// Repository group interface showing data context
-    /// </summary>
-    private readonly IUnitOfWork _unitOfWork;
-
-    /// <summary>
-    /// Object of class <see cref="IBrandService"/> providing the APIs for managing category in a persistence store.
-    /// </summary>
-    private readonly IBrandService _service;
-
-    /// <summary>
-    /// Object of class <see cref="IMapper"/> for models mapping
-    /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Creates an instance of the <see cref="BrandController"/>.
     /// </summary>
-    /// <param name="unitOfWork"> Repository group interface showing data context </param>
-    /// <param name="service"> Object of class <see cref="IBrandService"/>
-    /// providing the APIs for managing category in a persistence store </param>
-    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
-    public BrandController(IUnitOfWork unitOfWork, IBrandService service, IMapper mapper)
+    public BrandController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _service = service;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -52,14 +34,12 @@ public class BrandController : ControllerBase
     /// </summary>
     /// <returns> The action result of getting brands information </returns>
     /// <response code="200"> Successful completion </response>
-    [HttpGet]
-    [ProducesResponseType(typeof(List<BrandDTOResponse>), (int)HttpStatusCode.OK)]
-    public IActionResult GetAll()
+    [HttpGet()]
+    [ProducesResponseType(typeof(IAsyncEnumerable<BrandDTOResponse>), (int)HttpStatusCode.OK)]
+    public ActionResult<IAsyncEnumerable<BrandDTOResponse>> GetList(string? sort = null, string? searchString = null)
     {
-        var result = _service.GetAll();
-        var res = _mapper.Map<List<BrandDTOResponse>>(result);
-
-        return Ok(res);
+        var result = _mediator.CreateStream(new GetBrandListQuery(sort, searchString));
+        return Ok(result);
     }
 
     /// <summary>
@@ -71,14 +51,12 @@ public class BrandController : ControllerBase
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetById(Guid id)
+    public async Task<IActionResult> GetDetails(Guid id)
     {
         try
         {
-            var result = _service.GetById(id);
-            var res = _mapper.Map<BrandDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetBrandDetailsQuery(id));
+            return Ok(result);
         }
         catch(NotFoundException ex)
         {
@@ -96,14 +74,12 @@ public class BrandController : ControllerBase
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetByName(string name)
+    public async Task<IActionResult> GetDetails(string name)
     {
         try
         {
-            var result = _service.GetByName(name);
-            var res = _mapper.Map<BrandDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetBrandDetailsQuery(name));
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {
@@ -114,7 +90,7 @@ public class BrandController : ControllerBase
     /// <summary>
     /// Create a new brand
     /// </summary>
-    /// <param name="model"> Brand data transfer object </param>
+    /// <param name="request"> Brand data transfer object </param>
     /// <returns> The task object containing the action result of creating a new brand </returns>
     /// <response code="201"> Successful completion </response>
     /// <response code="409"> Brand with this name already exists </response>
@@ -123,18 +99,14 @@ public class BrandController : ControllerBase
     [Authorize(Policy = "ChangingOfCatalog")]
     [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-    public async Task<IActionResult> Create(BrandDTORequest model)
+    public async Task<IActionResult> Create(BrandDTORequest request)
     {
         try
         {
-            Brand category = _mapper.Map<Brand>(model);
+            var result = await _mediator.Send(new CreateBrandCommand(request.Name, request.Description));
 
-            var result = await _service.Create(category);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<BrandDTOResponse>(result);
-
-            return Created(new Uri($"http://localhost:44389/api/v1/CatalogAPI/Brand/GetById/{res.Id}"), res);
+            return Created(
+                new Uri($"http://localhost:44389/api/v1/CatalogAPI/Brand/GetDetails/{result.Id}"), result);
         }
         catch (ObjectNotUniqueException ex)
         {
@@ -146,7 +118,7 @@ public class BrandController : ControllerBase
     /// Change brand data
     /// </summary>
     /// <param name="id"> Brand Id </param>
-    /// <param name="model"> Brand data transfer object </param>
+    /// <param name="request"> Brand data transfer object </param>
     /// <returns> The task object containing the action result of changing brand </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="409"> Brand with this name already exists </response>
@@ -154,22 +126,15 @@ public class BrandController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    [ProducesResponseType(typeof(BrandDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update(Guid id, BrandDTORequest model)
+    public async Task<IActionResult> Update(Guid id, BrandDTORequest request)
     {
         try
         {
-            Brand category = _mapper.Map<Brand>(model);
-            category.Id = id;
-
-            var result = await _service.Update(category);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<BrandDTOResponse>(result);
-
-            return Ok(res);
+            await _mediator.Send(new UpdateBrandCommand(id, request.Name, request.Description));
+            return NoContent();
         }
         catch (ObjectNotUniqueException ex)
         {

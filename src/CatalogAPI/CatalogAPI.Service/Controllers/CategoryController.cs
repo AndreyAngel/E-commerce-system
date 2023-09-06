@@ -1,12 +1,13 @@
-﻿using AutoMapper;
-using Infrastructure.Exceptions;
+﻿using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
-using CatalogAPI.Domain.Repositories.Interfaces;
-using CatalogAPI.UseCases.Interfaces;
 using CatalogAPI.Contracts.DTO;
-using CatalogAPI.Domain.Entities;
+using MediatR;
+using CatalogAPI.UseCases.GetCategoriesList;
+using CatalogAPI.UseCases.GetCategoryDetails;
+using CatalogAPI.UseCases.CreateCategory;
+using CatalogAPI.UseCases.UpdateCategory;
 
 namespace CatalogAPI.Controllers;
 
@@ -18,33 +19,14 @@ namespace CatalogAPI.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
-    /// <summary>
-    /// Repository group interface showing data context
-    /// </summary>
-    private readonly IUnitOfWork _unitOfWork;
-
-    /// <summary>
-    /// Object of class <see cref="ICategoryService"/> providing the APIs for managing category in a persistence store.
-    /// </summary>
-    private readonly ICategoryService _service;
-
-    /// <summary>
-    /// Object of class <see cref="IMapper"/> for models mapping
-    /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Creates an instance of the <see cref="CategoryController"/>.
     /// </summary>
-    /// <param name="unitOfWork"> Repository group interface showing data context </param>
-    /// <param name="service"> Object of class <see cref="ICategoryService"/>
-    /// providing the APIs for managing category in a persistence store </param>
-    /// <param name="mapper"> Object of class <see cref="IMapper"/> for models mapping </param>
-    public CategoryController(IUnitOfWork unitOfWork, ICategoryService service, IMapper mapper)
+    public CategoryController(IMediator mediator)
     {
-        _unitOfWork = unitOfWork;
-        _service = service;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -52,14 +34,13 @@ public class CategoryController : ControllerBase
     /// </summary>
     /// <returns> The action result of getting categories information </returns>
     /// <response code="200"> Successful completion </response>
-    [HttpGet]
-    [ProducesResponseType(typeof(List<CategoryDTOResponse>), (int)HttpStatusCode.OK)]
-    public IActionResult GetAll()
+    [HttpGet()]
+    [ProducesResponseType(typeof(IAsyncEnumerable<CategoryDTOResponse>), (int)HttpStatusCode.OK)]
+    public ActionResult<IAsyncEnumerable<CategoryDTOResponse>> GetList(string? sort = null,
+                                                                       string? searchString = null)
     {
-        var result = _service.GetAll();
-        var res = _mapper.Map<List<CategoryDTOResponse>>(result);
-
-        return Ok(res);
+        var result = _mediator.CreateStream(new GetCategoryListQuery(sort, searchString));
+        return Ok(result);
     }
 
     /// <summary>
@@ -72,14 +53,12 @@ public class CategoryController : ControllerBase
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetById(Guid id)
+    public async Task<IActionResult> GetDetails(Guid id)
     {
         try
         {
-            var result = _service.GetById(id);
-            var res = _mapper.Map<CategoryDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetCategoryDetailsQuery(id));
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {
@@ -97,14 +76,12 @@ public class CategoryController : ControllerBase
     [HttpGet("{name}")]
     [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public IActionResult GetByName(string name)
+    public async Task<IActionResult> GetDetails(string name)
     {
         try
         {
-            var result = _service.GetByName(name);
-            var res = _mapper.Map<CategoryDTOResponse>(result);
-
-            return Ok(res);
+            var result = await _mediator.Send(new GetCategoryDetailsQuery(name));
+            return Ok(result);
         }
         catch (NotFoundException ex)
         {
@@ -115,7 +92,7 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Create a new category
     /// </summary>
-    /// <param name="model"> Category data transfer object </param>
+    /// <param name="request"> Category data transfer object </param>
     /// <returns> The task object containing the action result of creating a new category </returns>
     /// <response code="201"> Successful completion </response>
     /// <response code="409"> Category with this name already exists </response>
@@ -124,18 +101,14 @@ public class CategoryController : ControllerBase
     [Authorize(Policy = "ChangingOfCatalog")]
     [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-    public async Task<IActionResult> Create(CategoryDTORequest model)
+    public async Task<IActionResult> Create(CategoryDTORequest request)
     {
         try
         {
-            Category category = _mapper.Map<Category>(model);
+            var result = await _mediator.Send(new CreateCategoryCommand(request.Name, request.Description));
 
-            var result = await _service.Create(category);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<CategoryDTOResponse>(result);
-
-            return Created(new Uri($"https://localhost:44389/api/v1/CatalogAPI/Category/GetById/{result.Id}"), res);
+            return Created(
+                new Uri($"https://localhost:44389/api/v1/CatalogAPI/Category/GetDetails/{result.Id}"), result);
         }
         catch(ObjectNotUniqueException ex)
         {
@@ -147,7 +120,7 @@ public class CategoryController : ControllerBase
     /// Change category data
     /// </summary>
     /// <param name="id"> Category Id </param>
-    /// <param name="model"> Category data transfer object </param>
+    /// <param name="request"> Category data transfer object </param>
     /// <returns> The task object containing the action result of changing category </returns>
     /// <response code="200"> Successful completion </response>
     /// <response code="409"> Category with this name already exists </response>
@@ -155,22 +128,15 @@ public class CategoryController : ControllerBase
     /// <response code="401"> Unauthorized </response>
     [HttpPut("{id:Guid}")]
     [Authorize(Policy = "ChangingOfCatalog")]
-    [ProducesResponseType(typeof(CategoryDTOResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> Update(Guid id, CategoryDTORequest model)
+    public async Task<IActionResult> Update(Guid id, CategoryDTORequest request)
     {
         try
         {
-            Category category = _mapper.Map<Category>(model);
-            category.Id = id;
-
-            var result = await _service.Update(category);
-            await _unitOfWork.SaveChangesAsync();
-
-            var res = _mapper.Map<CategoryDTOResponse>(result);
-
-            return Ok(res);
+            await _mediator.Send(new UpdateCategoryCommand(id, request.Name, request.Description));
+            return NoContent();
         }
         catch (NotFoundException ex)
         {

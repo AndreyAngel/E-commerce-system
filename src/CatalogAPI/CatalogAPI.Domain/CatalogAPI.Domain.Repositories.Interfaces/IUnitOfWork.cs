@@ -25,5 +25,5 @@ public interface IUnitOfWork : IDisposable
     /// Save changes
     /// </summary>
     /// <returns> Task object </returns>
-    public Task SaveChangesAsync();
+    public Task SaveChangesAsync(CancellationToken cancellation = default);
 }

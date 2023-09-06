@@ -36,4 +36,9 @@ public class ProductDTORequest
     /// </summary>
     [Required]
     public Guid BrandId { get; set; }
+
+    /// <summary>
+    /// Product is sale?
+    /// </summary>
+    public bool IsSale { get; set; } = false;
 }

@@ -12,7 +12,7 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     /// Get all entity objects
     /// </summary>
     /// <returns> List of entity objects </returns>
-    List<TEntity> GetAll();
+    IQueryable<TEntity> GetAll();
 
     /// <summary>
     /// Get entity by Id

@@ -2,8 +2,9 @@
 using CatalogAPI.Contracts.DTO;
 using CatalogAPI.Domain.Entities;
 using Infrastructure.DTO;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
-namespace CatalogAPI.Helpers;
+namespace CatalogAPI.UseCases;
 
 /// <summary>
 /// Class for models mapping

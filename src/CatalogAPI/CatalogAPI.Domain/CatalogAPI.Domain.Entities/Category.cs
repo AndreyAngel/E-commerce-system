@@ -11,4 +11,12 @@ public class Category : BaseEntity
     /// Gets or sets a product list in this category
     /// </summary>
     public virtual List<Product> Products { get; set; } = new List<Product>();
+
+    public Category(string name, string? description = null)
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        Description = description;
+        CreationDate = DateTime.Now;
+    }
 }

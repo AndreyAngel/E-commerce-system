@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Infrastructure.DTO;
-using CatalogAPI.UseCases.Interfaces;
+using MediatR;
+using CatalogAPI.UseCases.GetActualityProducts;
 
 namespace CatalogAPI.Consumers;
 
@@ -9,26 +10,22 @@ namespace CatalogAPI.Consumers;
 /// </summary>
 public class CheckProductsConsumer : IConsumer<ProductListDTORabbitMQ<Guid>>
 {
-    /// <summary>
-    /// Object of class <see cref="IProductService"/> providing the APIs for managing product in a persistence store.
-    /// </summary>
-    private readonly IProductService _service;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Creates an instance of the <see cref="CheckProductsConsumer"/>.
     /// </summary>
-    /// <param name="service"> Object of class <see cref="IProductService"/>
     /// providing the APIs for managing product in a persistence store </param>
-    public CheckProductsConsumer(IProductService service)
+    public CheckProductsConsumer(IMediator mediator)
     {
-        _service = service;
+        _mediator = mediator;
     }
 
     /// <inheritdoc/>
     public async Task Consume(ConsumeContext<ProductListDTORabbitMQ<Guid>> context)
     {
         var content = context.Message;
-        var res = _service.GetActualityProducts(content);
+        var res = _mediator.Send(new GetActualityProductsQuery(content));
         await context.RespondAsync(res);
     }
 }

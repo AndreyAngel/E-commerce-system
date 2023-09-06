@@ -45,10 +45,10 @@ public class UnitOfWork : IUnitOfWork
     ~UnitOfWork() => Dispose(false);
 
     /// <inheritdoc/>
-    public async Task SaveChangesAsync()
+    public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         ThrowIfDisposed();
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>

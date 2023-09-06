@@ -2,7 +2,7 @@
 using IdentityAPI.Controllers;
 using IdentityAPI.DataBase.Entities;
 using IdentityAPI.Helpers;
-using IdentityAPI.Models.DTO;
+using IdentityAPI.Models.DTO.Response;
 using IdentityAPI.Services;
 using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
